@@ -2,15 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
 
-package org.iessineu.loderunner;
+package iessineu.penguinrunner;
 
 /**
  *
  * @author Marc Mas
  */
-public class LodeRunner {
+public class PenguinRunner {
 
     public static void main(String[] args) {
-        System.out.println("Test 2");
+        System.out.println("Hello World!");
     }
 }
