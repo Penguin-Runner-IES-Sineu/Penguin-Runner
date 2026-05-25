@@ -114,7 +114,7 @@ public class GameState {
                  * La casella on hi havia E passa a ser terra.
                  */
                 if (symbol == 'E') {
-                    enemies.add(new Enemy(row, col));
+                    enemies.add(new Enemy(row, col, 1, 1));
                 }
             }
         }
@@ -213,6 +213,7 @@ public class GameState {
     private void moveEnemies() {
         for (Enemy enemy : enemies) {
             moveEnemy(enemy);
+            
         }
     }
 
@@ -227,6 +228,10 @@ public class GameState {
         int col =enemy.getCol();
         int dr = 0;
         int dc = 0;
+        if (shouldDie(row,col)) {
+            enemy.die();
+            return;
+        }
         if (shouldDrop(row,col)) {
             enemy.setPosition(row+1, col);
             return;
@@ -410,6 +415,9 @@ public class GameState {
                 && !isEnemy(row + 1, col)
                 && isFos(row + 1, col)
                 && !isFos(row, col);
+    }
+    private boolean shouldDie(int row, int col) {
+        return isGel(row, col);
     }
 
     public void applyGravity() {

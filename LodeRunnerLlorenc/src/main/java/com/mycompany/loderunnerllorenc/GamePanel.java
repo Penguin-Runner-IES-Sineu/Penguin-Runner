@@ -216,7 +216,7 @@ public class GamePanel extends JPanel {
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON
         );
-
+        
         Font font = new Font("Segoe UI Emoji", Font.PLAIN, 30);
         g2.setFont(font);
 
