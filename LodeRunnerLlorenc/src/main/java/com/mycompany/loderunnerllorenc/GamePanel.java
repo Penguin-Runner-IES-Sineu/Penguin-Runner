@@ -13,6 +13,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+
 import javax.swing.JPanel;
 
 /**
@@ -118,16 +119,24 @@ public class GamePanel extends JPanel {
 
                 TileType tile = gameState.getTile(row, col);
 
-                if (tile == TileType.WALL) {
-                    drawParet(g, row, col);
-                } else if (tile == TileType.GEL) {
-                    drawGel(g, row, col);
-                } else if (tile == TileType.GELAT) {
-                    drawGelat(g, row, col);
-                } else if (tile == TileType.ESCALA) {
-                    drawEscala(g, row, col);
-                } else if (tile == TileType.PASARELA) {
-                    drawPasarela(g, row, col);
+                if (null != tile) switch (tile) {
+                    case WALL:
+                        drawParet(g, row, col);
+                        break;
+                    case GEL:
+                        drawGel(g, row, col);
+                        break;
+                    case GELAT:
+                        drawGelat(g, row, col);
+                        break;
+                    case ESCALA:
+                        drawEscala(g, row, col);
+                        break;
+                    case PASARELA:
+                        drawPasarela(g, row, col);
+                        break;
+                    default:
+                        break;
                 }
             }
         }
