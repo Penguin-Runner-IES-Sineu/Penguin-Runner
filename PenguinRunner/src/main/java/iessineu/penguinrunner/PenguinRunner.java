@@ -1,7 +1,7 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
-package com.mycompany.loderunnerllorenc;
+package iessineu.penguinrunner;
 
 import javax.swing.SwingUtilities;
 
@@ -9,7 +9,7 @@ import javax.swing.SwingUtilities;
  *
  * @author loren
  */
-public class LodeRunnerLlorenc {
+public class PenguinRunner {
 
     public static void main(String[] args) {
 
