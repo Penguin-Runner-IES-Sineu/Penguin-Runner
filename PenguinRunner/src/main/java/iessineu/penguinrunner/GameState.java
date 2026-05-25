@@ -85,18 +85,25 @@ public class GameState {
 
                 char symbol = level[row].charAt(col);
 
-                if (symbol == '#') {
-                    map[row][col] = TileType.WALL;
-                } else if (symbol == 'G') {
-                    map[row][col] = TileType.GELAT;
-                } else if (symbol == '.') {
-                    map[row][col] = TileType.GEL;
-                } else if (symbol == 'H') {
-                    map[row][col] = TileType.ESCALA;
-                } else if (symbol == '-') {
-                    map[row][col] = TileType.PASARELA;
-                } else {
-                    map[row][col] = TileType.RES;
+                switch (symbol) {
+                    case '#':
+                        map[row][col] = TileType.WALL;
+                        break;
+                    case 'G':
+                        map[row][col] = TileType.GELAT;
+                        break;
+                    case '.':
+                        map[row][col] = TileType.GEL;
+                        break;
+                    case 'H':
+                        map[row][col] = TileType.ESCALA;
+                        break;
+                    case '-':
+                        map[row][col] = TileType.PASARELA;
+                        break;
+                    default:
+                        map[row][col] = TileType.RES;
+                        break;
                 }
 
                 /*
@@ -134,7 +141,7 @@ public class GameState {
      * 3. Es comproven col·lisions.
      */
     public void takeTurn(Direction direction) {
-        
+
         movePlayer(direction);
         collectIcecream();
         moveEnemies();
@@ -142,7 +149,8 @@ public class GameState {
         checkCollisions();
 
     }
-        public void takeTurn() {
+
+    public void takeTurn() {
         collectIcecream();
         moveEnemies();
         updateBrokenBlocks();
@@ -160,21 +168,21 @@ public class GameState {
         int nextRow = actualRow + direction.getDr();
         int nextCol = actualCol + direction.getDc();
 
-        boolean hiHaGelDavall = isGel(actualRow + 1, actualCol);
-        boolean estaDamuntPasarela = isPasarela(actualRow, actualCol);
-        boolean estaEnLaEscala = isEscala(actualRow, actualCol);
-        boolean hiHaEscalaDavall = isEscala(actualRow + 1, actualCol);
-        boolean hiHaEnemicDavall = isEnemy(actualRow + 1, actualCol);
+        boolean iceUnderneath = isIce(actualRow + 1, actualCol);
+        boolean onRail = isRail(actualRow, actualCol); // maquina d'estats
+        boolean isClimbing = isStair(actualRow, actualCol); // maquina d'estats
+        boolean stairUnderneath = isStair(actualRow + 1, actualCol);
+        boolean enemyUnderneath = isEnemy(actualRow + 1, actualCol);
 
         // Si vol pujar, només pot fer-ho si està damunt una escala
         if (direction == Direction.UP) {
-            if (canMoveTo(nextRow, nextCol) && estaEnLaEscala) {
+            if (canMoveTo(nextRow, nextCol) && isClimbing) {
                 player.setPosition(nextRow, nextCol);
             }
             return;
         }
         if (direction == Direction.DOWN) {
-            if (canMoveTo(nextRow, nextCol) && (estaEnLaEscala || !hiHaEnemicDavall || hiHaEscalaDavall)) {
+            if (canMoveTo(nextRow, nextCol) && (isClimbing || !enemyUnderneath || stairUnderneath)) {
                 player.setPosition(nextRow, nextCol);
             }
             return;
@@ -213,20 +221,19 @@ public class GameState {
      */
     private void moveEnemies() {
         for (Enemy enemy : enemies) {
-            
-            if(enemy.getIsDead()){
+
+            if (enemy.getIsDead()) {
                 enemy.subtractTimeToRevive(1);
-                if(enemy.getTimeToRevive()<= 0){
-                   enemy.revive();
+                if (enemy.getTimeToRevive() <= 0) {
+                    enemy.revive();
                 }
             } else {
-                if(!isFos(enemy.getRow(), enemy.getCol())){
+                if (!isFos(enemy.getRow(), enemy.getCol())) {
                     moveEnemy(enemy);
                 }
-                
+
             }
-            
-            
+
         }
     }
 
@@ -237,17 +244,17 @@ public class GameState {
      * Si ja està a la mateixa fila, intenta acostar-se en horitzontal.
      */
     private void moveEnemy(Enemy enemy) {
-        int row =enemy.getRow();
-        int col =enemy.getCol();
+        int row = enemy.getRow();
+        int col = enemy.getCol();
         int dr = 0;
         int dc = 0;
-        if (shouldDie(row,col) && !enemy.getIsDead()) {
+        if (shouldDie(row, col) && !enemy.getIsDead()) {
             enemy.die();
             enemy.setTimeToRevive(7);
             return;
         }
-        if (shouldDrop(row,col)) {
-            enemy.setPosition(row+1, col);
+        if (shouldDrop(row, col)) {
+            enemy.setPosition(row + 1, col);
             return;
         }
         if (enemy.getRow() < player.getRow()) {
@@ -272,7 +279,7 @@ public class GameState {
      * Comprova si una posició és vàlida per moure's.
      */
     private boolean canMoveTo(int row, int col) {
-        return !isOutOfBounds(row, col) && !isWall(row, col) && !isGel(row, col)  ;
+        return !isOutOfBounds(row, col) && !isWall(row, col) && !isIce(row, col);
     }
 
     /*
@@ -292,25 +299,28 @@ public class GameState {
         return map[row][col] == TileType.WALL;
     }
 
-    private boolean isGel(int row, int col) {
+    private boolean isIce(int row, int col) {
         return map[row][col] == TileType.GEL;
     }
 
-    private boolean isPasarela(int row, int col) {
+    private boolean isRail(int row, int col) {
         return map[row][col] == TileType.PASARELA;
     }
 
-    private boolean isEscala(int row, int col) {
+    private boolean isStair(int row, int col) {
         return map[row][col] == TileType.ESCALA;
     }
+
     private boolean isFos(int row, int col) {
         return map[row][col] == TileType.FOS;
     }
+
     private boolean isEnemy(int row, int col) {
-        for (Enemy enemy : enemies ){
-            if(enemy.getRow() == row && enemy.getCol()== col)
+        for (Enemy enemy : enemies) {
+            if (enemy.getRow() == row && enemy.getCol() == col) {
                 return true;
-            
+            }
+
         }
         return false;
     }
@@ -336,8 +346,8 @@ public class GameState {
         int actualCol = player.getCol();
         for (Enemy enemy : enemies) {
             if ((enemy.getRow() == player.getRow()
-                    && enemy.getCol() == player.getCol()) || isGel(actualRow, actualCol)) {
-                
+                    && enemy.getCol() == player.getCol()) || isIce(actualRow, actualCol)) {
+
                 resetPositions();
             }
         }
@@ -351,7 +361,7 @@ public class GameState {
         player.setPosition(startPlayerRow, startPlayerCol);
 
         if (!enemies.isEmpty()) {
-            for(Enemy enemy : enemies){
+            for (Enemy enemy : enemies) {
                 enemy.moveToOriginalRow();
             }
         }
@@ -412,28 +422,29 @@ public class GameState {
         int actualRow = player.getRow();
         int actualCol = player.getCol();
 
-        boolean hiHaGelDavall = isGel(actualRow + 1, actualCol);
-        boolean estaDamuntPasarela = isPasarela(actualRow, actualCol);
-        boolean estaEnLaEscala = isEscala(actualRow, actualCol);
-        boolean hiHaEscalaDavall = isEscala(actualRow + 1, actualCol);
+        boolean hiHaGelDavall = isIce(actualRow + 1, actualCol);
+        boolean estaDamuntPasarela = isRail(actualRow, actualCol);
+        boolean estaEnLaEscala = isStair(actualRow, actualCol);
+        boolean hiHaEscalaDavall = isStair(actualRow + 1, actualCol);
         boolean hiHaParetDavall = isWall(actualRow + 1, actualCol);
         boolean hiHaEnemicDavall = isEnemy(actualRow + 1, actualCol);
 
-        return !hiHaGelDavall && !estaDamuntPasarela && !estaEnLaEscala && !hiHaEscalaDavall && !hiHaParetDavall &&!hiHaEnemicDavall;
+        return !hiHaGelDavall && !estaDamuntPasarela && !estaEnLaEscala && !hiHaEscalaDavall && !hiHaParetDavall && !hiHaEnemicDavall;
     }
 
     private boolean shouldDrop(int row, int col) {
-        return !isGel(row + 1, col)
+        return !isIce(row + 1, col)
                 && !isWall(row + 1, col)
-                && !isPasarela(row, col)
-                && !isEscala(row, col)
-                && !isEscala(row + 1, col)
+                && !isRail(row, col)
+                && !isStair(row, col)
+                && !isStair(row + 1, col)
                 && !isEnemy(row + 1, col)
                 && isFos(row + 1, col)
                 && !isFos(row, col);
     }
+
     private boolean shouldDie(int row, int col) {
-        return isGel(row, col);
+        return isIce(row, col);
     }
 
     public void applyGravity() {
@@ -446,6 +457,6 @@ public class GameState {
             player.setPosition(nextRow, nextCol);
             collectIcecream();
         }
-        
+
     }
 }
