@@ -7,16 +7,12 @@ package iessineu.penguinrunner;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
-
 import javax.swing.JPanel;
 
 /**
@@ -45,16 +41,8 @@ public class GamePanel extends JPanel {
     // Estat del joc.
     private final GameState gameState;
 
-    private Font font;
-
     public GamePanel() {
         gameState = new GameState();
-
-        try {
-            font = Font.createFont(Font.TRUETYPE_FONT, new File("resources/font.TTF")).deriveFont(30f);
-        } catch (FontFormatException | IOException ex) {
-            System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
 
         int width = gameState.getCols() * TILE_SIZE;
         int height = gameState.getRows() * TILE_SIZE;
@@ -79,31 +67,36 @@ public class GamePanel extends JPanel {
      */
     private void handleInput(KeyEvent e) {
         Direction direction = null;
-        if (gameState.shouldDrop()) {
+        if(gameState.shouldDrop()){
             gameState.applyGravity();
 
             repaint();
             return;
         }
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP ->
-                direction = Direction.UP;
-            case KeyEvent.VK_DOWN ->
-                direction = Direction.DOWN;
-            case KeyEvent.VK_LEFT ->
-                direction = Direction.LEFT;
-            case KeyEvent.VK_RIGHT ->
-                direction = Direction.RIGHT;
-            case KeyEvent.VK_Q ->
-                gameState.breakDownLeft();
-            case KeyEvent.VK_E ->
-                gameState.breakDownRight();
+        if (e.getKeyCode() == KeyEvent.VK_UP) {
+            direction = Direction.UP;
+        } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            direction = Direction.DOWN;
+        } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            direction = Direction.LEFT;
+        } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            direction = Direction.RIGHT;
         }
 
         if (direction != null) {
             gameState.takeTurn(direction);
+            repaint();
         }
-        repaint();
+        if (e.getKeyCode() == KeyEvent.VK_Q) {
+            gameState.takeTurn();
+            gameState.breakDownLeft();
+            repaint();
+        }
+        if (e.getKeyCode() == KeyEvent.VK_E) {
+            gameState.takeTurn();
+            gameState.breakDownRight();
+            repaint();
+        }
     }
 
     /*
@@ -128,19 +121,16 @@ public class GamePanel extends JPanel {
 
                 TileType tile = gameState.getTile(row, col);
 
-                if (tile != null) {
-                    switch (tile) {
-                        case WALL ->
-                            drawParet(g, row, col);
-                        case GEL ->
-                            drawGel(g, row, col);
-                        case GELAT ->
-                            drawGelat(g, row, col);
-                        case ESCALA ->
-                            drawEscala(g, row, col);
-                        case PASARELA ->
-                            drawPasarela(g, row, col);
-                    }
+                if (tile == TileType.WALL) {
+                    drawParet(g, row, col);
+                } else if (tile == TileType.GEL) {
+                    drawGel(g, row, col);
+                } else if (tile == TileType.GELAT) {
+                    drawGelat(g, row, col);
+                } else if (tile == TileType.ESCALA) {
+                    drawEscala(g, row, col);
+                } else if (tile == TileType.PASARELA) {
+                    drawPasarela(g, row, col);
                 }
             }
         }
@@ -151,7 +141,7 @@ public class GamePanel extends JPanel {
      */
     private void drawParet(Graphics g, int row, int col) {
         drawCellBackground(g, row, col, new Color(70, 70, 80));
-        drawEmoji(g, "🧱", row, col, null, font);
+        drawEmoji(g, "🧱", row, col, null);
     }
 
     /*
@@ -159,28 +149,28 @@ public class GamePanel extends JPanel {
      */
     private void drawGel(Graphics g, int row, int col) {
         drawCellBackground(g, row, col, new Color(170, 225, 255));
-        drawEmoji(g, "🧱", row, col, null, font);
+        drawEmoji(g, "🧱", row, col, null);
     }
 
     /*
      * Dibuixa una casella amb gelat.
      */
     private void drawGelat(Graphics g, int row, int col) {
-        drawEmoji(g, "🍦", row, col, new Color(255, 255, 153), font);
+        drawEmoji(g, "🍦", row, col, new Color (255, 255, 153));
     }
 
     /*
      * Dibuixa una casella amb escala.
      */
     private void drawEscala(Graphics g, int row, int col) {
-        drawEmoji(g, "🪜", row, col, new Color(128, 64, 0), font);
+        drawEmoji(g, "🪜", row, col, new Color(128, 64, 0));
     }
 
     /*
      * Dibuixa una casella amb pasarela.
      */
     private void drawPasarela(Graphics g, int row, int col) {
-        drawEmoji(g, "—", row, col, new Color(134, 0, 179), font);
+        drawEmoji(g, "—", row, col, new Color(134, 0, 179));
     }
 
 
@@ -205,7 +195,7 @@ public class GamePanel extends JPanel {
     private void drawPlayer(Graphics g) {
         Player player = gameState.getPlayer();
 
-        drawEmoji(g, "🐧", player.getRow(), player.getCol(), new Color(0, 136, 204), font);
+        drawEmoji(g, "🐧", player.getRow(), player.getCol(), new Color(0, 136, 204));
     }
 
     /*
@@ -213,8 +203,8 @@ public class GamePanel extends JPanel {
      */
     private void drawEnemies(Graphics g) {
         for (Enemy enemy : gameState.getEnemies()) {
-            if (!enemy.getIsDead()) {
-                drawEmoji(g, "🦭", enemy.getRow(), enemy.getCol(), null, font);
+            if(!enemy.getIsDead()){
+                drawEmoji(g, "🦭", enemy.getRow(), enemy.getCol(), null);
             }
         }
     }
@@ -222,17 +212,16 @@ public class GamePanel extends JPanel {
     /*
      * Dibuixa un emoji dins una casella.
      */
-    private void drawEmoji(Graphics g, String emoji, int row, int col, Color color, Font f) {
+    private void drawEmoji(Graphics g, String emoji, int row, int col, Color color) {
         Graphics2D g2 = (Graphics2D) g;
         g.setColor(color);
         g2.setRenderingHint(
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON
         );
-
-        // Font font = new Font("Segoe UI Emoji", Font.PLAIN, 30);
-        // g2.setFont(font);
-        g2.setFont(f);
+        
+        Font font = new Font("Segoe UI Emoji", Font.PLAIN, 30);
+        g2.setFont(font);
 
         int cellX = col * TILE_SIZE;
         int cellY = row * TILE_SIZE;
