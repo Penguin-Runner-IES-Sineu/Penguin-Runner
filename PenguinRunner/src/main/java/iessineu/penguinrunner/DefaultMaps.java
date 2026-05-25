@@ -11,9 +11,9 @@ import java.util.List;
  *
  * @author loren
  */
-public class CrearMapa {
+public class DefaultMaps {
 
-    String[] mapa = {
+    private static String[] map1 = {
         "####################",
         "#n.pnnnnnnnngnnnnnnnn#",
         "#n.......nnnn....nn#",
@@ -29,7 +29,7 @@ public class CrearMapa {
         "#..................#",
         "####################"
     };
-    String mapa2[] = {
+    private static String map2[] = {
         "############################",
         "#..............................#",
         "#.............G................#",
@@ -40,10 +40,23 @@ public class CrearMapa {
         "#..............................#",
         "############################"};
 
-    List<String[]> mapes = new ArrayList<>();
+    static List<String[]> maps = new ArrayList<>();
 
-    public CrearMapa() {
-        mapes.add(mapa);
-        mapes.add(mapa2);
+    public DefaultMaps() {
+        maps.add(map1);
+        maps.add(map2);
+    }
+    
+//    public List<String[]> getMaps (){
+//        return maps;
+//    }
+    
+    
+    public int getAmountOfMaps(){
+        return maps.size();
+    }
+    
+    public String[] getMap(int nivell){
+        return maps.get(nivell);
     }
 }

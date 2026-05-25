@@ -49,22 +49,13 @@ public class GameState {
          * P = jugador
          * E = enemic
          */
-        String[] level = {
-            "####################",
-            "#nnnnnnnnngnnnnnnnn#",
-            "#n.......nnnn....nn#",
-            "#nnnnnn.nnEnnnnHnnn#",
-            "#nn.Gnn.n---nGnH.nn#",
-            "#.....n........H.nn#",
-            "#nnnnnn.nnnnnnnH.nn#",
-            "#nnEnnn.nnn....Hnnn#",
-            "#nnnnnn.nnnnngnH---#",
-            "#nn............Hnnn#",
-            "#nnnn---nnnn.nnHnnn#",
-            "#PnnnHnnnnnnnnnHnnn#",
-            "#..................#",
-            "####################"
-        };
+        String[] level = {};
+        DefaultMaps maps = new DefaultMaps();
+        int amountOfMaps = maps.getAmountOfMaps();
+        if(amountOfMaps >= 1){
+            level = maps.getMap(1);
+        }
+        
 
         map = new TileType[level.length][level[0].length()];
         enemies = new ArrayList<>();
