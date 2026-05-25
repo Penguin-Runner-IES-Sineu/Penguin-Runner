@@ -9,7 +9,7 @@ import javax.swing.SwingUtilities;
  *
  * @author loren
  */
-public class PenguinRuner {
+public class PenguinRunner {
 
     public static void main(String[] args) {
 
