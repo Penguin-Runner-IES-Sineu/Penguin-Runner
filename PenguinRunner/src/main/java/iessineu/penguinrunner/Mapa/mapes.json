@@ -1,0 +1,20 @@
+{
+    "type": "map",
+    "nivel": 1,
+    "vista": [
+        "####################",
+        "#n.pnnnnnnnngnnnnnnnn#",
+        "#n.......nnnn....nn#",
+        "#nnnnnn.nnEnnnnHnnn#",
+        "#nn.Gnn.n---nGnH.nn#",
+        "#.....n........H.nn#",
+        "#nnnnnn.nnnnnnnH.nn#",
+        "#nnEnnn.nnn....Hnnn#",
+        "#nnnnnn.nnnnngnH---#",
+        "#nn............Hnnn#",
+        "#nnnn---nnnn.nnHnnn#",
+        "#PnnnHnnnnnnnnnHnnn#",
+        "#..................#",
+        "####################"
+    ]
+}
