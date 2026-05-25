@@ -10,4 +10,5 @@
         <maven.compiler.release>24</maven.compiler.release>
         <exec.mainClass>iessineu.penguinrunner.PenguinRunner</exec.mainClass>
     </properties>
+    <name>PenguinRunner</name>
 </project>

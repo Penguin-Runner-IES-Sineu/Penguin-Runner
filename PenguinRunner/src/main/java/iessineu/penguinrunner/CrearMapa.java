@@ -4,13 +4,32 @@
  */
 package iessineu.penguinrunner;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author loren
  */
 public class CrearMapa {
 
-    String mapa[] = {
+    String[] mapa = {
+        "####################",
+        "#n.pnnnnnnnngnnnnnnnn#",
+        "#n.......nnnn....nn#",
+        "#nnnnnn.nnEnnnnHnnn#",
+        "#nn.Gnn.n---nGnH.nn#",
+        "#.....n........H.nn#",
+        "#nnnnnn.nnnnnnnH.nn#",
+        "#nnEnnn.nnn....Hnnn#",
+        "#nnnnnn.nnnnngnH---#",
+        "#nn............Hnnn#",
+        "#nnnn---nnnn.nnHnnn#",
+        "#PnnnHnnnnnnnnnHnnn#",
+        "#..................#",
+        "####################"
+    };
+    String mapa2[] = {
         "############################",
         "#..............................#",
         "#.............G................#",
@@ -20,5 +39,11 @@ public class CrearMapa {
         "#...........L..................#",
         "#..............................#",
         "############################"};
-    
+
+    List<String[]> mapes = new ArrayList<>();
+
+    public CrearMapa() {
+        mapes.add(mapa);
+        mapes.add(mapa2);
+    }
 }

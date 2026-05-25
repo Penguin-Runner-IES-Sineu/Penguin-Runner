@@ -51,7 +51,7 @@ public class GameState {
          */
         String[] level = {
             "####################",
-            "#pnnnnnnnngnnnnnnnn#",
+            "#nnnnnnnnngnnnnnnnn#",
             "#n.......nnnn....nn#",
             "#nnnnnn.nnEnnnnHnnn#",
             "#nn.Gnn.n---nGnH.nn#",
