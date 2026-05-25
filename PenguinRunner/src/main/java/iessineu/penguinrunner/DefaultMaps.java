@@ -15,7 +15,7 @@ public class DefaultMaps {
 
     private static String[] map1 = {
         "####################",
-        "#n.pnnnnnnnngnnnnnnnn#",
+        "#n.pnnnnnnnngnnnnnn#",
         "#n.......nnnn....nn#",
         "#nnnnnn.nnEnnnnHnnn#",
         "#nn.Gnn.n---nGnH.nn#",
@@ -30,7 +30,7 @@ public class DefaultMaps {
         "####################"
     };
     private static String map2[] = {
-        "############################",
+        "################################",
         "#..............................#",
         "#.............G................#",
         "#..............................#",

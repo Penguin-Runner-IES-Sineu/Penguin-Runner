@@ -53,7 +53,7 @@ public class GameState {
         DefaultMaps maps = new DefaultMaps();
         int amountOfMaps = maps.getAmountOfMaps();
         if(amountOfMaps >= 1){
-            level = maps.getMap(1);
+            level = maps.getMap(0);
         }
         
 
