@@ -81,6 +81,7 @@ public class GamePanel extends JPanel {
         Direction direction = null;
         if (gameState.shouldDrop()) {
             gameState.applyGravity();
+
             repaint();
             return;
         }
@@ -212,7 +213,9 @@ public class GamePanel extends JPanel {
      */
     private void drawEnemies(Graphics g) {
         for (Enemy enemy : gameState.getEnemies()) {
-            drawEmoji(g, "🦭", enemy.getRow(), enemy.getCol(), null, font);
+            if (!enemy.getIsDead()) {
+                drawEmoji(g, "🦭", enemy.getRow(), enemy.getCol(), null, font);
+            }
         }
     }
 

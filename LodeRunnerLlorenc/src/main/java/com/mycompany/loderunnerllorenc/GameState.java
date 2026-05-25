@@ -53,7 +53,7 @@ public class GameState {
             "####################",
             "#pnnnnnnnngnnnnnnnn#",
             "#n.......nnnn....nn#",
-            "#nnnnnn.nnEnnnnH.nn#",
+            "#nnnnnn.nnEnnnnHnnn#",
             "#nn.Gnn.n---nGnH.nn#",
             "#.....n........H.nn#",
             "#nnnnnn.nnnnnnnH.nn#",
@@ -121,7 +121,7 @@ public class GameState {
                  * La casella on hi havia E passa a ser terra.
                  */
                 if (symbol == 'E') {
-                    enemies.add(new Enemy(row, col));
+                    enemies.add(new Enemy(row, col, 1, 1));
                 }
             }
         }
@@ -141,12 +141,20 @@ public class GameState {
      * 3. Es comproven col·lisions.
      */
     public void takeTurn(Direction direction) {
-
+        
         movePlayer(direction);
         collectIcecream();
         moveEnemies();
         updateBrokenBlocks();
         checkCollisions();
+
+    }
+        public void takeTurn() {
+        collectIcecream();
+        moveEnemies();
+        updateBrokenBlocks();
+        checkCollisions();
+
     }
 
     /*
@@ -201,7 +209,7 @@ public class GameState {
             return;
         }
         if (map[row][col] == TileType.GEL) {
-            map[row][col] = TileType.RES;
+            map[row][col] = TileType.FOS;
             brokenBlocks.add(new BrokenBlock(row, col, 5));
         }
 
@@ -212,7 +220,17 @@ public class GameState {
      */
     private void moveEnemies() {
         for (Enemy enemy : enemies) {
-            moveEnemy(enemy);
+            
+            if(enemy.getIsDead()){
+                enemy.subtractTimeToRevive(1);
+                if(enemy.getTimeToRevive()<= 0){
+                   enemy.revive();
+                }
+            } else {
+                moveEnemy(enemy);
+            }
+            
+            
         }
     }
 
@@ -227,6 +245,13 @@ public class GameState {
         int col = enemy.getCol();
         int dr = 0;
         int dc = 0;
+        if (shouldDie(row,col) && !enemy.getIsDead()) {
+            enemy.die();
+            enemy.setTimeToRevive(7);
+            return;
+        }
+        if (shouldDrop(row,col)) {
+            enemy.setPosition(row+1, col);
         if (shouldDrop(row, col)) {
             enemy.setPosition(row + 1, col);
             return;
@@ -253,7 +278,7 @@ public class GameState {
      * Comprova si una posició és vàlida per moure's.
      */
     private boolean canMoveTo(int row, int col) {
-        return !isOutOfBounds(row, col) && !isWall(row, col) && !isGel(row, col);
+        return !isOutOfBounds(row, col) && !isWall(row, col) && !isGel(row, col)  ;
     }
 
     /*
@@ -293,6 +318,9 @@ public class GameState {
         return map[row][col] == type;
     }
 
+    private boolean isFos(int row, int col) {
+        return map[row][col] == TileType.FOS;
+    }
     private boolean isEnemy(int row, int col) {
         for (Enemy enemy : enemies) {
             if (enemy.getRow() == row && enemy.getCol() == col) {
@@ -304,8 +332,8 @@ public class GameState {
     }
 
     /*
-     * Si el jugador trepitja una casella amb or,
-     * la convertim en terra.
+     * Si el jugador trepitja una casella amb gelat,
+     * la convertim en res.
      */
     private void collectIcecream() {
         int row = player.getRow();
@@ -329,7 +357,7 @@ public class GameState {
         for (Enemy enemy : enemies) {
             if ((enemy.getRow() == player.getRow()
                     && enemy.getCol() == player.getCol()) || isGel(actualRow, actualCol)) {
-
+                
                 resetPositions();
             }
         }
@@ -343,7 +371,9 @@ public class GameState {
         player.setPosition(startPlayerRow, startPlayerCol);
 
         if (!enemies.isEmpty()) {
-            enemies.get(0).setPosition(4, 7);
+            for(Enemy enemy : enemies){
+                enemy.moveToOriginalRow();
+            }
         }
     }
 
@@ -418,7 +448,12 @@ public class GameState {
                 && !isPasarela(row, col)
                 && !isEscala(row, col)
                 && !isEscala(row + 1, col)
-                && !isEnemy(row + 1, col);
+                && !isEnemy(row + 1, col)
+                && isFos(row + 1, col)
+                && !isFos(row, col);
+    }
+    private boolean shouldDie(int row, int col) {
+        return isGel(row, col);
     }
 
     public void applyGravity() {
@@ -429,7 +464,8 @@ public class GameState {
         int nextCol = actualCol;
         if (canMoveTo(nextRow, nextCol)) {
             player.setPosition(nextRow, nextCol);
-
+            collectIcecream();
         }
+        
     }
 }

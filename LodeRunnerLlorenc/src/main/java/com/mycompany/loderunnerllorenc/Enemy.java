@@ -18,29 +18,60 @@ public class Enemy {
 
     private int row;
     private int col;
-    private int rowOriginal;
-    private int colOriginal;
+    private final int respawnRow;
+    private final int respawnCol;
+    private final int originalRow;
+    private final int originalCol;
+    
+    private boolean isDead = false;
+    private int timeToRevive = 0;
 
-    public Enemy(int row, int col) {
-        rowOriginal = this.row = row;
-        colOriginal = this.col = col;
+    public Enemy(int row, int col, int respawnRow, int respawnCol) {
+        originalRow = this.row = row;
+        originalCol = this.col = col;
+        this.respawnRow = respawnRow;
+        this.respawnCol = respawnCol;
     }
 
     public int getRow() {
         return row;
     }
-    public int getRowOriginal() {
-        return rowOriginal;
+    public int respawnRow() {
+        return respawnRow;
     }
     
+    public void moveToOriginalRow(){
+        row = originalRow;
+        col = originalCol;
+    }
 
     public int getCol() {
         return col;
     }
-    public int getColOriginal() {
-        return colOriginal;
+    public int getRespawnCol() {
+        return respawnCol;
     }
-
+    public boolean getIsDead(){
+        return isDead;
+    }
+    public void revive(){
+         isDead = false;
+         setPosition(respawnRow, respawnCol);
+    }
+    public void die(){
+         isDead = true;
+    }
+    
+    public void setTimeToRevive(int timeToRevive){
+        this.timeToRevive = timeToRevive;
+    }
+    public int getTimeToRevive(){
+        return timeToRevive;
+    }
+    public void subtractTimeToRevive(int timeLess){
+        this.timeToRevive -= timeLess;
+    }
+    
     public void setPosition(int row, int col) {
         this.row = row;
         this.col = col;
