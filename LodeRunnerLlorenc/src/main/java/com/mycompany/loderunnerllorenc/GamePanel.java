@@ -202,7 +202,9 @@ public class GamePanel extends JPanel {
      */
     private void drawEnemies(Graphics g) {
         for (Enemy enemy : gameState.getEnemies()) {
-            drawEmoji(g, "🦭", enemy.getRow(), enemy.getCol(), null);
+            if(!enemy.getIsDead()){
+                drawEmoji(g, "🦭", enemy.getRow(), enemy.getCol(), null);
+            }
         }
     }
 

@@ -134,8 +134,9 @@ public class GameState {
      * 3. Es comproven col·lisions.
      */
     public void takeTurn(Direction direction) {
-        collectIcecream();
+        
         movePlayer(direction);
+        collectIcecream();
         moveEnemies();
         updateBrokenBlocks();
         checkCollisions();
@@ -213,6 +214,12 @@ public class GameState {
     private void moveEnemies() {
         for (Enemy enemy : enemies) {
             moveEnemy(enemy);
+            if(enemy.getIsDead()){
+                enemy.subtractTimeToRevive(1);
+                if(enemy.getTimeToRevive()<= 0){
+                   enemy.revive();
+                }
+            }
             
         }
     }
@@ -228,8 +235,9 @@ public class GameState {
         int col =enemy.getCol();
         int dr = 0;
         int dc = 0;
-        if (shouldDie(row,col)) {
+        if (shouldDie(row,col) && !enemy.getIsDead()) {
             enemy.die();
+            enemy.setTimeToRevive(7);
             return;
         }
         if (shouldDrop(row,col)) {
@@ -323,7 +331,7 @@ public class GameState {
         for (Enemy enemy : enemies) {
             if ((enemy.getRow() == player.getRow()
                     && enemy.getCol() == player.getCol()) || isGel(actualRow, actualCol)) {
-
+                
                 resetPositions();
             }
         }
@@ -337,7 +345,9 @@ public class GameState {
         player.setPosition(startPlayerRow, startPlayerCol);
 
         if (!enemies.isEmpty()) {
-            enemies.get(0).setPosition(4, 7);
+            for(Enemy enemy : enemies){
+                enemy.moveToOriginalRow();
+            }
         }
     }
 
@@ -428,7 +438,8 @@ public class GameState {
         int nextCol = actualCol;
         if (canMoveTo(nextRow, nextCol)) {
             player.setPosition(nextRow, nextCol);
-
+            collectIcecream();
         }
+        
     }
 }

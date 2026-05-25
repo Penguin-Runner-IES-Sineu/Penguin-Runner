@@ -20,12 +20,15 @@ public class Enemy {
     private int col;
     private int respawnRow;
     private int respawnCol;
+    private int originalRow;
+    private int originalCol;
+    
     private boolean isDead = false;
     private int timeToRevive = 0;
 
     public Enemy(int row, int col, int respawnRow, int respawnCol) {
-        this.row = row;
-        this.col = col;
+        originalRow = this.row = row;
+        originalCol = this.col = col;
         this.respawnRow = respawnRow;
         this.respawnCol = respawnCol;
     }
@@ -37,6 +40,10 @@ public class Enemy {
         return respawnRow;
     }
     
+    public void moveToOriginalRow(){
+        row = originalRow;
+        col = originalCol;
+    }
 
     public int getCol() {
         return col;
@@ -49,6 +56,7 @@ public class Enemy {
     }
     public void revive(){
          isDead = false;
+         setPosition(respawnRow, respawnCol);
     }
     public void die(){
          isDead = true;
@@ -61,7 +69,7 @@ public class Enemy {
         return timeToRevive;
     }
     public void subtractTimeToRevive(int timeLess){
-        timeToRevive -= timeLess;
+        this.timeToRevive -= timeLess;
     }
     
     public void setPosition(int row, int col) {
