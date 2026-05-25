@@ -18,10 +18,10 @@ public class Enemy {
 
     private int row;
     private int col;
-    private int respawnRow;
-    private int respawnCol;
-    private int originalRow;
-    private int originalCol;
+    private final int respawnRow;
+    private final int respawnCol;
+    private final int originalRow;
+    private final int originalCol;
     
     private boolean isDead = false;
     private int timeToRevive = 0;

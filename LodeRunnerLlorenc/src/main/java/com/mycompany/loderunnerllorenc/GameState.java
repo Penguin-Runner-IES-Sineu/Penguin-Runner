@@ -213,13 +213,16 @@ public class GameState {
      */
     private void moveEnemies() {
         for (Enemy enemy : enemies) {
-            moveEnemy(enemy);
+            
             if(enemy.getIsDead()){
                 enemy.subtractTimeToRevive(1);
                 if(enemy.getTimeToRevive()<= 0){
                    enemy.revive();
                 }
+            } else {
+                moveEnemy(enemy);
             }
+            
             
         }
     }
@@ -266,7 +269,7 @@ public class GameState {
      * Comprova si una posició és vàlida per moure's.
      */
     private boolean canMoveTo(int row, int col) {
-        return !isOutOfBounds(row, col) && !isWall(row, col) && !isGel(row, col);
+        return !isOutOfBounds(row, col) && !isWall(row, col) && !isGel(row, col)  ;
     }
 
     /*

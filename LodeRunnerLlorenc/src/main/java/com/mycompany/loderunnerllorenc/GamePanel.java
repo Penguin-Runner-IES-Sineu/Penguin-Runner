@@ -69,6 +69,7 @@ public class GamePanel extends JPanel {
         Direction direction = null;
         if(gameState.shouldDrop()){
             gameState.applyGravity();
+
             repaint();
             return;
         }
