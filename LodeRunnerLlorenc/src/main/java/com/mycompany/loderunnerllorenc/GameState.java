@@ -141,6 +141,13 @@ public class GameState {
         checkCollisions();
 
     }
+        public void takeTurn() {
+        collectIcecream();
+        moveEnemies();
+        updateBrokenBlocks();
+        checkCollisions();
+
+    }
 
     /*
      * Mou el jugador una casella en la direcció indicada.

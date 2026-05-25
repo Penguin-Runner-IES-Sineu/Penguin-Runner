@@ -87,10 +87,12 @@ public class GamePanel extends JPanel {
             repaint();
         }
         if (e.getKeyCode() == KeyEvent.VK_Q) {
+            gameState.takeTurn();
             gameState.breakDownLeft();
             repaint();
         }
         if (e.getKeyCode() == KeyEvent.VK_E) {
+            gameState.takeTurn();
             gameState.breakDownRight();
             repaint();
         }
