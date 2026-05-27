@@ -39,7 +39,7 @@ public class GameState implements Serializable {
     private Map mapObject = null;
     private final Player player;
     private final List<Enemy> enemies;
-    private final int iceCream = 0;
+    private int iceCream = 0;
 
     /*
      * Guardem les posicions inicials per poder reiniciar
@@ -89,6 +89,7 @@ public class GameState implements Serializable {
                         break;
                     case 'G':
                         map[row][col] = TileType.ICECREAM;
+                        iceCream++;
                         break;
                     case '.':
                         map[row][col] = TileType.ICE;

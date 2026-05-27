@@ -29,7 +29,6 @@ public class Player implements Serializable{
     public Player(int row, int col) {
         this.row = row;
         this.col = col;
-        
     }
     
     public void addIceCream(){
