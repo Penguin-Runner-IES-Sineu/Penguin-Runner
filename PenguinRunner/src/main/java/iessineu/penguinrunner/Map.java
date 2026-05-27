@@ -11,7 +11,7 @@ package iessineu.penguinrunner;
 public class Map {
 
     private int level;
-    private String[] map;
+    private final String[] map;
 
     public Map(int level, String[] map) {
         this.level = level;

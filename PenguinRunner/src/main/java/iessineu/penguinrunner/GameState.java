@@ -8,12 +8,12 @@ package iessineu.penguinrunner;
  *
  * @author loren
  */
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -455,9 +455,15 @@ public class GameState {
     public List<Map> llegirMapes() {
         String jsonString = "";
         try {
-            Scanner s = new Scanner(new File("resources/maps.json"));
-            while (s.hasNext()) {
-                jsonString += s.next();
+            BufferedReader fitxer = new BufferedReader(new FileReader("resources/maps.json"));
+            try {
+                String c;
+                while ((c = fitxer.readLine()) != null) { //llegim linea, si no es null, imprimim la linea sencera
+                    jsonString += c;
+                }
+                fitxer.close();
+            } catch (IOException ex) {
+                System.out.println("Problema d'entrada i sortida");
             }
         } catch (FileNotFoundException ex) {
             System.out.println("L'arxiu de mapes no s'ha trobat!");

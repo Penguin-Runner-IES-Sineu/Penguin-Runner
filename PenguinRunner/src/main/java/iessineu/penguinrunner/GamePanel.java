@@ -16,7 +16,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
-
 import javax.swing.JPanel;
 
 /**
@@ -49,11 +48,12 @@ public class GamePanel extends JPanel {
 
     public GamePanel() {
 
-        font = new Font("Segoe UI Emoji", Font.PLAIN, 30);
+        font = new Font("Segoe UI Emoji", Font.PLAIN, 30); // per defecte s'empra aquesta, i després llegim l'arxiu 
 
         try {
             font = Font.createFont(Font.TRUETYPE_FONT, new File("resources/font.ttf")).deriveFont(30f);
         } catch (FontFormatException | IOException ex) {
+            System.out.println("Error obrint la font!");
             System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
         gameState = new GameState();
