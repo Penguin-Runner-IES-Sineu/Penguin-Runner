@@ -22,18 +22,28 @@ public class Player {
 
     private int row;
     private int col;
+    private int iceCream = 0;
 
     public Player(int row, int col) {
         this.row = row;
         this.col = col;
+        
     }
-
+    
+    public void addIceCream(){
+        this.iceCream++;
+    }
+    
     public int getRow() {
         return row;
     }
 
     public int getCol() {
         return col;
+    }
+    
+    public int geticeCream(){
+        return iceCream;
     }
 
     public void setPosition(int row, int col) {

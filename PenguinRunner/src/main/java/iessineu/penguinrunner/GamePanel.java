@@ -187,6 +187,9 @@ public class GamePanel extends JPanel {
         drawEmoji(g, "—", row, col, new Color(134, 0, 179), font);
     }
 
+    private void drawDoor(Graphics g, int row, int col) {
+        drawEmoji(g, "🚪", row, col, new Color(128, 64, 0), font);
+    }
 
     /*
      * Dibuixa el fons d'una casella i la quadrícula.
@@ -221,6 +224,31 @@ public class GamePanel extends JPanel {
                 drawEmoji(g, "🦭", enemy.getRow(), enemy.getCol(), null, font);
             }
         }
+    }
+
+    /*
+     * Dibuixa una porta
+     */
+    private void drawDoor(Graphics g) {
+        if (checkObjective()) {
+            // drawEmoji(g, "🚪", player.getRow(), player.getCol() + 2,  null, font);
+            drawEmoji(g, "🚪", 35, 35, null, font);
+        }
+    }
+
+    /*
+     * Comprova que el jugador hi ha completat l'objectiu per a dibuixar la porta 
+     */
+    private boolean checkObjective() {
+        Player player = gameState.getPlayer();
+        int iceCream = player.geticeCream();
+        int row = player.getRow() + 2;
+        int col = player.getCol();
+
+        if (iceCream >= 4) {
+            return true;
+        }
+        return false;
     }
 
     /*
