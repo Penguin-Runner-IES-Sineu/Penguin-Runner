@@ -14,7 +14,8 @@ initSqlJs(config).then(function (SQL) {
         const db = new SQL.Database(uInt8Array);
         contents = db.exec("SELECT * FROM main");
         // contents = db.exec("SELECT * FROM carmodels ");
-        const taula = document.querySelector('#taula');
+        var taula = document.createElement("taula");
+        document.body.appendChild(taula)
         var tbody = document.createElement("tbody");
         taula.appendChild(tbody);
         var headerRow = document.createElement("tr");
