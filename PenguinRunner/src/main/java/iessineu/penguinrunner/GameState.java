@@ -14,6 +14,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -54,9 +55,11 @@ public class GameState {
          * G = or
          * P = jugador
          * E = enemic
+         * D = porta
          */
         List<Map> mapList = llegirMapes();
         String[] level = mapList.get(0).getMap();
+        int icecream = 0;
 
         map = new TileType[level.length][level[0].length()];
         enemies = new ArrayList<>();
@@ -83,6 +86,7 @@ public class GameState {
                         break;
                     case 'G':
                         map[row][col] = TileType.ICECREAM;
+                        icecream++;
                         break;
                     case '.':
                         map[row][col] = TileType.ICE;
@@ -93,6 +97,8 @@ public class GameState {
                     case '-':
                         map[row][col] = TileType.RAIL;
                         break;
+                    case 'D':
+                        map[row][col] = TileType.DOOR;
                     default:
                         map[row][col] = TileType.BLANK;
                         break;
@@ -327,6 +333,8 @@ public class GameState {
 
         if (map[row][col] == TileType.ICECREAM) {
             map[row][col] = TileType.BLANK;
+            player.addIceCream();
+            System.out.println("Gelat: " + player.geticeCream());
         }
     }
 

@@ -19,5 +19,6 @@ public enum TileType {
     STAIR,
     RAIL,
     MOLTEN,
+    DOOR,
     BLANK
 }
