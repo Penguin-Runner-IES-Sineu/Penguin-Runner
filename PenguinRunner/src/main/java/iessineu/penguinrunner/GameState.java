@@ -84,45 +84,33 @@ public class GameState implements Serializable {
                 char symbol = level[row].charAt(col);
 
                 switch (symbol) {
-                    case '#':
+                    case '#' ->
                         map[row][col] = TileType.WALL;
-                        break;
-                    case 'G':
+                    case 'G' -> {
                         map[row][col] = TileType.ICECREAM;
                         iceCream++;
-                        break;
-                    case '.':
+                    }
+                    case '.' ->
                         map[row][col] = TileType.ICE;
-                        break;
-                    case 'H':
+                    case 'H' ->
                         map[row][col] = TileType.STAIR;
-                        break;
-                    case '-':
+                    case '-' ->
                         map[row][col] = TileType.RAIL;
-                        break;
-                    case 'D':
+                    case 'D' ->
                         map[row][col] = TileType.DOOR;
-                    default:
+                    case 'P' -> {
+                        //         Si trobem el jugador, el creem.
+                        //         La casella on hi havia P passa a ser terra.
+                        foundPlayer = new Player(row, col);
+                        tempStartRow = row;
+                        tempStartCol = col;
+                    }
+                    case 'E' ->
+                        // Si trobem un enemic, l'afegim a la llista.
+                        // La casella on hi havia E passa a ser terra.
+                        enemies.add(new Enemy(row, col, 1, 1));
+                    default ->
                         map[row][col] = TileType.BLANK;
-                        break;
-                }
-
-                /*
-                 * Si trobem el jugador, el creem.
-                 * La casella on hi havia P passa a ser terra.
-                 */
-                if (symbol == 'P') {
-                    foundPlayer = new Player(row, col);
-                    tempStartRow = row;
-                    tempStartCol = col;
-                }
-
-                /*
-                 * Si trobem un enemic, l'afegim a la llista.
-                 * La casella on hi havia E passa a ser terra.
-                 */
-                if (symbol == 'E') {
-                    enemies.add(new Enemy(row, col, 1, 1));
                 }
             }
         }

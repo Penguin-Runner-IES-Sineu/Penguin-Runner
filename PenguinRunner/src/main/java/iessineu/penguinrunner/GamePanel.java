@@ -65,8 +65,6 @@ public class GamePanel extends JPanel {
             System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
         gameState = new GameState();
-        this.carregarPartida();
-        // String nomArxiu = JOptionPane.showInputDialog("Introdueixi el nom de la partida (sense extensió) o deixi buit per una nova partida");
 
         int width = gameState.getCols() * TILE_SIZE;
         int height = gameState.getRows() * TILE_SIZE;
@@ -91,12 +89,7 @@ public class GamePanel extends JPanel {
      */
     private void handleInput(KeyEvent e) {
         Direction direction = null;
-        if (gameState.shouldDrop()) {
-            gameState.applyGravity();
 
-            repaint();
-            return;
-        }
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP ->
                 direction = Direction.UP;
@@ -112,10 +105,24 @@ public class GamePanel extends JPanel {
                 gameState.breakDownRight();
             case KeyEvent.VK_P ->
                 this.guardarPartida();
+            case KeyEvent.VK_O ->
+                this.carregarPartida();
         }
-
         if (direction != null) {
             gameState.takeTurn(direction);
+        }
+
+        long current = System.currentTimeMillis();
+        while (gameState.shouldDrop()) { //ha de ser un IF
+            repaint();
+            if (System.currentTimeMillis() - current < 500) {
+                gameState.takeTurn(Direction.DOWN);
+                current = System.currentTimeMillis();
+                repaint();
+            } else {
+                gameState.takeTurn();
+                repaint();
+            }
         }
         repaint();
     }
@@ -190,15 +197,17 @@ public class GamePanel extends JPanel {
                 if (null != tile) {
                     switch (tile) {
                         case WALL ->
-                            drawParet(g, row, col);
+                            drawWall(g, row, col);
                         case ICE ->
-                            drawGel(g, row, col);
+                            drawIce(g, row, col);
                         case ICECREAM ->
-                            drawGelat(g, row, col);
+                            drawIceCream(g, row, col);
                         case STAIR ->
-                            drawEscala(g, row, col);
+                            drawStair(g, row, col);
                         case RAIL ->
-                            drawPasarela(g, row, col);
+                            drawRail(g, row, col);
+                        case DOOR ->
+                            drawDoor(g, row, col);
                         default -> {
                         }
                     }
@@ -210,7 +219,7 @@ public class GamePanel extends JPanel {
     /*
      * Dibuixa una paret.
      */
-    private void drawParet(Graphics g, int row, int col) {
+    private void drawWall(Graphics g, int row, int col) {
         drawCellBackground(g, row, col, new Color(70, 70, 80));
         drawEmoji(g, "🧱", row, col, null, font);
     }
@@ -218,7 +227,7 @@ public class GamePanel extends JPanel {
     /*
      * Dibuixa una casella de gel.
      */
-    private void drawGel(Graphics g, int row, int col) {
+    private void drawIce(Graphics g, int row, int col) {
         drawCellBackground(g, row, col, new Color(170, 225, 255));
         drawEmoji(g, "🧱", row, col, null, font);
     }
@@ -226,26 +235,28 @@ public class GamePanel extends JPanel {
     /*
      * Dibuixa una casella amb gelat.
      */
-    private void drawGelat(Graphics g, int row, int col) {
+    private void drawIceCream(Graphics g, int row, int col) {
         drawEmoji(g, "🍦", row, col, new Color(255, 255, 153), font);
     }
 
     /*
      * Dibuixa una casella amb escala.
      */
-    private void drawEscala(Graphics g, int row, int col) {
+    private void drawStair(Graphics g, int row, int col) {
         drawEmoji(g, "🪜", row, col, new Color(128, 64, 0), font);
     }
 
     /*
      * Dibuixa una casella amb pasarela.
      */
-    private void drawPasarela(Graphics g, int row, int col) {
+    private void drawRail(Graphics g, int row, int col) {
         drawEmoji(g, "—", row, col, new Color(134, 0, 179), font);
     }
 
     private void drawDoor(Graphics g, int row, int col) {
-        drawEmoji(g, "🚪", row, col, new Color(128, 64, 0), font);
+        if (checkObjective()) {
+            drawEmoji(g, "🚪", row, col, new Color(128, 64, 0), font);
+        }
     }
 
     /*
@@ -283,15 +294,6 @@ public class GamePanel extends JPanel {
         }
     }
 
-    /*
-     * Dibuixa una porta
-     */
-    private void drawDoor(Graphics g) {
-        if (checkObjective()) {
-            // drawEmoji(g, "🚪", player.getRow(), player.getCol() + 2,  null, font);
-            drawEmoji(g, "🚪", 35, 35, null, font);
-        }
-    }
 
     /*
      * Comprova que el jugador hi ha completat l'objectiu per a dibuixar la porta 
@@ -299,13 +301,8 @@ public class GamePanel extends JPanel {
     private boolean checkObjective() {
         Player player = gameState.getPlayer();
         int iceCream = player.geticeCream();
-        int row = player.getRow() + 2;
-        int col = player.getCol();
-
-        if (iceCream >= 4) {
-            return true;
-        }
-        return false;
+        // return true;
+        return iceCream >= 1;
     }
 
     /*
