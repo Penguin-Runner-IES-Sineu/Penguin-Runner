@@ -15,7 +15,13 @@ import java.awt.RenderingHints;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -44,7 +50,7 @@ public class GamePanel extends JPanel {
     private Font font;
 
     // Estat del joc.
-    private final GameState gameState;
+    private GameState gameState;
 
     public GamePanel() {
 
@@ -57,6 +63,7 @@ public class GamePanel extends JPanel {
             System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
         gameState = new GameState();
+        this.carregarPartida();
 
         int width = gameState.getCols() * TILE_SIZE;
         int height = gameState.getRows() * TILE_SIZE;
@@ -100,12 +107,45 @@ public class GamePanel extends JPanel {
                 gameState.breakDownLeft();
             case KeyEvent.VK_E ->
                 gameState.breakDownRight();
+            case KeyEvent.VK_P ->
+                this.guardarPartida();
         }
 
         if (direction != null) {
             gameState.takeTurn(direction);
         }
         repaint();
+    }
+
+    public void guardarPartida() {
+        String nomArxiu = JOptionPane.showInputDialog("Introdueixi el nom de la partida (sense extensió)");
+        GameState estat = this.gameState;
+        ObjectOutputStream file;
+        try {
+            file = new ObjectOutputStream(new FileOutputStream(nomArxiu + ".milm"));
+            file.writeObject((Object) estat);
+            File f = new File(nomArxiu);
+            System.out.println("Guardat a " + f.getAbsolutePath() + ".milm");
+        } catch (IOException ex) {
+            System.out.println("Problema al guardar");
+            System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+
+    }
+
+    public void carregarPartida() {
+        String nomArxiu = JOptionPane.showInputDialog("Introdueixi el nom de la partida (sense extensió) o deixi buit per una nova partida");
+        if (nomArxiu.length() > 0) {
+            try {
+                ObjectInputStream file = new ObjectInputStream(new FileInputStream(nomArxiu + ".milm"));
+                this.gameState = (GameState) file.readObject();
+            } catch (IOException ex) {
+                System.out.println("Problema al carregar!");
+            } catch (ClassNotFoundException ex) {
+                System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+        }
+
     }
 
     /*

@@ -4,11 +4,13 @@
  */
 package iessineu.penguinrunner;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Marc Mas
  */
-public class Map {
+public class Map implements Serializable {
 
     private int level;
     private final String[] map;

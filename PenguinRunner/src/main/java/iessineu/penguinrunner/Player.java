@@ -4,6 +4,8 @@
  */
 package iessineu.penguinrunner;
 
+import java.io.Serializable;
+
 /**
  *
  * @author loren
@@ -18,7 +20,7 @@ package iessineu.penguinrunner;
  *
  * No guardem x/y en píxels perquè això és només per dibuixar.
  */
-public class Player {
+public class Player implements Serializable{
 
     private int row;
     private int col;

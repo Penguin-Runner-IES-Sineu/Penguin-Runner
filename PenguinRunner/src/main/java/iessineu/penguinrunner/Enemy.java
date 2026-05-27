@@ -4,6 +4,8 @@
  */
 package iessineu.penguinrunner;
 
+import java.io.Serializable;
+
 /**
  *
  * @author loren
@@ -14,7 +16,7 @@ package iessineu.penguinrunner;
  *
  * Igual que el jugador, l'enemic es mou per caselles.
  */
-public class Enemy {
+public class Enemy implements Serializable{
 
     private int row;
     private int col;

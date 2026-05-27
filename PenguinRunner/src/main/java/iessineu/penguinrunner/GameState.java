@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,12 +32,14 @@ import org.json.JSONObject;
  *
  * Aquesta classe NO dibuixa res.
  */
-public class GameState {
+public class GameState implements Serializable {
 
     private final List<BrokenBlock> brokenBlocks = new ArrayList<>();
     private final TileType[][] map;
+    private Map mapObject = null;
     private final Player player;
     private final List<Enemy> enemies;
+    private final int iceCream = 0;
 
     /*
      * Guardem les posicions inicials per poder reiniciar
@@ -58,11 +61,11 @@ public class GameState {
          * D = porta
          */
         List<Map> mapList = llegirMapes();
-        String[] level = mapList.get(0).getMap();
-        int icecream = 0;
+        this.mapObject = mapList.get(0);
+        String[] level = mapObject.getMap();
 
         map = new TileType[level.length][level[0].length()];
-        enemies = new ArrayList<>();
+        enemies = new ArrayList();
 
         Player foundPlayer = null;
 
@@ -86,7 +89,6 @@ public class GameState {
                         break;
                     case 'G':
                         map[row][col] = TileType.ICECREAM;
-                        icecream++;
                         break;
                     case '.':
                         map[row][col] = TileType.ICE;
@@ -390,7 +392,15 @@ public class GameState {
         return enemies;
     }
 
-    private static class BrokenBlock {
+    public TileType[][] getMap() {
+        return map;
+    }
+
+    public int getLevel() {
+        return mapObject.getLevel();
+    }
+
+    private static class BrokenBlock implements Serializable {
 
         int row;
         int col;

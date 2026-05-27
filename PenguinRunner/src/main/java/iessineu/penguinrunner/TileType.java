@@ -4,6 +4,8 @@
  */
 package iessineu.penguinrunner;
 
+import java.io.Serializable;
+
 /**
  *
  * @author loren
@@ -12,7 +14,7 @@ package iessineu.penguinrunner;
 /*
  * Tipus de caselles que pot tenir el mapa.
  */
-public enum TileType {
+public enum TileType implements Serializable {
     ICE,
     WALL,
     ICECREAM,
