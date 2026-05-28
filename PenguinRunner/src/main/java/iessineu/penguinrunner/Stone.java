@@ -4,40 +4,48 @@
  */
 package iessineu.penguinrunner;
 
+import java.io.Serializable;
+
 /**
  *
  * @author loren
  */
-public class Stone {
+public class Stone implements Serializable {
+
     private int row;
     private int col;
     private final int originalRow;
     private final int originalCol;
-    public Stone(int row, int col){
+
+    public Stone(int row, int col) {
         originalRow = this.row = row;
         originalCol = this.col = col;
     }
-    
-    public void setPosition(int row, int col){
+
+    public void setPosition(int row, int col) {
         this.row = row;
         this.col = col;
     }
-    
-    public final int getRow(){
+
+    public final int getRow() {
         return row;
     }
-    public final int getCol(){
+
+    public final int getCol() {
         return col;
     }
-    public final int getOriginalRow(){
+
+    public final int getOriginalRow() {
         return originalRow;
     }
-    public final int getOriginalCol(){
+
+    public final int getOriginalCol() {
         return originalCol;
     }
-    public void moveToOriginalRow(){
+
+    public void moveToOriginalRow() {
         row = originalRow;
         col = originalCol;
     }
-    
+
 }

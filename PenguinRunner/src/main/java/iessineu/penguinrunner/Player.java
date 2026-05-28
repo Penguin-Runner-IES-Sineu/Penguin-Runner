@@ -20,8 +20,9 @@ import java.io.Serializable;
  *
  * No guardem x/y en píxels perquè això és només per dibuixar.
  */
-public class Player implements Serializable{
+public class Player implements Serializable {
 
+    private String avatar = "🐧";
     private int row;
     private int col;
     private int iceCream = 0;
@@ -30,11 +31,11 @@ public class Player implements Serializable{
         this.row = row;
         this.col = col;
     }
-    
-    public void addIceCream(){
+
+    public void addIceCream() {
         this.iceCream++;
     }
-    
+
     public int getRow() {
         return row;
     }
@@ -42,13 +43,21 @@ public class Player implements Serializable{
     public int getCol() {
         return col;
     }
-    
-    public int geticeCream(){
+
+    public int geticeCream() {
         return iceCream;
+    }
+
+    public String getAvatar() {
+        return avatar;
     }
 
     public void setPosition(int row, int col) {
         this.row = row;
         this.col = col;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

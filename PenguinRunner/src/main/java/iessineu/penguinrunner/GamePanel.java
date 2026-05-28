@@ -288,7 +288,7 @@ public class GamePanel extends JPanel {
     private void drawPlayer(Graphics g) {
         Player player = gameState.getPlayer();
 
-        drawEmoji(g, "🐧", player.getRow(), player.getCol(), new Color(0, 136, 204), font);
+        drawEmoji(g, player.getAvatar(), player.getRow(), player.getCol(), new Color(0, 136, 204), font);
     }
 
     /*

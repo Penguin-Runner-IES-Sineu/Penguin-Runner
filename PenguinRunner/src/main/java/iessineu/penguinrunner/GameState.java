@@ -51,8 +51,6 @@ public class GameState implements Serializable {
     private int startPlayerRow;
     private int startPlayerCol;
 
-    public GameState() {}
-
     /*
      * Cada vegada que el jugador prem una fletxa:
      * 1. Es mou el jugador.
