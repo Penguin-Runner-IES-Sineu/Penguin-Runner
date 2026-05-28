@@ -35,6 +35,7 @@ import org.json.JSONObject;
 public class GameState implements Serializable {
 
     private final List<BrokenBlock> brokenBlocks = new ArrayList<>();
+    private final List<Stone> stoneBlocks = new ArrayList<>();
     private final TileType[][] map;
     private Map mapObject = null;
     private final Player player;
@@ -109,6 +110,11 @@ public class GameState implements Serializable {
                         // Si trobem un enemic, l'afegim a la llista.
                         // La casella on hi havia E passa a ser terra.
                         enemies.add(new Enemy(row, col, 1, 1));
+                    case 'S' -> {
+                        stoneBlocks.add(new Stone(row, col));
+                        map[row][col] = TileType.STONE;
+                        break;
+                    }
                     default ->
                         map[row][col] = TileType.BLANK;
                 }
@@ -122,8 +128,6 @@ public class GameState implements Serializable {
     }
 
     /*
-     * Aquest és el mètode principal de la lògica per torns.
-     *
      * Cada vegada que el jugador prem una fletxa:
      * 1. Es mou el jugador.
      * 2. Es mouen els enemics.
@@ -133,17 +137,18 @@ public class GameState implements Serializable {
         if (direction != null) {
             movePlayer(direction);
         }
+        moveBlocks();
         collectIcecream();
         moveEnemies();
         updateBrokenBlocks();
         checkCollisions();
 
+
     }
-
-
     /*
      * Mou el jugador una casella en la direcció indicada.
      */
+
     private void movePlayer(Direction direction) {
         int actualRow = player.getRow();
         int actualCol = player.getCol();
@@ -171,9 +176,58 @@ public class GameState implements Serializable {
             return;
         }
 
+        if (isStone(nextRow, nextCol)) {
+            boolean stoneMoved = tryPushStone(actualRow, actualCol, direction);
+
+            if (!stoneMoved) {
+                return;
+            }
+        }
         // Per a la resta de direccions, aplica les regles normals
         if (canMoveTo(nextRow, nextCol)) {
             player.setPosition(nextRow, nextCol);
+        }
+
+    }
+
+    private boolean tryPushStone(int row, int playerCol, Direction direction) {
+        int dc = direction.getDc();
+
+        if (dc == 0) {
+            return false;
+        }
+
+        int firstStoneCol = playerCol + dc;
+        int checkCol = firstStoneCol;
+
+        while (!isOutOfBounds(row, checkCol) && isStone(row, checkCol)) {
+            checkCol += dc;
+        }
+
+        if (isOutOfBounds(row, checkCol) || !isBlank(row, checkCol)) {
+            return false;
+        }
+
+        int col = checkCol - dc;
+
+        while (col != playerCol) {
+            map[row][col + dc] = TileType.STONE;
+            map[row][col] = TileType.BLANK;
+
+            updateStoneObject(row, col, col + dc);
+
+            col -= dc;
+        }
+
+        return true;
+    }
+
+    private void updateStoneObject(int row, int oldCol, int newCol) {
+        for (Stone stone : stoneBlocks) {
+            if (stone.getRow() == row && stone.getCol() == oldCol) {
+                stone.setPosition(row, newCol);
+                return;
+            }
         }
     }
 
@@ -221,6 +275,23 @@ public class GameState implements Serializable {
     }
 
     /*
+    * Comprova si la pedra ha de caure
+     */
+    private void moveBlocks() {
+        for (Stone s : stoneBlocks) {
+            int row = s.getRow();
+            int col = s.getCol();
+
+            if (!isOutOfBounds(row + 1, col) && map[row + 1][col] == TileType.BLANK) {
+                map[row][col] = TileType.BLANK;
+                map[row + 1][col] = TileType.STONE;
+
+                s.setPosition(row + 1, col);
+            }
+        }
+    }
+
+    /*
      * Mou un enemic cap al jugador de manera molt senzilla.
      *
      * Primer intenta acostar-se en vertical.
@@ -262,7 +333,10 @@ public class GameState implements Serializable {
      * Comprova si una posició és vàlida per moure's.
      */
     private boolean canMoveTo(int row, int col) {
-        return !isOutOfBounds(row, col) && !isWall(row, col) && !isIce(row, col);
+        return !isOutOfBounds(row, col)
+                && !isWall(row, col)
+                && !isIce(row, col)
+                && !isStone(row, col);
     }
 
     /*
@@ -296,6 +370,14 @@ public class GameState implements Serializable {
 
     private boolean isFos(int row, int col) {
         return map[row][col] == TileType.MOLTEN;
+    }
+
+    private boolean isBlank(int row, int col) {
+        return map[row][col] == TileType.BLANK;
+    }
+
+    private boolean isStone(int row, int col) {
+        return map[row][col] == TileType.STONE;
     }
 
     private boolean isEnemy(int row, int col) {
@@ -344,7 +426,13 @@ public class GameState implements Serializable {
      */
     private void resetPositions() {
         player.setPosition(startPlayerRow, startPlayerCol);
-
+        if (!stoneBlocks.isEmpty()) {
+            for (Stone s : stoneBlocks) {
+                map[s.getRow()][s.getCol()] = TileType.BLANK;
+                s.moveToOriginalRow();
+                map[s.getRow()][s.getCol()] = TileType.STONE;
+            }
+        }
         if (!enemies.isEmpty()) {
             for (Enemy enemy : enemies) {
                 enemy.moveToOriginalRow();
@@ -421,8 +509,9 @@ public class GameState implements Serializable {
         boolean hiHaEscalaDavall = isStair(actualRow + 1, actualCol);
         boolean hiHaParetDavall = isWall(actualRow + 1, actualCol);
         boolean hiHaEnemicDavall = isEnemy(actualRow + 1, actualCol);
+        boolean hiHaPedraDavall = isStone(actualRow + 1, actualCol);
 
-        return !hiHaGelDavall && !estaDamuntPasarela && !estaEnLaEscala && !hiHaEscalaDavall && !hiHaParetDavall && !hiHaEnemicDavall;
+        return !hiHaGelDavall && !estaDamuntPasarela && !estaEnLaEscala && !hiHaEscalaDavall && !hiHaParetDavall && !hiHaEnemicDavall && !hiHaPedraDavall;
     }
 
     private boolean shouldDrop(int row, int col) {
@@ -433,7 +522,8 @@ public class GameState implements Serializable {
                 && !isStair(row + 1, col)
                 && !isEnemy(row + 1, col)
                 && isFos(row + 1, col)
-                && !isFos(row, col);
+                && !isFos(row, col)
+                && !isStone(row, col);
     }
 
     private boolean shouldDie(int row, int col) {

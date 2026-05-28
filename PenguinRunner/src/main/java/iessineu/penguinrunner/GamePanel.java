@@ -214,6 +214,8 @@ public class GamePanel extends JPanel {
                             drawRail(g, row, col);
                         case DOOR ->
                             drawDoor(g, row, col);
+                        case STONE ->
+                            drawStone(g, row, col);
                         default -> {
                         }
                     }
@@ -227,6 +229,10 @@ public class GamePanel extends JPanel {
      */
     private void drawWall(Graphics g, int row, int col) {
         drawCellBackground(g, row, col, new Color(70, 70, 80));
+        drawEmoji(g, "🧱", row, col, null, font);
+    }
+    private void drawStone(Graphics g, int row, int col) {
+        drawCellBackground(g, row, col, new Color(20, 20, 20));
         drawEmoji(g, "🧱", row, col, null, font);
     }
 
