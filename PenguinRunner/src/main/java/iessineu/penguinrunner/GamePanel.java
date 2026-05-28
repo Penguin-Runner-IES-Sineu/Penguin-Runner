@@ -180,7 +180,7 @@ public class GamePanel extends JPanel {
     protected void paintComponent(Graphics g
     ) {
         super.paintComponent(g);
-        
+
         drawMap(g);
         drawEnemies(g);
         drawPlayer(g);
@@ -290,7 +290,7 @@ public class GamePanel extends JPanel {
     private void drawPlayer(Graphics g) {
         Player player = gameState.getPlayer();
 
-        drawEmoji(g, player.getAvatar(), player.getRow(), player.getCol(), new Color(0, 136, 204), font);
+        drawEmoji(g, player.getAvatar(), player.getRow(), player.getCol(), player.getColor(), font);
     }
 
     /*
@@ -299,7 +299,7 @@ public class GamePanel extends JPanel {
     private void drawEnemies(Graphics g) {
         for (Enemy enemy : gameState.getEnemies()) {
             if (!enemy.getIsDead()) {
-                drawEmoji(g, "🦭", enemy.getRow(), enemy.getCol(), null, font);
+                drawEmoji(g, enemy.getAvatar(), enemy.getRow(), enemy.getCol(), enemy.getColor(), font);
             }
         }
     }
@@ -307,7 +307,7 @@ public class GamePanel extends JPanel {
     //Dibuixa el HUD
     private void drawHUD(Graphics g) {
         // int alt = gameState.getCols() -3 ;
-        int amp = 0 ;
+        int amp = 0;
         int alt = gameState.getRows();
         Player player = gameState.getPlayer();
         int iceCream = player.geticeCream();

@@ -4,6 +4,7 @@
  */
 package iessineu.penguinrunner;
 
+import java.awt.Color;
 import java.io.Serializable;
 
 /**
@@ -16,15 +17,17 @@ import java.io.Serializable;
  *
  * Igual que el jugador, l'enemic es mou per caselles.
  */
-public class Enemy implements Serializable{
+public class Enemy implements Serializable {
 
+    private String avatar = "🦭";
     private int row;
     private int col;
     private final int respawnRow;
     private final int respawnCol;
     private final int originalRow;
     private final int originalCol;
-    
+    private Color color = null;
+
     private boolean isDead = false;
     private int timeToRevive = 0;
 
@@ -38,11 +41,12 @@ public class Enemy implements Serializable{
     public int getRow() {
         return row;
     }
+
     public int respawnRow() {
         return respawnRow;
     }
-    
-    public void moveToOriginalRow(){
+
+    public void moveToOriginalRow() {
         row = originalRow;
         col = originalCol;
     }
@@ -50,32 +54,54 @@ public class Enemy implements Serializable{
     public int getCol() {
         return col;
     }
+
     public int getRespawnCol() {
         return respawnCol;
     }
-    public boolean getIsDead(){
+
+    public boolean getIsDead() {
         return isDead;
     }
-    public void revive(){
-         isDead = false;
-         setPosition(respawnRow, respawnCol);
+
+    public void revive() {
+        isDead = false;
+        setPosition(respawnRow, respawnCol);
     }
-    public void die(){
-         isDead = true;
+
+    public void die() {
+        isDead = true;
     }
-    
-    public void setTimeToRevive(int timeToRevive){
+
+    public void setTimeToRevive(int timeToRevive) {
         this.timeToRevive = timeToRevive;
     }
-    public int getTimeToRevive(){
+
+    public int getTimeToRevive() {
         return timeToRevive;
     }
-    public void subtractTimeToRevive(int timeLess){
+
+    public void subtractTimeToRevive(int timeLess) {
         this.timeToRevive -= timeLess;
     }
-    
+
     public void setPosition(int row, int col) {
         this.row = row;
         this.col = col;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 }
