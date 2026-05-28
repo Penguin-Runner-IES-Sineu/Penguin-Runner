@@ -292,6 +292,8 @@ public class GamePanel extends JPanel {
 
         drawEmoji(g, player.getAvatar(), player.getRow(), player.getCol(), new Color(0, 136, 204), font);
     }
+    
+    
 
     /*
      * Dibuixa tots els enemics.
@@ -311,10 +313,12 @@ public class GamePanel extends JPanel {
         int alt = gameState.getRows();
         Player player = gameState.getPlayer();
         int iceCream = player.geticeCream();
-        drawEmoji(g, player.getAvatar(), alt, amp, new Color(0, 136, 204), font);
-        System.out.println(iceCream + " / " + "" + gameState.getIceCream());
-        System.out.println(amp);
-        System.out.println(alt);
+        drawEmoji(g, player.getAvatar(), alt, amp + 1, new Color(0, 136, 204), font);
+        drawEmoji(g, "🍦" , alt, amp + 5, new Color(255, 255, 153), font);
+        drawEmoji(g, "" + iceCream , alt, amp + 6, new Color(255, 255, 153), font);
+        drawEmoji(g, " / ", alt, amp + 7, new Color(255, 255, 153), font);
+        drawEmoji(g, "" + gameState.getIceCream(), alt, amp + 8, new Color(255, 255, 153), font);
+        
     }
 
     /*
