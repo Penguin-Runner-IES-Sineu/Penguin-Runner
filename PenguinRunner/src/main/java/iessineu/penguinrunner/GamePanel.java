@@ -4,6 +4,10 @@
  */
 package iessineu.penguinrunner;
 
+import iessineu.penguinrunner.Movement.Direction;
+import iessineu.penguinrunner.Entity.Enemy;
+import iessineu.penguinrunner.Entity.Player;
+import iessineu.penguinrunner.Blocks.TileType;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -15,16 +19,9 @@ import java.awt.RenderingHints;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -48,28 +45,27 @@ public class GamePanel extends JPanel {
 
     // Mida d'una casella en píxels.
     public static final int TILE_SIZE = 40;
+
     private Font font;
 
     // Estat del joc.
-    private GameState gameState;
+    private final GameState gameState;
 
     public GamePanel() {
 
-        font = new Font("Segoe UI Emoji", Font.PLAIN, 30); // per defecte s'empra aquesta, i després llegim l'arxiu 
+        font = new Font("Segoe UI Emoji", Font.PLAIN, 30);
 
         try {
             font = Font.createFont(Font.TRUETYPE_FONT, new File("resources/font.ttf")).deriveFont(30f);
         } catch (FontFormatException | IOException ex) {
-            System.out.println("Error obrint la font!");
             System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
         gameState = new GameState();
 
         int width = gameState.getCols() * TILE_SIZE;
         int height = gameState.getRows() * TILE_SIZE;
-       
 
-        setPreferredSize(new Dimension(width, height + 100));
+        setPreferredSize(new Dimension(width, height));
         setBackground(Color.BLACK);
 
         // Necessari perquè el JPanel pugui rebre tecles.
@@ -89,7 +85,13 @@ public class GamePanel extends JPanel {
      */
     private void handleInput(KeyEvent e) {
         Direction direction = null;
+        
+        if (gameState.shouldDrop()) {
+            gameState.applyGravity();
 
+            repaint();
+            return;
+        }
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP ->
                 direction = Direction.UP;
@@ -103,73 +105,33 @@ public class GamePanel extends JPanel {
                 gameState.breakDownLeft();
             case KeyEvent.VK_E ->
                 gameState.breakDownRight();
-            case KeyEvent.VK_P ->
-                guardarPartida();
-            case KeyEvent.VK_O ->
-                carregarPartida();
-            case KeyEvent.VK_F ->
-                gameState.interact();
         }
 
+<<<<<<< Updated upstream
+        if (direction != null) {
+            gameState.takeTurn(direction);
+        }
+=======
+        // if (direction != null) {
         gameState.takeTurn(direction);
+        // }
 
-        long start = System.currentTimeMillis();
-        while (gameState.shouldDrop()) {
-            long deltaTime = System.currentTimeMillis() - start;
-            if (deltaTime > 500) {
-                repaint();
-                gameState.takeTurn(Direction.DOWN);
-                start = System.currentTimeMillis();
-            } else {
-                System.out.println("Esperant " + System.currentTimeMillis());
-                System.out.println("Delta " + deltaTime);
-            }
-        }
+
+
+        // long current = System.currentTimeMillis();
+        // while (gameState.shouldDrop()) { //ha de ser un IF
+        //     repaint();
+        //     if (System.currentTimeMillis() - current < 500) {
+        //         gameState.takeTurn(Direction.DOWN);
+        //         current = System.currentTimeMillis();
+        //         repaint();
+        //     } else {
+        //         gameState.takeTurn();
+        //         repaint();
+        //     }
+        // }
+>>>>>>> Stashed changes
         repaint();
-    }
-
-    public void guardarPartida() {
-        String nomArxiu = JOptionPane.showInputDialog("Introdueixi el nom de la partida (sense extensió) o deixa-ho buit per emprar un nom generic");
-        if (nomArxiu.length() == 0) {
-            int saveAmount = new File("saves/").list().length;
-            nomArxiu = "partidaGuardada" + saveAmount;
-        }
-        GameState estat = this.gameState;
-        ObjectOutputStream file;
-        try {
-            file = new ObjectOutputStream(new FileOutputStream("saves/" + nomArxiu + ".milm"));
-            file.writeObject((Object) estat);
-            File f = new File("saves/" + nomArxiu);
-            System.out.println("Guardat a " + f.getAbsolutePath() + ".milm");
-        } catch (IOException ex) {
-            System.out.println("Problema al guardar");
-            System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
-
-    }
-
-    public void carregarPartida() {
-        String nomArxiu = "";
-        int test = JOptionPane.showConfirmDialog(null, "Vol carregar una Partida?", "Benvingut a Penguin Runner", JOptionPane.YES_NO_OPTION);
-        JPanel jp = new JPanel();
-        if (test == JOptionPane.YES_OPTION) {
-            JFileChooser JFC = new JFileChooser("saves/");
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("Arxius MILM", "milm");
-            JFC.setFileFilter(filter);
-            int returnVal = JFC.showOpenDialog(jp);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                nomArxiu = JFC.getSelectedFile().getName();
-                System.out.println(nomArxiu);
-            }
-            try {
-                ObjectInputStream file = new ObjectInputStream(new FileInputStream("saves/" + nomArxiu));
-                this.gameState = (GameState) file.readObject();
-            } catch (IOException ex) {
-                System.out.println("Problema al carregar!");
-            } catch (ClassNotFoundException ex) {
-                System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            }
-        }
     }
 
     /*
@@ -177,14 +139,12 @@ public class GamePanel extends JPanel {
      * Swing el crida automàticament quan cal redibuixar.
      */
     @Override
-    protected void paintComponent(Graphics g
-    ) {
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         drawMap(g);
         drawEnemies(g);
         drawPlayer(g);
-        drawHUD(g);
     }
 
     /*
@@ -199,17 +159,15 @@ public class GamePanel extends JPanel {
                 if (null != tile) {
                     switch (tile) {
                         case WALL ->
-                            drawWall(g, row, col);
+                            drawParet(g, row, col);
                         case ICE ->
-                            drawIce(g, row, col);
+                            drawGel(g, row, col);
                         case ICECREAM ->
-                            drawIceCream(g, row, col);
+                            drawGelat(g, row, col);
                         case STAIR ->
-                            drawStair(g, row, col);
+                            drawEscala(g, row, col);
                         case RAIL ->
-                            drawRail(g, row, col);
-                        case DOOR ->
-                            drawDoor(g, row, col);
+                            drawPasarela(g, row, col);
                         case STONE ->
                             drawStone(g, row, col);
                         default -> {
@@ -223,11 +181,10 @@ public class GamePanel extends JPanel {
     /*
      * Dibuixa una paret.
      */
-    private void drawWall(Graphics g, int row, int col) {
+    private void drawParet(Graphics g, int row, int col) {
         drawCellBackground(g, row, col, new Color(70, 70, 80));
         drawEmoji(g, "🧱", row, col, null, font);
     }
-
     private void drawStone(Graphics g, int row, int col) {
         drawCellBackground(g, row, col, new Color(20, 20, 20));
         drawEmoji(g, "🧱", row, col, null, font);
@@ -236,7 +193,7 @@ public class GamePanel extends JPanel {
     /*
      * Dibuixa una casella de gel.
      */
-    private void drawIce(Graphics g, int row, int col) {
+    private void drawGel(Graphics g, int row, int col) {
         drawCellBackground(g, row, col, new Color(170, 225, 255));
         drawEmoji(g, "🧱", row, col, null, font);
     }
@@ -244,29 +201,26 @@ public class GamePanel extends JPanel {
     /*
      * Dibuixa una casella amb gelat.
      */
-    private void drawIceCream(Graphics g, int row, int col) {
+    private void drawGelat(Graphics g, int row, int col) {
         drawEmoji(g, "🍦", row, col, new Color(255, 255, 153), font);
     }
 
     /*
      * Dibuixa una casella amb escala.
      */
-    private void drawStair(Graphics g, int row, int col) {
+    private void drawEscala(Graphics g, int row, int col) {
         drawEmoji(g, "🪜", row, col, new Color(128, 64, 0), font);
     }
 
     /*
      * Dibuixa una casella amb pasarela.
      */
-    private void drawRail(Graphics g, int row, int col) {
+    private void drawPasarela(Graphics g, int row, int col) {
         drawEmoji(g, "—", row, col, new Color(134, 0, 179), font);
     }
 
-    //Dibuixa una porta si el jugador compleix el objetivo
     private void drawDoor(Graphics g, int row, int col) {
-        if (checkObjective()) {
-            drawEmoji(g, "🚪", row, col, new Color(128, 64, 0), font);
-        }
+        drawEmoji(g, "🚪", row, col, new Color(128, 64, 0), font);
     }
 
     /*
@@ -290,10 +244,8 @@ public class GamePanel extends JPanel {
     private void drawPlayer(Graphics g) {
         Player player = gameState.getPlayer();
 
-        drawEmoji(g, player.getAvatar(), player.getRow(), player.getCol(), player.getColor(), font);
+        drawEmoji(g, "🐧", player.getRow(), player.getCol(), new Color(0, 136, 204), font);
     }
-    
-    
 
     /*
      * Dibuixa tots els enemics.
@@ -301,24 +253,19 @@ public class GamePanel extends JPanel {
     private void drawEnemies(Graphics g) {
         for (Enemy enemy : gameState.getEnemies()) {
             if (!enemy.getIsDead()) {
-                drawEmoji(g, enemy.getAvatar(), enemy.getRow(), enemy.getCol(), enemy.getColor(), font);
+                drawEmoji(g, "🦭", enemy.getRow(), enemy.getCol(), null, font);
             }
         }
     }
 
-    //Dibuixa el HUD
-    private void drawHUD(Graphics g) {
-        // int alt = gameState.getCols() -3 ;
-        int amp = 0;
-        int alt = gameState.getRows();
-        Player player = gameState.getPlayer();
-        int iceCream = player.geticeCream();
-        drawEmoji(g, player.getAvatar(), alt, amp + 1, new Color(0, 136, 204), font);
-        drawEmoji(g, "🍦" , alt, amp + 5, new Color(255, 255, 153), font);
-        drawEmoji(g, "" + iceCream , alt, amp + 6, new Color(255, 255, 153), font);
-        drawEmoji(g, " / ", alt, amp + 7, new Color(255, 255, 153), font);
-        drawEmoji(g, "" + gameState.getIceCream(), alt, amp + 8, new Color(255, 255, 153), font);
-        
+    /*
+     * Dibuixa una porta
+     */
+    private void drawDoor(Graphics g) {
+        if (checkObjective()) {
+            // drawEmoji(g, "🚪", player.getRow(), player.getCol() + 2,  null, font);
+            drawEmoji(g, "🚪", 35, 35, null, font);
+        }
     }
 
     /*
@@ -327,8 +274,13 @@ public class GamePanel extends JPanel {
     private boolean checkObjective() {
         Player player = gameState.getPlayer();
         int iceCream = player.geticeCream();
-        // return true;
-        return iceCream >= 1;
+        int row = player.getRow() + 2;
+        int col = player.getCol();
+
+        if (iceCream >= 4) {
+            return true;
+        }
+        return false;
     }
 
     /*

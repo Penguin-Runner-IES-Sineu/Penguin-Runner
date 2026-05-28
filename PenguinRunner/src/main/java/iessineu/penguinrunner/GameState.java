@@ -8,6 +8,44 @@ package iessineu.penguinrunner;
  *
  * @author loren
  */
+<<<<<<< Updated upstream
+import java.util.ArrayList;
+import java.util.List;
+
+/*
+ * GameState conté l'estat i la lògica del joc.
+ *
+ * Responsabilitats:
+ * - Guardar el mapa.
+ * - Guardar el jugador.
+ * - Guardar els enemics.
+ * - Moure el jugador.
+ * - Moure els enemics.
+ * - Comprovar col·lisions.
+ *
+ * Aquesta classe NO dibuixa res.
+ */
+public class GameState {
+
+    private final List<BrokenBlock> brokenBlocks = new ArrayList<>();
+    private final List<Stone> stoneBlocks = new ArrayList<>();
+    private final TileType[][] map;
+    private final Player player;
+    private final List<Enemy> enemies;
+=======
+import iessineu.penguinrunner.States.FallingState;
+import iessineu.penguinrunner.States.ClimbingState;
+import iessineu.penguinrunner.States.WalkingState;
+import iessineu.penguinrunner.States.PlayerState;
+import iessineu.penguinrunner.States.RailState;
+import iessineu.penguinrunner.Entity.Map;
+import iessineu.penguinrunner.Movement.Direction;
+import iessineu.penguinrunner.Entity.Enemy;
+import iessineu.penguinrunner.Entity.Player;
+import iessineu.penguinrunner.Blocks.*;
+import iessineu.penguinrunner.Blocks.TileType;
+import iessineu.penguinrunner.Blocks.Stone;
+import static iessineu.penguinrunner.Blocks.TileType.WALL;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -15,62 +53,231 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-/*
- * GameState conté l'estat i la lògica del joc.
- *
- * Responsabilitats:
- * Guardar el mapa.
- * Guardar el jugador.
- * Guardar els enemics.
- * Moure el jugador.
- * Moure els enemics.
- * Comprovar col·lisions.
- *
- * Aquesta classe NO dibuixa res.
- */
 public class GameState implements Serializable {
 
     private final List<BrokenBlock> brokenBlocks = new ArrayList<>();
-    private List<Stone> stoneBlocks = new ArrayList<>();
-    private Player player;
-    private List<Enemy> enemies;
+    private final List<Stone> stones = new ArrayList<>();
+
+    private final Block[][] blocks;
+
+    private Map mapObject;
+
+    private final Player player;
+    private final List<Enemy> enemies;
+
     private int iceCream = 0;
-    private List<Map> mapList = llegirMapes();
-    private Map mapObject = mapList.get(0);
-    private TileType[][] map = stringToTileType();
+>>>>>>> Stashed changes
 
-    /*
-     * Guardem les posicions inicials per poder reiniciar
-     * quan l'enemic atrapa el jugador.
-     */
-    private int startPlayerRow;
-    private int startPlayerCol;
+    private final int startPlayerRow;
+    private final int startPlayerCol;
 
-    /*
-     * Cada vegada que el jugador prem una fletxa:
-     * 1. Es mou el jugador.
-     * 2. Es mouen els enemics.
-     * 3. Es comproven col·lisions.
-     */
-    public void takeTurn(Direction direction) {
-        if (direction != null) {
-            movePlayer(direction);
+    private final PlayerState walkingState = new WalkingState();
+    private final PlayerState climbingState = new ClimbingState();
+    private final PlayerState railState = new RailState();
+    private final PlayerState fallingState = new FallingState();
+
+<<<<<<< Updated upstream
+        /*
+         * Mapa del nivell.
+         *
+         * # = paret
+         * . = terra
+         * G = or
+         * P = jugador
+         * E = enemic
+         * D = porta
+         */
+        String[] level = {};
+        DefaultMaps maps = new DefaultMaps();
+        int amountOfMaps = maps.getAmountOfMaps();
+        if (amountOfMaps >= 1) {
+            level = maps.getMap(0);
         }
-        moveBlocks();
-        collectIcecream();
-        moveEnemies();
-        updateBrokenBlocks();
-        checkCollisions();
-        spriteJSON("type");
+        int icecream = 0;
+
+        map = new TileType[level.length][level[0].length()];
+=======
+    public GameState() {
+        List<Map> mapList = llegirMapes();
+        this.mapObject = mapList.get(0);
+
+        String[] level = mapObject.getMap();
+
+        blocks = new Block[level.length][level[0].length()];
+>>>>>>> Stashed changes
+        enemies = new ArrayList<>();
+
+        Player foundPlayer = null;
+
+        int tempStartRow = 1;
+        int tempStartCol = 1;
+
+        for (int row = 0; row < level.length; row++) {
+            for (int col = 0; col < level[row].length(); col++) {
+                char symbol = level[row].charAt(col);
+
+                switch (symbol) {
+                    case '#':
+<<<<<<< Updated upstream
+                        map[row][col] = TileType.WALL;
+                        break;
+                    case 'G':
+                        map[row][col] = TileType.ICECREAM;
+                        icecream++;
+                        break;
+                    case '.':
+                        map[row][col] = TileType.ICE;
+                        break;
+                    case 'H':
+                        map[row][col] = TileType.STAIR;
+                        break;
+                    case '-':
+                        map[row][col] = TileType.RAIL;
+                        break;
+                    case 'D':
+                        map[row][col] = TileType.DOOR;
+                    case 'S':
+                        stoneBlocks.add(new Stone(row, col));
+                        map[row][col] = TileType.STONE;
+                        break;
+                    default:
+                        map[row][col] = TileType.BLANK;
+                        break;
+                }
+
+                /*
+                 * Si trobem el jugador, el creem.
+                 * La casella on hi havia P passa a ser terra.
+                 */
+                if (symbol == 'P') {
+                    foundPlayer = new Player(row, col);
+                    tempStartRow = row;
+                    tempStartCol = col;
+                }
+
+                /*
+                 * Si trobem un enemic, l'afegim a la llista.
+                 * La casella on hi havia E passa a ser terra.
+                 */
+                if (symbol == 'E') {
+                    enemies.add(new Enemy(row, col, 1, 1));
+=======
+                        blocks[row][col] = new Wall(row, col);
+                        break;
+
+                    case '.':
+                        blocks[row][col] = new Ice(row, col);
+                        break;
+
+                    case 'G':
+                        blocks[row][col] = new IceCream(row, col);
+                        iceCream++;
+                        break;
+
+                    case 'H':
+                        blocks[row][col] = new Ladder(row, col);
+                        break;
+
+                    case '-':
+                        blocks[row][col] = new Rail(row, col);
+                        break;
+
+                    case 'D':
+                        blocks[row][col] = new Door(row, col);
+                        break;
+
+                    case 'S':
+                        Stone stone = new Stone(row, col);
+                        blocks[row][col] = stone;
+                        stones.add(stone);
+                        break;
+
+                    case 'P':
+                        foundPlayer = new Player(row, col);
+                        tempStartRow = row;
+                        tempStartCol = col;
+                        blocks[row][col] = null;
+                        break;
+
+                    case 'E':
+                        enemies.add(new Enemy(row, col, 1, 1));
+                        blocks[row][col] = null;
+                        break;
+
+                    default:
+                        blocks[row][col] = null;
+                        break;
+>>>>>>> Stashed changes
+                }
+            }
+        }
+
+        player = foundPlayer;
+
+        startPlayerRow = tempStartRow;
+        startPlayerCol = tempStartCol;
+
+        updatePlayerState();
     }
 
     /*
-     * Mou el jugador una casella en la direcció indicada.
+     * TORNS
      */
+
+    public void takeTurn(Direction direction) {
+<<<<<<< Updated upstream
+        moveBlocks();
+        movePlayer(direction);
+        collectIcecream();
+        
+        moveEnemies();
+
+        updateBrokenBlocks();
+        checkCollisions();
+
+    }
+
+    public void takeTurn() {
+        moveBlocks();
+        collectIcecream();
+        
+        moveEnemies();
+        updateBrokenBlocks();
+        checkCollisions();
+
+=======
+        updatePlayerState();
+
+        if (direction != null) {
+            player.getState().handleInput(this, direction);
+        } else if (player.getState() == fallingState) {
+            player.getState().handleInput(this, null);
+        }
+
+        finishTurn();
+    }
+
+    public void takeTurn() {
+        takeTurn(null);
+    }
+
+    private void finishTurn() {
+        collectIcecream();
+        moveBlocks();
+        moveEnemies();
+        updateBrokenBlocks();
+        checkCollisions();
+        updatePlayerState();
+>>>>>>> Stashed changes
+    }
+
+    /*
+     * MÀQUINA D'ESTATS DEL JUGADOR
+     */
+<<<<<<< Updated upstream
     private void movePlayer(Direction direction) {
         int actualRow = player.getRow();
         int actualCol = player.getCol();
@@ -96,21 +303,68 @@ public class GameState implements Serializable {
                 player.setPosition(nextRow, nextCol);
             }
             return;
+=======
+
+    private void updatePlayerState() {
+        if (shouldPlayerDrop()) {
+            player.setState(fallingState);
+        } else if (isStair(player.getRow(), player.getCol())) {
+            player.setState(climbingState);
+        } else if (isRail(player.getRow(), player.getCol())) {
+            player.setState(railState);
+        } else {
+            player.setState(walkingState);
+>>>>>>> Stashed changes
         }
+    }
 
-        if (isStone(nextRow, nextCol)) {
-            boolean stoneMoved = tryPushStone(actualRow, actualCol, direction);
+    public boolean isPlayerOnStair() {
+        return isStair(player.getRow(), player.getCol());
+    }
 
-            if (!stoneMoved) {
+    public void movePlayerBy(Direction direction, boolean canPushStone) {
+        int row = player.getRow();
+        int col = player.getCol();
+
+        int nextRow = row + direction.getDr();
+        int nextCol = col + direction.getDc();
+
+        if (canPushStone && isStone(nextRow, nextCol)) {
+            boolean pushed = tryPushStone(row, col, direction);
+
+            if (!pushed) {
                 return;
             }
         }
-        // Per a la resta de direccions, aplica les regles normals
+
         if (canMoveTo(nextRow, nextCol)) {
             player.setPosition(nextRow, nextCol);
         }
-
     }
+
+    public void movePlayerDownOne() {
+        int nextRow = player.getRow() + 1;
+        int nextCol = player.getCol();
+
+        if (canMoveTo(nextRow, nextCol)) {
+            player.setPosition(nextRow, nextCol);
+        }
+    }
+
+    private boolean shouldPlayerDrop() {
+        int row = player.getRow();
+        int col = player.getCol();
+
+        return !isSolid(row + 1, col)
+                && !isRail(row, col)
+                && !isStair(row, col)
+                && !isStair(row + 1, col)
+                && !isEnemy(row + 1, col);
+    }
+
+    /*
+     * PEDRES
+     */
 
     private boolean tryPushStone(int row, int playerCol, Direction direction) {
         int dc = direction.getDc();
@@ -133,10 +387,12 @@ public class GameState implements Serializable {
         int col = checkCol - dc;
 
         while (col != playerCol) {
-            map[row][col + dc] = TileType.STONE;
-            map[row][col] = TileType.BLANK;
+            Block blockToMove = blocks[row][col];
 
-            updateStoneObject(row, col, col + dc);
+            blocks[row][col] = null;
+            blocks[row][col + dc] = blockToMove;
+
+            blockToMove.setPosition(row, col + dc);
 
             col -= dc;
         }
@@ -144,184 +400,123 @@ public class GameState implements Serializable {
         return true;
     }
 
-    private void updateStoneObject(int row, int oldCol, int newCol) {
-        for (Stone stone : stoneBlocks) {
-            if (stone.getRow() == row && stone.getCol() == oldCol) {
-                stone.setPosition(row, newCol);
-                return;
+    private void moveBlocks() {
+        for (Stone stone : stones) {
+            int row = stone.getRow();
+            int col = stone.getCol();
+
+            int nextRow = row + 1;
+            int nextCol = col;
+
+            if (isOutOfBounds(nextRow, nextCol)) {
+                continue;
             }
-        }
-    }
 
-    public void interact() {
-        if (map[player.getRow()][player.getCol()] == TileType.DOOR) {
-            System.out.println("Porta");
-            int nivellActual = mapObject.getLevel();
-            mapObject = mapList.get(nivellActual);
-            map = stringToTileType();
-        }
-    }
-
-    public TileType[][] stringToTileType() {
-        /*
-         * Mapa del nivell.
-         *
-         * # = paret
-         * . = terra
-         * G = or
-         * P = jugador
-         * E = enemic
-         * D = porta
-         */
-        String[] level = mapObject.getMap();
-        map = new TileType[level.length][level[0].length()];
-        iceCream = 0;
-        enemies = new ArrayList();
-
-        Player foundPlayer = null;
-
-        /*
-         * Valors temporals per recordar on comença el jugador.
-         */
-        int tempStartRow = 1;
-        int tempStartCol = 1;
-
-        /*
-         * Convertim el mapa de text a TileType[][].
-         */
-        for (int row = 0; row < level.length; row++) {
-            for (int col = 0; col < level[row].length(); col++) {
-
-                char symbol = level[row].charAt(col);
-
-                switch (symbol) {
-                    case '#' ->
-                        map[row][col] = TileType.WALL;
-                    case 'G' -> {
-                        map[row][col] = TileType.ICECREAM;
-                        iceCream++;
-                    }
-                    case '.' ->
-                        map[row][col] = TileType.ICE;
-                    case 'H' ->
-                        map[row][col] = TileType.STAIR;
-                    case '-' ->
-                        map[row][col] = TileType.RAIL;
-                    case 'D' ->
-                        map[row][col] = TileType.DOOR;
-                    case 'P' -> {
-                        // Si trobem el jugador, el creem.
-                        // La casella on hi havia P passa a ser terra.
-                        foundPlayer = new Player(row, col);
-                        tempStartRow = row;
-                        tempStartCol = col;
-                    }
-                    case 'E' ->
-                        // Si trobem un enemic, l'afegim a la llista.
-                        // La casella on hi havia E passa a ser terra.
-                        enemies.add(new Enemy(row, col, 1, 1));
-                    case 'S' -> {
-                        stoneBlocks.add(new Stone(row, col));
-                        map[row][col] = TileType.STONE;
-                        break;
-                    }
-                    default ->
-                        map[row][col] = TileType.BLANK;
-                }
+            if (!isBlank(nextRow, nextCol)) {
+                continue;
             }
+
+            if (player.getRow() == nextRow && player.getCol() == nextCol) {
+                continue;
+            }
+
+            if (isEnemy(nextRow, nextCol)) {
+                continue;
+            }
+
+            blocks[row][col] = null;
+            blocks[nextRow][nextCol] = stone;
+
+            stone.setPosition(nextRow, nextCol);
         }
-
-        player = foundPlayer;
-
-        startPlayerRow = tempStartRow;
-        startPlayerCol = tempStartCol;
-        return map;
     }
 
     /*
-       * Fa accions
+     * ACCIONS
      */
+
     public void breakDownLeft() {
         breakBlock(player.getRow() + 1, player.getCol() - 1);
+        finishTurn();
     }
 
     public void breakDownRight() {
         breakBlock(player.getRow() + 1, player.getCol() + 1);
+        finishTurn();
     }
 
     private void breakBlock(int row, int col) {
         if (isOutOfBounds(row, col)) {
             return;
         }
-        if (map[row][col] == TileType.ICE) {
-            map[row][col] = TileType.MOLTEN;
+
+        Block block = blocks[row][col];
+
+        if (block != null && block.isBreakable()) {
+            blocks[row][col] = new Molten(row, col);
             brokenBlocks.add(new BrokenBlock(row, col, 5));
         }
+    }
 
+    private void updateBrokenBlocks() {
+        for (int i = brokenBlocks.size() - 1; i >= 0; i--) {
+            BrokenBlock block = brokenBlocks.get(i);
+
+            block.turnsLeft--;
+
+            if (block.turnsLeft <= 0) {
+                blocks[block.row][block.col] = new Ice(block.row, block.col);
+                brokenBlocks.remove(i);
+            }
+        }
     }
 
     /*
-     * Mou tots els enemics.
+     * ENEMICS
      */
+
     private void moveEnemies() {
         for (Enemy enemy : enemies) {
-
             if (enemy.getIsDead()) {
                 enemy.subtractTimeToRevive(1);
+
                 if (enemy.getTimeToRevive() <= 0) {
                     enemy.revive();
                 }
-            } else {
-                if (!isFos(enemy.getRow(), enemy.getCol())) {
-                    moveEnemy(enemy);
-                }
 
+                continue;
             }
 
-        }
-    }
-
-    /*
-    * Comprova si la pedra ha de caure
-     */
-    private void moveBlocks() {
-        for (Stone s : stoneBlocks) {
-            int row = s.getRow();
-            int col = s.getCol();
-
-            if (!isOutOfBounds(row + 1, col) && map[row + 1][col] == TileType.BLANK) {
-                map[row][col] = TileType.BLANK;
-                map[row + 1][col] = TileType.STONE;
-
-                s.setPosition(row + 1, col);
+            if (!isMolten(enemy.getRow(), enemy.getCol())) {
+                moveEnemy(enemy);
             }
         }
     }
 
-    /*
-     * Mou un enemic cap al jugador de manera molt senzilla.
-     *
-     * Primer intenta acostar-se en vertical.
-     * Si ja està a la mateixa fila, intenta acostar-se en horitzontal.
-     */
     private void moveEnemy(Enemy enemy) {
         int row = enemy.getRow();
         int col = enemy.getCol();
-        int dr = 0;
-        int dc = 0;
-        if (shouldDie(row, col) && !enemy.getIsDead()) {
+
+        if (shouldDie(row, col)) {
             enemy.die();
             enemy.setTimeToRevive(7);
             return;
         }
-        if (shouldDrop(row, col)) {
+
+        if (shouldEnemyDrop(row, col)) {
             enemy.setPosition(row + 1, col);
             return;
         }
+
+        int dr = 0;
+        int dc = 0;
+
         if (enemy.getRow() < player.getRow()) {
             dr = 1;
         } else if (enemy.getRow() > player.getRow()) {
-            //amunt, de moment desactivat, falta fer comprovacio de si esta a una escala
+            if (isStair(enemy.getRow(), enemy.getCol())) {
+                dr = -1;
+            }
         } else if (enemy.getCol() < player.getCol()) {
             dc = 1;
         } else if (enemy.getCol() > player.getCol()) {
@@ -336,19 +531,81 @@ public class GameState implements Serializable {
         }
     }
 
-    /*
-     * Comprova si una posició és vàlida per moure's.
-     */
-    private boolean canMoveTo(int row, int col) {
-        return !isOutOfBounds(row, col)
-                && !isWall(row, col)
-                && !isIce(row, col)
-                && !isStone(row, col);
+    private boolean shouldEnemyDrop(int row, int col) {
+        return !isSolid(row + 1, col)
+                && !isRail(row, col)
+                && !isStair(row, col)
+                && !isStair(row + 1, col)
+                && !isEnemy(row + 1, col);
+    }
+
+    private boolean shouldDie(int row, int col) {
+        return isIce(row, col);
     }
 
     /*
-     * Comprova si una posició surt fora del mapa.
+     * OBJECTES I COL·LISIONS
      */
+
+    private void collectIcecream() {
+        int row = player.getRow();
+        int col = player.getCol();
+
+        Block block = blocks[row][col];
+
+        if (block != null && block.isCollectable()) {
+            blocks[row][col] = null;
+            player.addIceCream();
+
+            System.out.println("Gelat: " + player.geticeCream());
+        }
+    }
+
+    private void checkCollisions() {
+        int playerRow = player.getRow();
+        int playerCol = player.getCol();
+
+        for (Enemy enemy : enemies) {
+            if (!enemy.getIsDead()
+                    && enemy.getRow() == playerRow
+                    && enemy.getCol() == playerCol) {
+                resetPositions();
+                return;
+            }
+        }
+
+        if (isIce(playerRow, playerCol)) {
+            resetPositions();
+        }
+    }
+
+    private void resetPositions() {
+        player.setPosition(startPlayerRow, startPlayerCol);
+
+        for (Stone stone : stones) {
+            blocks[stone.getRow()][stone.getCol()] = null;
+
+            stone.moveToOriginalPosition();
+
+            blocks[stone.getRow()][stone.getCol()] = stone;
+        }
+
+        for (Enemy enemy : enemies) {
+            enemy.moveToOriginalRow();
+        }
+
+        updatePlayerState();
+    }
+
+    /*
+     * CONSULTES DE BLOCS
+     */
+
+    private boolean canMoveTo(int row, int col) {
+        return !isOutOfBounds(row, col)
+                && !isSolid(row, col);
+    }
+
     private boolean isOutOfBounds(int row, int col) {
         return row < 0
                 || row >= getRows()
@@ -356,55 +613,81 @@ public class GameState implements Serializable {
                 || col >= getCols();
     }
 
-    /*
-     * Comprova si una casella és paret.
-     */
-    private boolean isWall(int row, int col) {
-        return map[row][col] == TileType.WALL;
-    }
+    private Block getBlock(int row, int col) {
+        if (isOutOfBounds(row, col)) {
+            return null;
+        }
 
-    private boolean isIce(int row, int col) {
-        return map[row][col] == TileType.ICE;
-    }
-
-    private boolean isRail(int row, int col) {
-        return map[row][col] == TileType.RAIL;
-    }
-
-    private boolean isStair(int row, int col) {
-        return map[row][col] == TileType.STAIR;
-    }
-
-    private boolean isFos(int row, int col) {
-        return map[row][col] == TileType.MOLTEN;
+        return blocks[row][col];
     }
 
     private boolean isBlank(int row, int col) {
-        return map[row][col] == TileType.BLANK;
+        return !isOutOfBounds(row, col) && blocks[row][col] == null;
+    }
+
+    private boolean isSolid(int row, int col) {
+        if (isOutOfBounds(row, col)) {
+            return true;
+        }
+
+        Block block = blocks[row][col];
+
+        return block != null && block.isSolid();
+    }
+
+    private boolean isIce(int row, int col) {
+        Block block = getBlock(row, col);
+
+        return block != null && block.getType() == TileType.ICE;
+    }
+
+    private boolean isWall(int row, int col) {
+        Block block = getBlock(row, col);
+
+        return block != null && block.getType() == TileType.WALL;
+    }
+
+    private boolean isRail(int row, int col) {
+        Block block = getBlock(row, col);
+
+        return block != null && block.isRail();
+    }
+
+    private boolean isStair(int row, int col) {
+        Block block = getBlock(row, col);
+
+        return block != null && block.isClimbable();
     }
 
     private boolean isStone(int row, int col) {
-        return map[row][col] == TileType.STONE;
+        Block block = getBlock(row, col);
+
+        return block != null && block.isPushable();
+    }
+
+    private boolean isMolten(int row, int col) {
+        Block block = getBlock(row, col);
+
+        return block != null && block.getType() == TileType.MOLTEN;
     }
 
     private boolean isEnemy(int row, int col) {
         for (Enemy enemy : enemies) {
-            if (enemy.getRow() == row && enemy.getCol() == col) {
+            if (!enemy.getIsDead()
+                    && enemy.getRow() == row
+                    && enemy.getCol() == col) {
                 return true;
             }
-
         }
+
         return false;
     }
 
     /*
-     * Si el jugador trepitja una casella amb gelat,
-     * la convertim en res.
+     * GETTERS
      */
-    private void collectIcecream() {
-        int row = player.getRow();
-        int col = player.getCol();
 
+<<<<<<< Updated upstream
         if (map[row][col] == TileType.ICECREAM) {
             map[row][col] = TileType.BLANK;
             player.addIceCream();
@@ -433,7 +716,7 @@ public class GameState implements Serializable {
      */
     private void resetPositions() {
         player.setPosition(startPlayerRow, startPlayerCol);
-        if (!stoneBlocks.isEmpty()) {
+        if (!stoneBlocks.isEmpty()){
             for (Stone s : stoneBlocks) {
                 map[s.getRow()][s.getCol()] = TileType.BLANK;
                 s.moveToOriginalRow();
@@ -450,16 +733,24 @@ public class GameState implements Serializable {
     /*
      * Getters perquè el GamePanel pugui consultar informació.
      */
+=======
+>>>>>>> Stashed changes
     public TileType getTile(int row, int col) {
-        return map[row][col];
+        Block block = getBlock(row, col);
+
+        if (block == null) {
+            return TileType.BLANK;
+        }
+
+        return block.getType();
     }
 
     public int getRows() {
-        return map.length;
+        return blocks.length;
     }
 
     public int getCols() {
-        return map[0].length;
+        return blocks[0].length;
     }
 
     public Player getPlayer() {
@@ -470,35 +761,23 @@ public class GameState implements Serializable {
         return enemies;
     }
 
-    public TileType[][] getMap() {
-        return map;
-    }
-
+<<<<<<< Updated upstream
+    private static class BrokenBlock {
+=======
     public int getLevel() {
         return mapObject.getLevel();
     }
 
-    public int getIceCream() {
-        return iceCream;
+    public Block[][] getBlocks() {
+        return blocks;
     }
 
-    public List<Stone> getStoneBlocks() {
-        return stoneBlocks;
-    }
-
-    public void setStoneBlocks(List<Stone> stoneBlocks) {
-        this.stoneBlocks = stoneBlocks;
-    }
-
-    public List<Map> getMapList() {
-        return mapList;
-    }
-
-    public void setMapList(List<Map> mapList) {
-        this.mapList = mapList;
-    }
+    /*
+     * BLOCS ROMPUTS
+     */
 
     private static class BrokenBlock implements Serializable {
+>>>>>>> Stashed changes
 
         int row;
         int col;
@@ -511,6 +790,7 @@ public class GameState implements Serializable {
         }
     }
 
+<<<<<<< Updated upstream
     //actualitzar blocs
     private void updateBrokenBlocks() {
         for (int posicio = brokenBlocks.size() - 1; posicio >= 0; posicio--) {
@@ -569,64 +849,52 @@ public class GameState implements Serializable {
         }
 
     }
+}
+=======
+    /*
+     * LECTURA MAPES
+     */
 
-    public String llegirJSON(String ruta) {
+    public List<Map> llegirMapes() {
         String jsonString = "";
+
         try {
-            BufferedReader fitxer = new BufferedReader(new FileReader(ruta));
+            BufferedReader fitxer = new BufferedReader(new FileReader("resources/maps.json"));
+
             try {
-                String c;
-                while ((c = fitxer.readLine()) != null) { //llegim linea, si no es null, imprimim la linea sencera
-                    jsonString += c;
+                String line;
+
+                while ((line = fitxer.readLine()) != null) {
+                    jsonString += line;
                 }
+
                 fitxer.close();
+
             } catch (IOException ex) {
                 System.out.println("Problema d'entrada i sortida");
             }
+
         } catch (FileNotFoundException ex) {
             System.out.println("L'arxiu de mapes no s'ha trobat!");
         }
-        return jsonString;
-    }
 
-    public List<Map> llegirMapes() {
-        JSONArray maps = new JSONArray(llegirJSON("resources/maps.json"));
-        List<Map> mapList = new ArrayList();
+        JSONArray maps = new JSONArray(jsonString);
+        List<Map> mapList = new ArrayList<>();
+
         for (int i = 0; i < maps.length(); i++) {
             JSONObject obj = maps.getJSONObject(i);
-            JSONArray jAr = obj.getJSONArray("view");
-            String[] view = new String[jAr.length()];
+            JSONArray jsonView = obj.getJSONArray("view");
+
+            String[] view = new String[jsonView.length()];
+
             for (int j = 0; j < view.length; j++) {
-                view[j] = jAr.getString(j);
+                view[j] = jsonView.getString(j);
             }
+
             mapList.add(new Map(obj.getInt("level"), view));
         }
+
         return mapList;
     }
-
-    public String spriteJSON(String type) {
-        JSONArray entities = new JSONArray(llegirJSON("resources/entities.json"));
-        String sprite = "";
-        for (int i = 0; i < entities.length(); i++) {
-            JSONObject obj = entities.getJSONObject(i);
-            String objType = obj.getString("type");
-            switch (objType) {
-                case "tiles" -> {
-                    JSONArray tiles = obj.getJSONArray("tiles");
-                    for (int j = 0; j < tiles.length(); j++) {
-                        obj = (JSONObject) tiles.get(j);
-                        System.out.println("Type: " + obj.getString("type"));
-                        System.out.println("Sprite: " + obj.getString("sprite"));
-                        System.out.println("Color: " + obj.getString("color"));
-                    }
-                }
-                case "player", "enemy" -> {
-                    System.out.println("Sprite: " + obj.getString("sprite"));
-                    System.out.println("Nom: " + obj.getString("name"));
-                    System.out.println("Color: " + obj.getString("color"));
-                }
-            }
-        }
-        return "";
-    }
 }
+>>>>>>> Stashed changes

@@ -4,9 +4,6 @@
  */
 package iessineu.penguinrunner;
 
-import java.awt.Color;
-import java.io.Serializable;
-
 /**
  *
  * @author loren
@@ -21,23 +18,22 @@ import java.io.Serializable;
  *
  * No guardem x/y en píxels perquè això és només per dibuixar.
  */
-public class Player implements Serializable {
+public class Player {
 
-    private String avatar = "🐧";
     private int row;
     private int col;
     private int iceCream = 0;
-    private Color color = new Color(0, 136, 204);
 
     public Player(int row, int col) {
         this.row = row;
         this.col = col;
+        
     }
-
-    public void addIceCream() {
+    
+    public void addIceCream(){
         this.iceCream++;
     }
-
+    
     public int getRow() {
         return row;
     }
@@ -45,29 +41,13 @@ public class Player implements Serializable {
     public int getCol() {
         return col;
     }
-
-    public int geticeCream() {
+    
+    public int geticeCream(){
         return iceCream;
-    }
-
-    public String getAvatar() {
-        return avatar;
     }
 
     public void setPosition(int row, int col) {
         this.row = row;
         this.col = col;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
     }
 }
