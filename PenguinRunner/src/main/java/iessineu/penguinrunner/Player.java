@@ -4,6 +4,7 @@
  */
 package iessineu.penguinrunner;
 
+import java.awt.Color;
 import java.io.Serializable;
 
 /**
@@ -26,6 +27,7 @@ public class Player implements Serializable {
     private int row;
     private int col;
     private int iceCream = 0;
+    private Color color = new Color(0, 136, 204);
 
     public Player(int row, int col) {
         this.row = row;
@@ -59,5 +61,13 @@ public class Player implements Serializable {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 }
