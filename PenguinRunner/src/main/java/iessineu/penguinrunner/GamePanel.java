@@ -311,7 +311,7 @@ public class GamePanel extends JPanel {
         int alt = gameState.getRows();
         Player player = gameState.getPlayer();
         int iceCream = player.geticeCream();
-        drawEmoji(g, "🐧", alt, amp, new Color(0, 136, 204), font);
+        drawEmoji(g, player.getAvatar(), alt, amp, new Color(0, 136, 204), font);
         System.out.println(iceCream + " / " + "" + gameState.getIceCream());
         System.out.println(amp);
         System.out.println(alt);
