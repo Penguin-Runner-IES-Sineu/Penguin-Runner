@@ -48,7 +48,6 @@ public class GamePanel extends JPanel {
 
     // Mida d'una casella en píxels.
     public static final int TILE_SIZE = 40;
-
     private Font font;
 
     // Estat del joc.
@@ -68,8 +67,9 @@ public class GamePanel extends JPanel {
 
         int width = gameState.getCols() * TILE_SIZE;
         int height = gameState.getRows() * TILE_SIZE;
+       
 
-        setPreferredSize(new Dimension(width, height));
+        setPreferredSize(new Dimension(width, height + 100));
         setBackground(Color.BLACK);
 
         // Necessari perquè el JPanel pugui rebre tecles.
@@ -180,10 +180,11 @@ public class GamePanel extends JPanel {
     protected void paintComponent(Graphics g
     ) {
         super.paintComponent(g);
-
+        
         drawMap(g);
         drawEnemies(g);
         drawPlayer(g);
+        drawHUD(g);
     }
 
     /*
@@ -261,6 +262,7 @@ public class GamePanel extends JPanel {
         drawEmoji(g, "—", row, col, new Color(134, 0, 179), font);
     }
 
+    //Dibuixa una porta si el jugador compleix el objetivo
     private void drawDoor(Graphics g, int row, int col) {
         if (checkObjective()) {
             drawEmoji(g, "🚪", row, col, new Color(128, 64, 0), font);
@@ -302,6 +304,18 @@ public class GamePanel extends JPanel {
         }
     }
 
+    //Dibuixa el HUD
+    private void drawHUD(Graphics g) {
+        // int alt = gameState.getCols() -3 ;
+        int amp = 0 ;
+        int alt = gameState.getRows();
+        Player player = gameState.getPlayer();
+        int iceCream = player.geticeCream();
+        drawEmoji(g, "🐧", alt, amp, new Color(0, 136, 204), font);
+        System.out.println(iceCream + " / " + "" + gameState.getIceCream());
+        System.out.println(amp);
+        System.out.println(alt);
+    }
 
     /*
      * Comprova que el jugador hi ha completat l'objectiu per a dibuixar la porta 
