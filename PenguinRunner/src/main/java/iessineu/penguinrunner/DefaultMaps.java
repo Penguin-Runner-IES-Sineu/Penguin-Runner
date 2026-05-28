@@ -24,9 +24,9 @@ public class DefaultMaps {
         "#nnEnnn.nnn....Hnnn#",
         "#nnnnnn.nnnnngnH---#",
         "#nn............Hnnn#",
-        "#nnnn---nnnn.nnHnnn#",
-        "#PnnnHnnnnnnnnnHnnn#",
-        "#..................#",
+        "#nnnnnnnnnnn.nnHnnn#",
+        "#PSSnnnnnnnnnnnHnnn#",
+        "#...nn.............#",
         "####################"
     };
     private static String map2[] = {

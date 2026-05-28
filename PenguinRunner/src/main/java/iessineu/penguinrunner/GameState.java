@@ -27,6 +27,7 @@ import java.util.List;
 public class GameState {
 
     private final List<BrokenBlock> brokenBlocks = new ArrayList<>();
+    private final List<Stone> stoneBlocks = new ArrayList<>();
     private final TileType[][] map;
     private final Player player;
     private final List<Enemy> enemies;
@@ -96,6 +97,10 @@ public class GameState {
                         break;
                     case 'D':
                         map[row][col] = TileType.DOOR;
+                    case 'S':
+                        stoneBlocks.add(new Stone(row, col));
+                        map[row][col] = TileType.STONE;
+                        break;
                     default:
                         map[row][col] = TileType.BLANK;
                         break;
@@ -128,25 +133,27 @@ public class GameState {
     }
 
     /*
-     * Aquest és el mètode principal de la lògica per torns.
-     *
      * Cada vegada que el jugador prem una fletxa:
      * 1. Es mou el jugador.
      * 2. Es mouen els enemics.
      * 3. Es comproven col·lisions.
      */
     public void takeTurn(Direction direction) {
-
+        moveBlocks();
         movePlayer(direction);
         collectIcecream();
+        
         moveEnemies();
+
         updateBrokenBlocks();
         checkCollisions();
 
     }
 
     public void takeTurn() {
+        moveBlocks();
         collectIcecream();
+        
         moveEnemies();
         updateBrokenBlocks();
         checkCollisions();
@@ -183,9 +190,58 @@ public class GameState {
             return;
         }
 
+        if (isStone(nextRow, nextCol)) {
+            boolean stoneMoved = tryPushStone(actualRow, actualCol, direction);
+
+            if (!stoneMoved) {
+                return;
+            }
+        }
         // Per a la resta de direccions, aplica les regles normals
         if (canMoveTo(nextRow, nextCol)) {
             player.setPosition(nextRow, nextCol);
+        }
+
+    }
+
+    private boolean tryPushStone(int row, int playerCol, Direction direction) {
+        int dc = direction.getDc();
+
+        if (dc == 0) {
+            return false;
+        }
+
+        int firstStoneCol = playerCol + dc;
+        int checkCol = firstStoneCol;
+
+        while (!isOutOfBounds(row, checkCol) && isStone(row, checkCol)) {
+            checkCol += dc;
+        }
+
+        if (isOutOfBounds(row, checkCol) || !isBlank(row, checkCol)) {
+            return false;
+        }
+
+        int col = checkCol - dc;
+
+        while (col != playerCol) {
+            map[row][col + dc] = TileType.STONE;
+            map[row][col] = TileType.BLANK;
+
+            updateStoneObject(row, col, col + dc);
+
+            col -= dc;
+        }
+
+        return true;
+    }
+
+    private void updateStoneObject(int row, int oldCol, int newCol) {
+        for (Stone stone : stoneBlocks) {
+            if (stone.getRow() == row && stone.getCol() == oldCol) {
+                stone.setPosition(row, newCol);
+                return;
+            }
         }
     }
 
@@ -233,6 +289,23 @@ public class GameState {
     }
 
     /*
+    * Comprova si la pedra ha de caure
+     */
+    private void moveBlocks() {
+        for (Stone s : stoneBlocks) {
+            int row = s.getRow();
+            int col = s.getCol();
+
+            if (!isOutOfBounds(row + 1, col) && map[row + 1][col] == TileType.BLANK) {
+                map[row][col] = TileType.BLANK;
+                map[row + 1][col] = TileType.STONE;
+
+                s.setPosition(row + 1, col);
+            }
+        }
+    }
+
+    /*
      * Mou un enemic cap al jugador de manera molt senzilla.
      *
      * Primer intenta acostar-se en vertical.
@@ -274,7 +347,10 @@ public class GameState {
      * Comprova si una posició és vàlida per moure's.
      */
     private boolean canMoveTo(int row, int col) {
-        return !isOutOfBounds(row, col) && !isWall(row, col) && !isIce(row, col);
+        return !isOutOfBounds(row, col)
+                && !isWall(row, col)
+                && !isIce(row, col)
+                && !isStone(row, col);
     }
 
     /*
@@ -308,6 +384,14 @@ public class GameState {
 
     private boolean isFos(int row, int col) {
         return map[row][col] == TileType.MOLTEN;
+    }
+
+    private boolean isBlank(int row, int col) {
+        return map[row][col] == TileType.BLANK;
+    }
+
+    private boolean isStone(int row, int col) {
+        return map[row][col] == TileType.STONE;
     }
 
     private boolean isEnemy(int row, int col) {
@@ -356,7 +440,13 @@ public class GameState {
      */
     private void resetPositions() {
         player.setPosition(startPlayerRow, startPlayerCol);
-
+        if (!stoneBlocks.isEmpty()){
+            for (Stone s : stoneBlocks) {
+                map[s.getRow()][s.getCol()] = TileType.BLANK;
+                s.moveToOriginalRow();
+                map[s.getRow()][s.getCol()] = TileType.STONE;
+            }
+        }
         if (!enemies.isEmpty()) {
             for (Enemy enemy : enemies) {
                 enemy.moveToOriginalRow();
@@ -425,8 +515,9 @@ public class GameState {
         boolean hiHaEscalaDavall = isStair(actualRow + 1, actualCol);
         boolean hiHaParetDavall = isWall(actualRow + 1, actualCol);
         boolean hiHaEnemicDavall = isEnemy(actualRow + 1, actualCol);
+        boolean hiHaPedraDavall = isStone(actualRow + 1, actualCol);
 
-        return !hiHaGelDavall && !estaDamuntPasarela && !estaEnLaEscala && !hiHaEscalaDavall && !hiHaParetDavall && !hiHaEnemicDavall;
+        return !hiHaGelDavall && !estaDamuntPasarela && !estaEnLaEscala && !hiHaEscalaDavall && !hiHaParetDavall && !hiHaEnemicDavall && !hiHaPedraDavall;
     }
 
     private boolean shouldDrop(int row, int col) {
@@ -437,7 +528,8 @@ public class GameState {
                 && !isStair(row + 1, col)
                 && !isEnemy(row + 1, col)
                 && isFos(row + 1, col)
-                && !isFos(row, col);
+                && !isFos(row, col)
+                && !isStone(row, col);
     }
 
     private boolean shouldDie(int row, int col) {

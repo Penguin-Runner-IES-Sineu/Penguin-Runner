@@ -81,6 +81,7 @@ public class GamePanel extends JPanel {
      */
     private void handleInput(KeyEvent e) {
         Direction direction = null;
+        
         if (gameState.shouldDrop()) {
             gameState.applyGravity();
 
@@ -142,6 +143,8 @@ public class GamePanel extends JPanel {
                             drawEscala(g, row, col);
                         case RAIL ->
                             drawPasarela(g, row, col);
+                        case STONE ->
+                            drawStone(g, row, col);
                         default -> {
                         }
                     }
@@ -155,6 +158,10 @@ public class GamePanel extends JPanel {
      */
     private void drawParet(Graphics g, int row, int col) {
         drawCellBackground(g, row, col, new Color(70, 70, 80));
+        drawEmoji(g, "🧱", row, col, null, font);
+    }
+    private void drawStone(Graphics g, int row, int col) {
+        drawCellBackground(g, row, col, new Color(20, 20, 20));
         drawEmoji(g, "🧱", row, col, null, font);
     }
 
