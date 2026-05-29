@@ -11,7 +11,7 @@ package iessineu.penguinrunner.Blocks;
 public class IceCream extends Block {
 
     public IceCream(int row, int col) {
-        super(row, col, TileType.STAIR);
+        super(row, col, TileType.ICECREAM);
     }
 
     @Override

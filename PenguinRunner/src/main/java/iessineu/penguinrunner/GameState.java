@@ -57,12 +57,13 @@ public class GameState implements Serializable {
 
     private final int startPlayerRow;
     private final int startPlayerCol;
-
+    private final SoundManager soundManager = new SoundManager();
     private final PlayerState walkingState = new WalkingState();
     private final PlayerState climbingState = new ClimbingState();
     private final PlayerState railState = new RailState();
     private final PlayerState fallingState = new FallingState();
-
+    
+    
     public GameState() {
         List<Map> mapList = llegirMapes();
         this.mapObject = mapList.get(0);
@@ -416,6 +417,7 @@ public class GameState implements Serializable {
 
         if (block != null && block.isCollectable()) {
             blocks[row][col] = null;
+            soundManager.playSound("resources/nyam.wav");
             player.addIceCream();
 
             System.out.println("Gelat: " + player.geticeCream());

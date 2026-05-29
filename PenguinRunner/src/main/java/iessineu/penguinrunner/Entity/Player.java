@@ -87,7 +87,7 @@ public class Player implements Serializable {
         return "🐧";
     }
     public Color getColor() {
-        return new Color(71, 71, 209);
+        return new Color(102, 153, 255);
     }
 
     public void setState(PlayerState state) {

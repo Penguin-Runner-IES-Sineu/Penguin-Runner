@@ -15,15 +15,20 @@ import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.font.FontRenderContext;
+import java.awt.font.TextLayout;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -31,26 +36,45 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class GamePanel extends JPanel {
 
-    public static final int TILE_SIZE = 40;
+    public static final int TILE_SIZE = 43;
     private static final int HUD_HEIGHT = 100;
-
-
+    private Image iceSprite;
+    private Image iceCreamSprite;
+    private Image stairsSprite;
+    private Image playerSprite;
     private Font font;
-
+    private Font font2;
+    private final SoundManager soundManager = new SoundManager();
     private GameState gameState;
 
     public GamePanel() {
-        
+
         font = new Font("Segoe UI Emoji", Font.PLAIN, 30); // per defecte s'empra aquesta, i després llegim l'arxiu 
+        font2 = new Font("Segoe UI Emoji", Font.PLAIN, 30); // per defecte s'empra aquesta, i després llegim l'arxiu 
 
-        this.gameState = new GameState();
+        try {
+            font = Font.createFont(Font.TRUETYPE_FONT, new File("resources/font.ttf")).deriveFont(33f);
+            font2 = Font.createFont(Font.TRUETYPE_FONT, new File("resources/font.ttf")).deriveFont(16f);
+        } catch (FontFormatException | IOException ex) {
+            System.out.println("Error obrint la font!");
+            System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
 
-        resizePanelToGame();
+        loadSprites();
+        soundManager.playMusic("resources/music.wav");
+        soundManager.setVolume(0.5f);
+        gameState = new GameState();
 
+        int width = gameState.getCols() * TILE_SIZE;
+        int height = gameState.getRows() * TILE_SIZE;
+
+        setPreferredSize(new Dimension(width, height + 100));
         setBackground(Color.BLACK);
-        setFocusable(true);
-        requestFocusInWindow();
 
+        // Necessari perquè el JPanel pugui rebre tecles.
+        setFocusable(true);
+
+        // Escoltar teclat.
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -312,37 +336,70 @@ public class GamePanel extends JPanel {
     }
 
     private void drawBlank(Graphics g, int row, int col) {
-        drawCellBackground(g, row, col, new Color(10, 20, 35));
+        drawCellBackground(g, row, col);
     }
 
+    /*
+     * Dibuixa una paret.
+     */
     private void drawWall(Graphics g, int row, int col) {
-        drawCellBackground(g, row, col, new Color(70, 70, 80));
-        drawEmoji(g, "🧱", row, col, null, font);
+        drawCellBackground(g, row, col, new Color(38, 38, 38));
+        drawEmoji(g, "🧱", row, col, new Color(70, 70, 80), font);
     }
 
     private void drawStone(Graphics g, int row, int col) {
-        drawCellBackground(g, row, col, new Color(35, 35, 45));
-        drawEmoji(g, "🪨", row, col, null, font);
+        drawCellBackground(g, row, col, new Color(102, 51, 0));
+        drawEmoji(g, "🧱", row, col, new Color(153, 77, 0), font);
     }
 
+    /*
+     * Dibuixa una casella de gel.
+     */
+//    private void drawIce(Graphics g, int row, int col) {
+//        drawCellBackground(g, row, col, new Color(102, 179, 255));
+//        drawEmoji(g, "🧱", row, col, new Color(0, 115, 230), font);
+//
+//    }
     private void drawIce(Graphics g, int row, int col) {
-        drawCellBackground(g, row, col, new Color(170, 225, 255));
-        drawEmoji(g, "🧊", row, col, null, font);
+        drawCellBackground(g, row, col, new Color(102, 179, 255));
+        drawSprite(g, iceSprite, row, col);
     }
 
+    /*
+     * Dibuixa una casella amb gelat.
+     */
+//    private void drawIceCream(Graphics g, int row, int col) {
+//        drawCellBackground(g, row, col);
+//        drawEmoji(g, "🍦", row, col, new Color(155, 255, 153), font);
+//    }
     private void drawIceCream(Graphics g, int row, int col) {
-        drawCellBackground(g, row, col, new Color(170, 225, 255));
-        drawEmoji(g, "🍦", row, col, null, font);
+        drawCellBackground(g, row, col);
+        drawSprite(g, iceCreamSprite, row, col);
     }
 
+    /*
+     * Dibuixa una casella amb escala.
+     */
+//    private void drawStair(Graphics g, int row, int col) {
+//        drawCellBackground(g, row, col);
+//        drawEmoji(g, "🪜", row, col, new Color(128, 64, 0), font);
+//    }
     private void drawStair(Graphics g, int row, int col) {
-        drawCellBackground(g, row, col, new Color(15, 25, 40));
-        drawEmoji(g, "🪜", row, col, null, font);
+        drawCellBackground(g, row, col);
+        drawSprite(g, stairsSprite, row, col);
     }
 
+    /*
+     * Dibuixa una casella amb pasarela.
+     */
     private void drawRail(Graphics g, int row, int col) {
-        drawCellBackground(g, row, col, new Color(15, 25, 40));
-        drawEmoji(g, "━", row, col, new Color(134, 0, 179), font);
+        drawCellBackground(g, row, col);
+        drawEmoji(g, "—", row, col, new Color(134, 0, 179), font);
+    }
+
+    private void drawDoor(Graphics g, int row, int col) {
+        drawCellBackground(g, row, col);
+        drawEmoji(g, "🚪", row, col, new Color(128, 64, 0), font);
     }
 
     private void drawMolten(Graphics g, int row, int col) {
@@ -350,16 +407,6 @@ public class GamePanel extends JPanel {
         drawEmoji(g, "🕳️", row, col, null, font);
     }
 
-    /*
-     * Dibuixa una porta només si l'objectiu està completat.
-     */
-    private void drawDoor(Graphics g, int row, int col) {
-        drawCellBackground(g, row, col, new Color(40, 25, 10));
-
-        if (checkObjective()) {
-            drawEmoji(g, "🚪", row, col, null, font);
-        }
-    }
 
     /*
      * Fons i quadrícula d'una casella.
@@ -371,7 +418,19 @@ public class GamePanel extends JPanel {
         g.setColor(color);
         g.fillRect(x, y, TILE_SIZE, TILE_SIZE);
 
-        g.setColor(new Color(70, 100, 120));
+        g.setColor(new Color(230, 230, 230));
+        g.drawRect(x, y, TILE_SIZE, TILE_SIZE);
+    }
+
+    private void drawCellBackground(Graphics g, int row, int col) {
+        Color color = new Color(25, 25, 25);
+        int x = col * TILE_SIZE;
+        int y = row * TILE_SIZE;
+
+        g.setColor(color);
+        g.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+
+        g.setColor(new Color(230, 230, 230));
         g.drawRect(x, y, TILE_SIZE, TILE_SIZE);
     }
 
@@ -381,14 +440,8 @@ public class GamePanel extends JPanel {
     private void drawPlayer(Graphics g) {
         Player player = gameState.getPlayer();
 
-        drawEmoji(
-                g,
-                player.getAvatar(),
-                player.getRow(),
-                player.getCol(),
-                player.getColor(),
-                font
-        );
+        drawSprite(g, playerSprite, player.getRow(), player.getCol());
+
     }
 
     /*
@@ -418,25 +471,42 @@ public class GamePanel extends JPanel {
         int hudY = gameState.getRows() * TILE_SIZE;
         int hudHeight = HUD_HEIGHT;
 
-        g2.setColor(new Color(20, 20, 30));
+        // Fons del HUD
+        g2.setColor(new Color(18, 18, 28));
         g2.fillRect(0, hudY, getWidth(), hudHeight);
 
-        g2.setColor(new Color(70, 100, 120));
+        // Línia superior
+        g2.setColor(new Color(90, 130, 160));
         g2.drawLine(0, hudY, getWidth(), hudY);
 
         Player player = gameState.getPlayer();
 
-        int baseRow = gameState.getRows();
-        int baseCol = 0;
+        int padding = 20;
+        int textY = hudY + 35;
 
-        drawEmoji(g, player.getAvatar(), baseRow, baseCol + 1, player.getColor(), font);
-        drawEmoji(g, "🍦", baseRow, baseCol + 4, null, font);
-        drawText(g, player.geticeCream() + " / " + gameState.getIceCream(), baseRow, baseCol + 5, Color.WHITE);
+        g2.setFont(font2);
+        g2.setColor(Color.WHITE);
 
-        drawText(g, "Q: esquerra", baseRow + 1, baseCol + 1, Color.WHITE);
-        drawText(g, "E: dreta", baseRow + 1, baseCol + 5, Color.WHITE);
-        drawText(g, "P: guardar", baseRow + 1, baseCol + 9, Color.WHITE);
-        drawText(g, "O: carregar", baseRow + 1, baseCol + 13, Color.WHITE);
+        g2.drawString("🐧", padding, textY);
+
+        g2.drawString(
+                "🍦 Gelats: " + player.geticeCream() + " / " + gameState.getIceCream(),
+                padding + 220,
+                textY
+        );
+
+        g2.drawString(
+                "Nivell: " + gameState.getLevel(),
+                padding + 430,
+                textY
+        );
+
+        g2.setColor(new Color(190, 210, 230));
+        g2.drawString(
+                "Fletxes: moure   Q/E: trencar   F: interactuar   P: guardar   O: carregar",
+                padding,
+                hudY + 70
+        );
     }
 
     /*
@@ -479,6 +549,11 @@ public class GamePanel extends JPanel {
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON
         );
 
+        g2.setRenderingHint(
+                RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON
+        );
+
         g2.setFont(f);
 
         if (color != null) {
@@ -490,14 +565,33 @@ public class GamePanel extends JPanel {
         int cellX = col * TILE_SIZE;
         int cellY = row * TILE_SIZE;
 
-        FontMetrics metrics = g2.getFontMetrics(f);
+        FontRenderContext frc = g2.getFontRenderContext();
+        TextLayout layout = new TextLayout(emoji, f, frc);
 
-        int textWidth = metrics.stringWidth(emoji);
-        int textHeight = metrics.getAscent();
+        Rectangle2D bounds = layout.getBounds();
 
-        int x = cellX + (TILE_SIZE - textWidth) / 2;
-        int y = cellY + (TILE_SIZE + textHeight) / 2 - 4;
+        float x = (float) (cellX + (TILE_SIZE - bounds.getWidth()) / 2 - bounds.getX());
 
-        g2.drawString(emoji, x, y);
+        float y = (float) (cellY + (TILE_SIZE - bounds.getHeight()) / 2 - bounds.getY());
+
+        layout.draw(g2, x, y);
+    }
+
+    private Image loadSprite(String path) {
+        return new ImageIcon(path).getImage();
+    }
+
+    private void loadSprites() {
+        iceSprite = loadSprite("resources/sprites/ice.png");
+        iceCreamSprite = loadSprite("resources/sprites/iceCream.png");
+        stairsSprite = loadSprite("resources/sprites/stairs.png");
+        playerSprite = loadSprite("resources/sprites/player.png");
+    }
+
+    private void drawSprite(Graphics g, Image image, int row, int col) {
+        int x = col * TILE_SIZE;
+        int y = row * TILE_SIZE;
+
+        g.drawImage(image, x, y, TILE_SIZE, TILE_SIZE, null);
     }
 }
