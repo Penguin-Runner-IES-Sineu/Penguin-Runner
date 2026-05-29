@@ -4,15 +4,10 @@
  */
 package iessineu.penguinrunner;
 
-import iessineu.penguinrunner.Blocks.TileType;
-import iessineu.penguinrunner.Entity.Enemy;
-import iessineu.penguinrunner.Entity.Player;
-import iessineu.penguinrunner.Movement.Direction;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -28,11 +23,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import iessineu.penguinrunner.Blocks.TileType;
+import iessineu.penguinrunner.Entity.Enemy;
+import iessineu.penguinrunner.Entity.Player;
+import iessineu.penguinrunner.Movement.Direction;
 
 public class GamePanel extends JPanel {
 

@@ -1,0 +1,63 @@
+[
+    {
+        "type": "tiles",
+        "tiles": [
+            {
+                "type": "door",
+                "sprite": "🚪",
+                "color": "#804000",
+                "filename": "door.png"
+            },
+            {
+                "type": "rail",
+                "sprite": "—",
+                "color": "#8600b3",
+                "filename": "rail.png"
+            },
+            {
+                "type": "stair",
+                "sprite": "🪜",
+                "color": "#804000",
+                "filename": "stairs.png"
+            },
+            {
+                "type": "ice",
+                "sprite": "🧱",
+                "color": "#aae1ff",
+                "filename": "ice.png"
+            },
+            {
+                "type": "wall",
+                "sprite": "🧱",
+                "color": "#464650",
+                "filename": "wall.png"
+            },
+            {
+                "type": "stone",
+                "sprite": "🧱",
+                "color": "#141414",
+                "filename": "stone.png"
+            },
+            {
+                "type": "icecream",
+                "sprite": "🍦",
+                "color": "#FFFF99",
+                "filename": "icecream.png"
+            }
+        ]
+    },
+    {
+        "type": "player",
+        "sprite": "🐧",
+        "name": "Marc",
+        "color": "#FFFF00",
+        "filename": "player.png"
+    },
+    {
+        "type": "enemy",
+        "sprite": "🦭",
+        "name": "Iñaqui",
+        "color": "#00FF00",
+        "filename": "enemy.png"
+    }
+]

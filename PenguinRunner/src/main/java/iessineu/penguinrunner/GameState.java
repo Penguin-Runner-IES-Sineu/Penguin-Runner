@@ -8,6 +8,17 @@ package iessineu.penguinrunner;
  *
  * @author loren
  */
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import iessineu.penguinrunner.Blocks.Block;
 import iessineu.penguinrunner.Blocks.Door;
 import iessineu.penguinrunner.Blocks.Ice;
@@ -22,123 +33,88 @@ import iessineu.penguinrunner.Entity.Enemy;
 import iessineu.penguinrunner.Entity.Map;
 import iessineu.penguinrunner.Entity.Player;
 import iessineu.penguinrunner.Movement.Direction;
-
 import iessineu.penguinrunner.States.ClimbingState;
 import iessineu.penguinrunner.States.FallingState;
 import iessineu.penguinrunner.States.PlayerState;
 import iessineu.penguinrunner.States.RailState;
-
 import iessineu.penguinrunner.States.WalkingState;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class GameState implements Serializable {
 
     private final List<BrokenBlock> brokenBlocks = new ArrayList<>();
     private final List<Stone> stones = new ArrayList<>();
 
-    private final Block[][] blocks;
-
-    private Map mapObject;
-
-    private final Player player;
-    private final List<Enemy> enemies;
+    private final List<Map> mapList = llegirMapes();
+    private Map mapObject = mapList.get(0);
+    private Player player;
+    private List<Enemy> enemies;
+    private Block[][] blocks = loadMap();
 
     private int iceCream = 0;
 
-    private final int startPlayerRow;
-    private final int startPlayerCol;
+    private int startPlayerRow;
+    private int startPlayerCol;
     private final SoundManager soundManager = new SoundManager();
     private final PlayerState walkingState = new WalkingState();
     private final PlayerState climbingState = new ClimbingState();
     private final PlayerState railState = new RailState();
     private final PlayerState fallingState = new FallingState();
-    
-    
-    public GameState() {
-        List<Map> mapList = llegirMapes();
-        this.mapObject = mapList.get(0);
 
+    public Block[][] loadMap() {
         String[] level = mapObject.getMap();
-
         blocks = new Block[level.length][level[0].length()];
-        enemies = new ArrayList<>();
-
-        Player foundPlayer = null;
-
-        int tempStartRow = 1;
-        int tempStartCol = 1;
-
+        enemies = new ArrayList();
+        player = null;
+        startPlayerRow = 0;
+        startPlayerCol = 0;
         for (int row = 0; row < level.length; row++) {
             for (int col = 0; col < level[row].length(); col++) {
                 char symbol = level[row].charAt(col);
 
                 switch (symbol) {
-                    case '#':
+                    case '#' -> {
                         blocks[row][col] = new Wall(row, col);
-                        break;
-
-                    case '.':
+                    }
+                    case '.' -> {
                         blocks[row][col] = new Ice(row, col);
-                        break;
-
-                    case 'G':
+                    }
+                    case 'G' -> {
                         blocks[row][col] = new IceCream(row, col);
                         iceCream++;
-                        break;
-
-                    case 'H':
+                    }
+                    case 'H' -> {
                         blocks[row][col] = new Ladder(row, col);
-                        break;
-
-                    case '-':
+                    }
+                    case '-' -> {
                         blocks[row][col] = new Rail(row, col);
-                        break;
-
-                    case 'D':
+                    }
+                    case 'D' -> {
                         blocks[row][col] = new Door(row, col);
-                        break;
-
-                    case 'S':
+                    }
+                    case 'S' -> {
                         Stone stone = new Stone(row, col);
                         blocks[row][col] = stone;
                         stones.add(stone);
-                        break;
-
-                    case 'P':
-                        foundPlayer = new Player(row, col);
-                        tempStartRow = row;
-                        tempStartCol = col;
+                    }
+                    case 'P' -> {
+                        player = new Player(row, col);
+                        startPlayerRow = row;
+                        startPlayerCol = col;
                         blocks[row][col] = null;
-                        break;
-
-                    case 'E':
+                    }
+                    case 'E' -> {
                         enemies.add(new Enemy(row, col, 1, 1));
                         blocks[row][col] = null;
-                        break;
-
-                    default:
+                    }
+                    default -> {
                         blocks[row][col] = null;
-                        break;
+                    }
                 }
             }
         }
 
-        player = foundPlayer;
-
-        startPlayerRow = tempStartRow;
-        startPlayerCol = tempStartCol;
-
         updatePlayerState();
+        return blocks;
     }
 
     /*
@@ -583,7 +559,13 @@ public class GameState implements Serializable {
     }
 
     void interact() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (blocks[player.getRow()][player.getCol()].getType() == TileType.DOOR) {
+            System.out.println("Porta");
+            int nivellActual = mapObject.getLevel();
+            mapObject = mapList.get(mapObject.getLevel());
+            loadMap();
+            // blocks = "";
+        }
     }
 
     /*
@@ -606,29 +588,8 @@ public class GameState implements Serializable {
      * LECTURA MAPES
      */
     public List<Map> llegirMapes() {
-        String jsonString = "";
 
-        try {
-            BufferedReader fitxer = new BufferedReader(new FileReader("resources/maps.json"));
-
-            try {
-                String line;
-
-                while ((line = fitxer.readLine()) != null) {
-                    jsonString += line;
-                }
-
-                fitxer.close();
-
-            } catch (IOException ex) {
-                System.out.println("Problema d'entrada i sortida");
-            }
-
-        } catch (FileNotFoundException ex) {
-            System.out.println("L'arxiu de mapes no s'ha trobat!");
-        }
-
-        JSONArray maps = new JSONArray(jsonString);
+        JSONArray maps = new JSONArray(llegirJSON("maps"));
         List<Map> mapList = new ArrayList<>();
 
         for (int i = 0; i < maps.length(); i++) {
@@ -645,6 +606,29 @@ public class GameState implements Serializable {
         }
 
         return mapList;
+    }
+
+    public String llegirJSON(String nomArxiu) {
+        String jsonString = "";
+        try {
+            BufferedReader fitxer = new BufferedReader(new FileReader("resources/" + nomArxiu + ".json"));
+            try {
+                String line;
+
+                while ((line = fitxer.readLine()) != null) {
+                    jsonString += line;
+                }
+
+                fitxer.close();
+
+            } catch (IOException ex) {
+                System.out.println("Problema d'entrada i sortida");
+            }
+
+        } catch (FileNotFoundException ex) {
+            System.out.println("L'arxiu no s'ha trobat!");
+        }
+        return jsonString;
     }
 
     public int getIceCream() {
