@@ -42,6 +42,8 @@ public class GamePanel extends JPanel {
     private Image iceCreamSprite;
     private Image stairsSprite;
     private Image playerSprite;
+    private Image blankSprite;
+    private Image railSprite;
     private Font font;
     private Font font2;
     private final SoundManager soundManager = new SoundManager();
@@ -62,7 +64,7 @@ public class GamePanel extends JPanel {
 
         loadSprites();
         soundManager.playMusic("resources/music.wav");
-        soundManager.setVolume(0.5f);
+        soundManager.setVolume(0.7f);
         gameState = new GameState();
 
         int width = gameState.getCols() * TILE_SIZE;
@@ -336,19 +338,21 @@ public class GamePanel extends JPanel {
     }
 
     private void drawBlank(Graphics g, int row, int col) {
-        drawCellBackground(g, row, col);
+//        drawCellBackground(g, row, col);
+drawSprite(g, blankSprite, row, col);
+
     }
 
     /*
      * Dibuixa una paret.
      */
     private void drawWall(Graphics g, int row, int col) {
-        drawCellBackground(g, row, col, new Color(38, 38, 38));
+//        drawCellBackground(g, row, col, new Color(38, 38, 38));
         drawEmoji(g, "🧱", row, col, new Color(70, 70, 80), font);
     }
 
     private void drawStone(Graphics g, int row, int col) {
-        drawCellBackground(g, row, col, new Color(102, 51, 0));
+//        drawCellBackground(g, row, col, new Color(102, 51, 0));
         drawEmoji(g, "🧱", row, col, new Color(153, 77, 0), font);
     }
 
@@ -361,7 +365,7 @@ public class GamePanel extends JPanel {
 //
 //    }
     private void drawIce(Graphics g, int row, int col) {
-        drawCellBackground(g, row, col, new Color(102, 179, 255));
+//        drawCellBackground(g, row, col, new Color(102, 179, 255));
         drawSprite(g, iceSprite, row, col);
     }
 
@@ -373,7 +377,7 @@ public class GamePanel extends JPanel {
 //        drawEmoji(g, "🍦", row, col, new Color(155, 255, 153), font);
 //    }
     private void drawIceCream(Graphics g, int row, int col) {
-        drawCellBackground(g, row, col);
+//        drawCellBackground(g, row, col);
         drawSprite(g, iceCreamSprite, row, col);
     }
 
@@ -385,25 +389,29 @@ public class GamePanel extends JPanel {
 //        drawEmoji(g, "🪜", row, col, new Color(128, 64, 0), font);
 //    }
     private void drawStair(Graphics g, int row, int col) {
-        drawCellBackground(g, row, col);
+
         drawSprite(g, stairsSprite, row, col);
     }
 
     /*
      * Dibuixa una casella amb pasarela.
      */
+//    private void drawRail(Graphics g, int row, int col) {
+//        drawEmoji(g, "—", row, col, new Color(134, 0, 179), font);
+//    }
+
     private void drawRail(Graphics g, int row, int col) {
-        drawCellBackground(g, row, col);
-        drawEmoji(g, "—", row, col, new Color(134, 0, 179), font);
+//        drawCellBackground(g, row, col);
+        drawSprite(g, railSprite, row, col);
     }
 
     private void drawDoor(Graphics g, int row, int col) {
-        drawCellBackground(g, row, col);
+//        drawCellBackground(g, row, col);
         drawEmoji(g, "🚪", row, col, new Color(128, 64, 0), font);
     }
 
     private void drawMolten(Graphics g, int row, int col) {
-        drawCellBackground(g, row, col, new Color(35, 10, 10));
+//        drawCellBackground(g, row, col, new Color(35, 10, 10));
         drawEmoji(g, "🕳️", row, col, null, font);
     }
 
@@ -586,6 +594,8 @@ public class GamePanel extends JPanel {
         iceCreamSprite = loadSprite("resources/sprites/iceCream.png");
         stairsSprite = loadSprite("resources/sprites/stairs.png");
         playerSprite = loadSprite("resources/sprites/player.png");
+        railSprite = loadSprite("resources/sprites/rail.png");
+        blankSprite = loadSprite("resources/sprites/blank.png");
     }
 
     private void drawSprite(Graphics g, Image image, int row, int col) {
