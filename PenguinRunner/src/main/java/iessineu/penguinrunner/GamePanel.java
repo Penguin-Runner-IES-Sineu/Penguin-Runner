@@ -281,44 +281,48 @@ public class GamePanel extends JPanel {
             for (int col = 0; col < gameState.getCols(); col++) {
                 TileType tile = gameState.getTile(row, col);
                 Block mapa[][] = gameState.loadMap();
-                switch (tile) {
-                    case WALL -> {
-                        Block bloc = mapa[row][col];
-                        bloc.draw(row, col);
-                        // Wall.draw(row, col);
-                    }
-                    case ICE -> {
-                        Block bloc = mapa[row][col];
-                        bloc.draw(row, col);
-                        // Ice.draw(row, col);
-                        // drawIce(g, row, col);
-                        // System.out.println(Ice.getEmoji());
-                        // System.out.println(Ice.getColorPrintable());
-                    }
-                    case ICECREAM ->
-                        // IceCream.draw(row, col);
-                        drawIceCream(g, row, col);
-                    case STAIR ->
-                        // Ladder.draw(row, col);
-                        drawStair(g, row, col);
-                    case RAIL ->
-                        // Rail.draw(row, col);
-                        drawRail(g, row, col);
-                    case DOOR ->
-                        // Door.draw(row, col);
-                        drawDoor(g, row, col);
-                    case STONE ->
-                        // Stone.draw(row, col);
-                        drawStone(g, row, col);
-                    case MOLTEN ->
-                        // Molten.draw(row, col);
-                        drawMolten(g, row, col);
-                    case BLANK ->
-                        drawBlank(g, row, col);
-                    default -> {
-                        throw new AssertionError(tile.name());
-                    }
+                Block bloc = mapa[row][col];
+                if (bloc != null) {
+                    bloc.draw(row, col);
                 }
+                // switch (tile) {
+                //     case WALL -> {
+                //         Block bloc = mapa[row][col];
+                //         bloc.draw(row, col);
+                //         // Wall.draw(row, col);
+                //     }
+                //     case ICE -> {
+                //         Block bloc = mapa[row][col];
+                //         bloc.draw(row, col);
+                //         // Ice.draw(row, col);
+                //         // drawIce(g, row, col);
+                //         // System.out.println(Ice.getEmoji());
+                //         // System.out.println(Ice.getColorPrintable());
+                //     }
+                //     case ICECREAM ->
+                //         // IceCream.draw(row, col);
+                //         drawIceCream(g, row, col);
+                //     case STAIR ->
+                //         // Ladder.draw(row, col);
+                //         drawStair(g, row, col);
+                //     case RAIL ->
+                //         // Rail.draw(row, col);
+                //         drawRail(g, row, col);
+                //     case DOOR ->
+                //         // Door.draw(row, col);
+                //         drawDoor(g, row, col);
+                //     case STONE ->
+                //         // Stone.draw(row, col);
+                //         drawStone(g, row, col);
+                //     case MOLTEN ->
+                //         // Molten.draw(row, col);
+                //         drawMolten(g, row, col);
+                //     case BLANK ->
+                //         drawBlank(g, row, col);
+                //     default -> {
+                //         throw new AssertionError(tile.name());
+                //     }
+                // }
             }
         }
     }
@@ -419,9 +423,11 @@ public class GamePanel extends JPanel {
      */
     private void drawPlayer(Graphics g) {
         Player player = gameState.getPlayer();
+        player.setColorFromHex("#FFFF00");
+        player.setEmoji("%");
+        player.draw(player.getRow(), player.getCol());
 
-        drawSprite(g, playerSprite, player.getRow(), player.getCol());
-
+        // drawSprite(g, playerSprite, player.getRow(), player.getCol());
     }
 
     /*

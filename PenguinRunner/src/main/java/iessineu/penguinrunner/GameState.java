@@ -21,12 +21,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import iessineu.penguinrunner.Blocks.Block;
-import iessineu.penguinrunner.Blocks.Door;
 import iessineu.penguinrunner.Blocks.Ice;
-import iessineu.penguinrunner.Blocks.IceCream;
-import iessineu.penguinrunner.Blocks.Ladder;
 import iessineu.penguinrunner.Blocks.Molten;
-import iessineu.penguinrunner.Blocks.Rail;
 import iessineu.penguinrunner.Blocks.Stone;
 import iessineu.penguinrunner.Blocks.TileType;
 import iessineu.penguinrunner.Entity.Enemy;
@@ -65,64 +61,63 @@ public class GameState implements Serializable {
         blocks = new Block[level.length][level[0].length()];
         enemies = new ArrayList();
         Map<String, List<String>> mapaSprites = GamePanel.createSpriteMap();
-        System.out.println(mapaSprites.toString());
         player = null;
         startPlayerRow = 0;
         startPlayerCol = 0;
         for (int row = 0; row < level.length; row++) {
             for (int col = 0; col < level[row].length(); col++) {
                 char symbol = level[row].charAt(col);
+                List<String> atr = new ArrayList();
                 switch (symbol) {
                     case '#' -> {
                         // blocks[row][col] = new Wall(row, col);
-                        List<String> atr = mapaSprites.get("wall");
+                        atr = mapaSprites.get("wall");
                         blocks[row][col] = new Block(row, col, TileType.WALL);
-                        blocks[row][col].setEmoji(atr.get(0));
-                        blocks[row][col].setColorFromHex(atr.get(1));
-                        blocks[row][col].setSprite(atr.get(2));
+                        // blocks[row][col].setEmoji(atr.get(0));
+                        // blocks[row][col].setColorFromHex(atr.get(1));
+                        // blocks[row][col].setSprite(atr.get(2));
                     }
                     case '.' -> {
                         blocks[row][col] = new Block(row, col, TileType.ICE);
-                        List<String> atr = mapaSprites.get("ice");
-                        blocks[row][col].setEmoji(atr.get(0));
-                        blocks[row][col].setColorFromHex(atr.get(1));
-                        blocks[row][col].setSprite(atr.get(2));
+                        atr = mapaSprites.get("ice");
+                        // blocks[row][col].setEmoji(atr.get(0));
+                        // blocks[row][col].setColorFromHex(atr.get(1));
+                        // blocks[row][col].setSprite(atr.get(2));
                     }
                     case 'G' -> {
-                        blocks[row][col] = new IceCream(row, col);
+                        blocks[row][col] = new Block(row, col, TileType.ICECREAM);
                         iceCream++;
-                        // atr = mapaSprites.get("icecream");
-                        // IceCream.setEmoji(atr.get(0));
-                        // IceCream.setColorFromHex(atr.get(1));
-                        // IceCream.setSprite(atr.get(2));
+                        atr = mapaSprites.get("icecream");
+                        // blocks[row][col].setEmoji(atr.get(0));
+                        // blocks[row][col].setColorFromHex(atr.get(1));
+                        // blocks[row][col].setSprite(atr.get(2));
                     }
                     case 'H' -> {
-                        blocks[row][col] = new Ladder(row, col);
-                        // List<String> atr = new ArrayList();
-                        // atr = mapaSprites.get("stair");
-                        // Ladder.setEmoji(atr.get(0));
-                        // Ladder.setColorFromHex(atr.get(1));
-                        // Ladder.setSprite(atr.get(2));
+                        blocks[row][col] = new Block(row, col, TileType.STAIR);
+                        atr = mapaSprites.get("stair");
+                        // blocks[row][col].setEmoji(atr.get(0));
+                        // blocks[row][col].setColorFromHex(atr.get(1));
+                        // blocks[row][col].setSprite(atr.get(2));
                     }
                     case '-' -> {
-                        blocks[row][col] = new Rail(row, col);
-                        // atr = mapaSprites.get("rail");
-                        // Rail.setEmoji(atr.get(0));
-                        // Rail.setColorFromHex(atr.get(1));
-                        // Rail.setSprite(atr.get(2));
+                        blocks[row][col] = new Block(row, col, TileType.RAIL);
+                        atr = mapaSprites.get("rail");
+                        // blocks[row][col].setEmoji(atr.get(0));
+                        // blocks[row][col].setColorFromHex(atr.get(1));
+                        // blocks[row][col].setSprite(atr.get(2));
+                        // blocks[row][col] = new Rail(row, col);
                     }
                     case 'D' -> {
-                        blocks[row][col] = new Door(row, col);
-                        // atr = mapaSprites.get("door");
-                        // Door.setEmoji(atr.get(0));
-                        // Door.setColorFromHex(atr.get(1));
-                        // Door.setSprite(atr.get(2));
+                        blocks[row][col] = new Block(row, col, TileType.DOOR);
+                        atr = mapaSprites.get("door");
+                        // blocks[row][col] = new Door(row, col);
                     }
                     case 'S' -> {
+                        blocks[row][col] = new Block(row, col, TileType.STONE);
                         Stone stone = new Stone(row, col);
-                        blocks[row][col] = stone;
                         stones.add(stone);
-                        // atr = mapaSprites.get("stone");
+                        atr = mapaSprites.get("stone");
+                        // blocks[row][col] = stone;
                         // Stone.setEmoji(atr.get(0));
                         // Stone.setColorFromHex(atr.get(1));
                         // Stone.setSprite(atr.get(2));
@@ -131,28 +126,36 @@ public class GameState implements Serializable {
                         player = new Player(row, col);
                         startPlayerRow = row;
                         startPlayerCol = col;
+                        blocks[row][col] = new Block(row, col, TileType.BLANK);
+                        atr = mapaSprites.get("player");
                         blocks[row][col] = null;
-                        // atr = mapaSprites.get("player");
                         // Player.setEmoji(atr.get(0));
                         // Player.setColorFromHex(atr.get(1));
                         // Player.setSprite(atr.get(2));
                     }
                     case 'E' -> {
                         enemies.add(new Enemy(row, col, 1, 1));
+                        // blocks[row][col] = new Block(row, col, TileType.BLANK);
+                        atr = mapaSprites.get("enemy");
                         blocks[row][col] = null;
-                        // atr = mapaSprites.get("enemy");
                         // Enemy.setEmoji(atr.get(0));
                         // Enemy.setColorFromHex(atr.get(1));
                         // Enemy.setSprite(atr.get(2));
                     }
                     default -> {
                         blocks[row][col] = new Block(row, col, TileType.BLANK);
+                        // atr = mapaSprites.get("blank");
                     }
+                }
+                if (!atr.isEmpty() && blocks[row][col] != null) {
+                    blocks[row][col].setEmoji(atr.get(0));
+                    blocks[row][col].setColorFromHex(atr.get(1));
+                    blocks[row][col].setSprite(atr.get(2));
                 }
             }
         }
 
-        // updatePlayerState();
+        updatePlayerState();
         return blocks;
     }
 
