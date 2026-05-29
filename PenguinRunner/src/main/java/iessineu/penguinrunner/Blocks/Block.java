@@ -11,7 +11,9 @@ package iessineu.penguinrunner.Blocks;
 import java.awt.Color;
 import java.io.Serializable;
 
-public abstract class Block implements Serializable {
+import iessineu.penguinrunner.Printable;
+
+public abstract class Block extends Printable implements Serializable {
 
     protected int row;
     protected int col;

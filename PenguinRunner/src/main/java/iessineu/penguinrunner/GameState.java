@@ -173,7 +173,6 @@ public class GameState implements Serializable {
 
         if (canPushStone && isStone(nextRow, nextCol)) {
             boolean pushed = tryPushStone(row, col, direction);
-
             if (!pushed) {
                 return;
             }
@@ -276,13 +275,17 @@ public class GameState implements Serializable {
      * ACCIONS
      */
     public void breakDownLeft() {
-        breakBlock(player.getRow() + 1, player.getCol() - 1);
-        finishTurn();
+        if (canMoveTo(player.getRow(), player.getCol() - 1)) {
+            breakBlock(player.getRow() + 1, player.getCol() - 1);
+            finishTurn();
+        }
     }
 
     public void breakDownRight() {
-        breakBlock(player.getRow() + 1, player.getCol() + 1);
-        finishTurn();
+        if (canMoveTo(player.getRow(), player.getCol() + 1)) {
+            breakBlock(player.getRow() + 1, player.getCol() + 1);
+            finishTurn();
+        }
     }
 
     private void breakBlock(int row, int col) {

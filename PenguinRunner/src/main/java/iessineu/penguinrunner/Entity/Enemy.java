@@ -5,6 +5,9 @@
 package iessineu.penguinrunner.Entity;
 
 import java.awt.Color;
+import java.io.Serializable;
+
+import iessineu.penguinrunner.Printable;
 
 /**
  *
@@ -16,7 +19,7 @@ import java.awt.Color;
  *
  * Igual que el jugador, l'enemic es mou per caselles.
  */
-public class Enemy {
+public class Enemy extends Printable implements Serializable {
 
     private int row;
     private int col;
@@ -24,7 +27,7 @@ public class Enemy {
     private final int respawnCol;
     private final int originalRow;
     private final int originalCol;
-    
+
     private boolean isDead = false;
     private int timeToRevive = 0;
 
@@ -38,11 +41,12 @@ public class Enemy {
     public int getRow() {
         return row;
     }
+
     public int respawnRow() {
         return respawnRow;
     }
-    
-    public void moveToOriginalRow(){
+
+    public void moveToOriginalRow() {
         row = originalRow;
         col = originalCol;
     }
@@ -50,40 +54,47 @@ public class Enemy {
     public int getCol() {
         return col;
     }
+
     public int getRespawnCol() {
         return respawnCol;
     }
-    public boolean getIsDead(){
+
+    public boolean getIsDead() {
         return isDead;
     }
-    public void revive(){
-         isDead = false;
-         setPosition(respawnRow, respawnCol);
+
+    public void revive() {
+        isDead = false;
+        setPosition(respawnRow, respawnCol);
     }
-    public void die(){
-         isDead = true;
+
+    public void die() {
+        isDead = true;
     }
-    
-    public void setTimeToRevive(int timeToRevive){
+
+    public void setTimeToRevive(int timeToRevive) {
         this.timeToRevive = timeToRevive;
     }
-    public int getTimeToRevive(){
+
+    public int getTimeToRevive() {
         return timeToRevive;
     }
-    public void subtractTimeToRevive(int timeLess){
+
+    public void subtractTimeToRevive(int timeLess) {
         this.timeToRevive -= timeLess;
     }
-    
+
     public void setPosition(int row, int col) {
         this.row = row;
         this.col = col;
     }
 
-        public String getAvatar() {
+    public String getAvatar() {
         return "🦭";
     }
+
     public Color getColor() {
         return new Color(26, 140, 255);
     }
-    
+
 }

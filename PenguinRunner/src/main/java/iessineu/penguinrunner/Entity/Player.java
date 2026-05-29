@@ -4,10 +4,12 @@
  */
 package iessineu.penguinrunner.Entity;
 
-import iessineu.penguinrunner.States.WalkingState;
-import iessineu.penguinrunner.States.PlayerState;
 import java.awt.Color;
 import java.io.Serializable;
+
+import iessineu.penguinrunner.Printable;
+import iessineu.penguinrunner.States.PlayerState;
+import iessineu.penguinrunner.States.WalkingState;
 
 /**
  *
@@ -24,7 +26,7 @@ import java.io.Serializable;
  * No guardem x/y en píxels perquè això és només per dibuixar.
  */
 
-public class Player implements Serializable {
+public class Player extends Printable implements Serializable {
 
     private int row;
     private int col;

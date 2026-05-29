@@ -21,6 +21,11 @@
                 "filename": "stairs.png"
             },
             {
+                "type": "stair",
+                "sprite": "🪜",
+                "color": "#804000"
+            },
+            {
                 "type": "ice",
                 "sprite": "🧱",
                 "color": "#aae1ff",
