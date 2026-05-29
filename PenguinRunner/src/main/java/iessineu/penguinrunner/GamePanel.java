@@ -4,6 +4,7 @@
  */
 package iessineu.penguinrunner;
 
+import iessineu.penguinrunner.Blocks.Block;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -60,6 +61,8 @@ public class GamePanel extends JPanel {
     private final SoundManager soundManager = new SoundManager();
     private GameState gameState;
 
+    Block mapa[][];
+
     public GamePanel() {
         soundManager.playMusic("resources/music.wav");
         soundManager.setVolume(0.7f);
@@ -67,6 +70,7 @@ public class GamePanel extends JPanel {
         loadFont();
         loadSprites();
         Printable.setFont(font);
+        mapa = gameState.loadMap();
 
         int width = gameState.getCols() * TILE_SIZE;
         int height = gameState.getRows() * TILE_SIZE;
@@ -279,7 +283,6 @@ public class GamePanel extends JPanel {
         for (int row = 0; row < gameState.getRows(); row++) {
             for (int col = 0; col < gameState.getCols(); col++) {
                 TileType tile = gameState.getTile(row, col);
-                // Block mapa[][] = gameState.loadMap();
                 switch (tile) {
                     case WALL -> {
                         drawWall(g, row, col);

@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 import iessineu.penguinrunner.Printable;
 
-public abstract class Block extends Printable implements Serializable {
+public class Block extends Printable implements Serializable {
 
     protected int row;
     protected int col;
