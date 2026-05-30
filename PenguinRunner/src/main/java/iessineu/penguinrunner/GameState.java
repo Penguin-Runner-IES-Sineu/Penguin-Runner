@@ -40,6 +40,9 @@ public class GameState implements Serializable {
     private final List<Stone> stones = new ArrayList<>();
     private String rutaMapes = "resources/maps.json";
     private String rutaPrintables = "resources/printables.json";
+    private final Map<String, List<String>> mapaSprites = GamePanel.createSpriteMap();
+    private int nivellActual = 0;
+
     private final List<GameMap> mapList = llegirMapes(rutaMapes);
     private GameMap mapObject = mapList.get(0);
     private Player player;
@@ -60,7 +63,6 @@ public class GameState implements Serializable {
         String[] level = mapObject.getMap();
         blocks = new Block[level.length][level[0].length()];
         enemies = new ArrayList();
-        Map<String, List<String>> mapaSprites = GamePanel.createSpriteMap();
         player = null;
         startPlayerRow = 0;
         startPlayerCol = 0;
@@ -315,7 +317,7 @@ public class GameState implements Serializable {
      */
     private void moveEnemies() {
         for (Enemy enemy : enemies) {
-            if (enemy.getIsDead()) {
+            if (enemy.isDead()) {
                 enemy.subtractTimeToRevive(1);
 
                 if (enemy.getTimeToRevive() <= 0) {
@@ -404,7 +406,7 @@ public class GameState implements Serializable {
         int playerCol = player.getCol();
 
         for (Enemy enemy : enemies) {
-            if (!enemy.getIsDead()
+            if (!enemy.isDead()
                     && enemy.getRow() == playerRow
                     && enemy.getCol() == playerCol) {
                 resetPositions();
@@ -510,7 +512,7 @@ public class GameState implements Serializable {
 
     private boolean isEnemy(int row, int col) {
         for (Enemy enemy : enemies) {
-            if (!enemy.getIsDead()
+            if (!enemy.isDead()
                     && enemy.getRow() == row
                     && enemy.getCol() == col) {
                 return true;
@@ -549,10 +551,6 @@ public class GameState implements Serializable {
         return enemies;
     }
 
-    public int getLevel() {
-        return mapObject.getLevel();
-    }
-
     public Block[][] getBlocks() {
         return blocks;
     }
@@ -560,11 +558,16 @@ public class GameState implements Serializable {
     void interact() {
         if (blocks[player.getRow()][player.getCol()].getType() == TileType.DOOR) {
             System.out.println("Porta");
-            int nivellActual = mapObject.getLevel();
-            mapObject = mapList.get(mapObject.getLevel());
+            nivellActual++;
+            mapObject = mapList.get(nivellActual);
+            // mapObject = mapList.get(1);
             loadMap();
             // blocks = "";
         }
+    }
+
+    public int getNivell() {
+        return nivellActual;
     }
 
     /*
@@ -601,9 +604,8 @@ public class GameState implements Serializable {
                 view[j] = jsonView.getString(j);
             }
 
-            mapList.add(new GameMap(obj.getInt("level"), view));
+            mapList.add(new GameMap(view));
         }
-
         return mapList;
     }
 

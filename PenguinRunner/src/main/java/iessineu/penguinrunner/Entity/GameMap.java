@@ -12,11 +12,9 @@ import java.io.Serializable;
  */
 public class GameMap implements Serializable {
 
-    private int level;
     private final String[] map;
 
-    public GameMap(int level, String[] map) {
-        this.level = level;
+    public GameMap(String[] map) {
         this.map = map;
     }
 
@@ -24,12 +22,5 @@ public class GameMap implements Serializable {
         return map;
     }
 
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
 
 }

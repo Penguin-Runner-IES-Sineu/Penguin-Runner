@@ -11,12 +11,8 @@ import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.font.FontRenderContext;
-import java.awt.font.TextLayout;
-import java.awt.geom.Rectangle2D;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -52,12 +47,7 @@ public class GamePanel extends JPanel {
     public static final int TILE_SIZE = 43;
     private static final int HUD_HEIGHT = 100;
     private static String printablesPath = "resources/printables.json";
-    private Image iceSprite;
-    private Image iceCreamSprite;
-    private Image stairsSprite;
-    private Image playerSprite;
     private Image blankSprite;
-    private Image railSprite;
     private Font font;
     private final SoundManager soundManager = new SoundManager();
     private GameState gameState = new GameState();
@@ -71,7 +61,7 @@ public class GamePanel extends JPanel {
         loadFont();
         createSpriteMap();
         Printable.setFont(font);
-        // mapa = gameState.loadMap();
+        mapa = gameState.loadMap();
 
         int width = gameState.getCols() * TILE_SIZE;
         int height = gameState.getRows() * TILE_SIZE;
@@ -284,131 +274,19 @@ public class GamePanel extends JPanel {
         for (int row = 0; row < gameState.getRows(); row++) {
             for (int col = 0; col < gameState.getCols(); col++) {
                 TileType tile = gameState.getTile(row, col);
-                switch (tile) {
-                    case WALL, ICE, ICECREAM, MOLTEN, STAIR, RAIL, DOOR, STONE -> {
-                        Block b = mapa[row][col];
-                        b.draw(row, col);
-                        // drawWall(g, row, col);
-                        // Block bloc = mapa[row][col];
-                        // bloc.draw(row, col);
-                        // Wall.draw(row, col);
-                    }
-                    // case ICE -> {
-                    //     drawIce(g, row, col);
-                    //     // Block bloc = mapa[row][col];
-                    //     // bloc.draw(row, col);
-                    //     // Ice.draw(row, col);
-                    //     // drawIce(g, row, col);
-                    //     // System.out.println(Ice.getEmoji());
-                    //     // System.out.println(Ice.getColorPrintable());
-                    // }
-                    // case ICECREAM ->
-                    //     // IceCream.draw(row, col);
-                    //     drawIceCream(g, row, col);
-                    // case STAIR ->
-                    //     // Ladder.draw(row, col);
-                    //     drawStair(g, row, col);
-                    // case RAIL ->
-                    //     // Rail.draw(row, col);
-                    //     drawRail(g, row, col);
-                    // case DOOR ->
-                    //     // Door.draw(row, col);
-                    //     drawDoor(g, row, col);
-                    // case STONE ->
-                    //     // Stone.draw(row, col);
-                    //     drawStone(g, row, col);
-                    // case MOLTEN ->
-                    //     // Molten.draw(row, col);
-                    //     drawMolten(g, row, col);
-                    case BLANK ->
-                        drawBlank(g, row, col);
-                    default -> {
-                        throw new AssertionError(tile.name());
-                    }
+                if (tile == TileType.BLANK) {
+                    drawBlank(g, row, col);
+                } else {
+                    Block b = gameState.getBlocks()[row][col];
+                    b.draw(row, col);
                 }
             }
+            System.out.println("");
         }
     }
 
     private void drawBlank(Graphics g, int row, int col) {
-//        drawCellBackground(g, row, col);
         drawSprite(g, blankSprite, row, col);
-
-    }
-
-//     /*
-//      * Dibuixa una paret.
-//      */
-//     private void drawWall(Graphics g, int row, int col) {
-// //        drawCellBackground(g, row, col, new Color(38, 38, 38));
-//         drawEmoji(g, "🧱", row, col, new Color(70, 70, 80), font);
-//     }
-//     private void drawStone(Graphics g, int row, int col) {
-// //        drawCellBackground(g, row, col, new Color(102, 51, 0));
-//         drawEmoji(g, "🧱", row, col, new Color(153, 77, 0), font);
-//     }
-//     /*
-//      * Dibuixa una casella de gel.
-//      */
-//     private void drawIce(Graphics g, int row, int col) {
-// //        drawCellBackground(g, row, col, new Color(102, 179, 255));
-//         drawSprite(g, iceSprite, row, col);
-//     }
-//     /*
-//      * Dibuixa una casella amb gelat.
-//      */
-//     private void drawIceCream(Graphics g, int row, int col) {
-// //        drawCellBackground(g, row, col);
-//         drawSprite(g, iceCreamSprite, row, col);
-//     }
-//     /*
-//      * Dibuixa una casella amb escala.
-//      */
-//     private void drawStair(Graphics g, int row, int col) {
-//         drawSprite(g, stairsSprite, row, col);
-//     }
-//     /*
-//      * Dibuixa una casella amb pasarela.
-//      */
-// //    private void drawRail(Graphics g, int row, int col) {
-// //        drawEmoji(g, "—", row, col, new Color(134, 0, 179), font);
-// //    }
-//     private void drawRail(Graphics g, int row, int col) {
-// //        drawCellBackground(g, row, col);
-//         drawSprite(g, railSprite, row, col);
-//     }
-//     private void drawDoor(Graphics g, int row, int col) {
-// //        drawCellBackground(g, row, col);
-//         drawEmoji(g, "🚪", row, col, new Color(128, 64, 0), font);
-//     }
-//     private void drawMolten(Graphics g, int row, int col) {
-// //        drawCellBackground(g, row, col, new Color(35, 10, 10));
-//         drawEmoji(g, "🕳️", row, col, null, font);
-//     }
-    /*
-     * Fons i quadrícula d'una casella.
-     */
-    private void drawCellBackground(Graphics g, int row, int col, Color color) {
-        int x = col * TILE_SIZE;
-        int y = row * TILE_SIZE;
-
-        g.setColor(color);
-        g.fillRect(x, y, TILE_SIZE, TILE_SIZE);
-
-        g.setColor(new Color(230, 230, 230));
-        g.drawRect(x, y, TILE_SIZE, TILE_SIZE);
-    }
-
-    private void drawCellBackground(Graphics g, int row, int col) {
-        Color color = new Color(25, 25, 25);
-        int x = col * TILE_SIZE;
-        int y = row * TILE_SIZE;
-
-        g.setColor(color);
-        g.fillRect(x, y, TILE_SIZE, TILE_SIZE);
-
-        g.setColor(new Color(230, 230, 230));
-        g.drawRect(x, y, TILE_SIZE, TILE_SIZE);
     }
 
     /*
@@ -426,15 +304,8 @@ public class GamePanel extends JPanel {
      */
     private void drawEnemies(Graphics g) {
         for (Enemy enemy : gameState.getEnemies()) {
-            if (!enemy.getIsDead()) {
-                drawEmoji(
-                        g,
-                        enemy.getAvatar(),
-                        enemy.getRow(),
-                        enemy.getCol(),
-                        enemy.getColor(),
-                        font
-                );
+            if (!enemy.isDead()) {
+                enemy.draw(enemy.getRow(), enemy.getCol());
             }
         }
     }
@@ -473,7 +344,7 @@ public class GamePanel extends JPanel {
         );
 
         g2.drawString(
-                "Nivell: " + gameState.getLevel(),
+                "Nivell: " + gameState.getNivell(),
                 padding + 430,
                 textY
         );
@@ -493,69 +364,6 @@ public class GamePanel extends JPanel {
         Player player = gameState.getPlayer();
 
         return player.geticeCream() >= gameState.getIceCream();
-    }
-
-    /*
-     * Dibuixa text normal dins una zona tipus casella.
-     */
-    private void drawText(Graphics g, String text, int row, int col, Color color) {
-        Graphics2D g2 = (Graphics2D) g;
-
-        g2.setRenderingHint(
-                RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_ON
-        );
-
-        g2.setFont(font);
-        g2.setColor(color);
-
-        int x = col * TILE_SIZE;
-        int y = row * TILE_SIZE + 25;
-
-        g2.drawString(text, x, y);
-    }
-
-    /*
-     * Dibuixa un emoji centrat dins una casella.
-     */
-    private void drawEmoji(Graphics g, String emoji, int row, int col, Color color, Font f) {
-        Graphics2D g2 = (Graphics2D) g;
-
-        g2.setRenderingHint(
-                RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_ON
-        );
-
-        g2.setRenderingHint(
-                RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON
-        );
-
-        g2.setFont(f);
-
-        if (color != null) {
-            g2.setColor(color);
-        } else {
-            g2.setColor(Color.WHITE);
-        }
-
-        int cellX = col * TILE_SIZE;
-        int cellY = row * TILE_SIZE;
-
-        FontRenderContext frc = g2.getFontRenderContext();
-        TextLayout layout = new TextLayout(emoji, f, frc);
-
-        Rectangle2D bounds = layout.getBounds();
-
-        float x = (float) (cellX + (TILE_SIZE - bounds.getWidth()) / 2 - bounds.getX());
-
-        float y = (float) (cellY + (TILE_SIZE - bounds.getHeight()) / 2 - bounds.getY());
-
-        layout.draw(g2, x, y);
-    }
-
-    private Image loadSprite(String path) {
-        return new ImageIcon(path).getImage();
     }
 
     public static Map<String, List<String>> createSpriteMap() {
@@ -612,16 +420,6 @@ public class GamePanel extends JPanel {
         return spriteMap;
     }
 
-    // private void loadSprites() {
-    //     createSpriteMap();
-    //     iceSprite = loadSprite("resources/sprites/ice.png");
-    //     iceCreamSprite = loadSprite("resources/sprites/iceCream.png");
-    //     stairsSprite = loadSprite("resources/sprites/stairs.png");
-    //     playerSprite = loadSprite("resources/sprites/player.png");
-    //     railSprite = loadSprite("resources/sprites/rail.png");
-    //     blankSprite = loadSprite("resources/sprites/blank.png");
-    // }
-    
     private void drawSprite(Graphics g, Image image, int row, int col) {
         int x = col * TILE_SIZE;
         int y = row * TILE_SIZE;

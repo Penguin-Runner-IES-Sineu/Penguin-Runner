@@ -4,7 +4,6 @@
  */
 package iessineu.penguinrunner.Entity;
 
-import java.awt.Color;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +62,7 @@ public class Enemy extends Printable implements Serializable {
         return respawnCol;
     }
 
-    public boolean getIsDead() {
+    public boolean isDead() {
         return isDead;
     }
 
@@ -92,15 +91,7 @@ public class Enemy extends Printable implements Serializable {
         this.row = row;
         this.col = col;
     }
-
-    public String getAvatar() {
-        return "🦭";
-    }
-
-    public Color getColor() {
-        return new Color(26, 140, 255);
-    }
-
+    
     public void setPrintables() {
         Map<String, List<String>> mapaSprites = GamePanel.createSpriteMap();
         List<String> atributs = mapaSprites.get("enemy");

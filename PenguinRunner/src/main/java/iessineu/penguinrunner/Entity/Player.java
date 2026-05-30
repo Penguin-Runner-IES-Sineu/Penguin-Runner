@@ -4,7 +4,6 @@
  */
 package iessineu.penguinrunner.Entity;
 
-import java.awt.Color;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -87,14 +86,6 @@ public class Player extends Printable implements Serializable {
 
     public PlayerState getState() {
         return state;
-    }
-
-    public String getAvatar() {
-        return "🐧";
-    }
-
-    public Color getColor() {
-        return new Color(102, 153, 255);
     }
 
     public void setState(PlayerState state) {
