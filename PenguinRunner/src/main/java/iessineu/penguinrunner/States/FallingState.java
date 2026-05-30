@@ -4,8 +4,8 @@
  */
 package iessineu.penguinrunner.States;
 
-import iessineu.penguinrunner.Movement.Direction;
 import iessineu.penguinrunner.GameState;
+import iessineu.penguinrunner.Movement.Direction;
 
 /**
  *
@@ -19,6 +19,7 @@ public class FallingState implements PlayerState {
         // Quan cau, ignora la tecla i baixa una casella.
         gameState.movePlayerDownOne();
     }
+
 
     @Override
     public String getName() {

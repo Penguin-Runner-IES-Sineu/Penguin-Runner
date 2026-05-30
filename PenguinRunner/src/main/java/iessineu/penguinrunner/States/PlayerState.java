@@ -8,9 +8,10 @@ package iessineu.penguinrunner.States;
  *
  * @author loren
  */
-import iessineu.penguinrunner.Movement.Direction;
-import iessineu.penguinrunner.GameState;
 import java.io.Serializable;
+
+import iessineu.penguinrunner.GameState;
+import iessineu.penguinrunner.Movement.Direction;
 
 public interface PlayerState extends Serializable {
 
@@ -18,3 +19,4 @@ public interface PlayerState extends Serializable {
 
     String getName();
 }
+

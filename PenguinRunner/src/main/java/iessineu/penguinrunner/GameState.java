@@ -40,6 +40,7 @@ public class GameState implements Serializable {
     private String rutaMapes = "resources/maps.json";
     private final Map<String, List<String>> mapaSprites = GamePanel.createSpriteMap();
     private int nivellActual = 0;
+    private long lastTurn;
 
     private final List<GameMap> mapList = llegirMapes(rutaMapes);
     private GameMap mapObject = mapList.get(0);
@@ -158,15 +159,25 @@ public class GameState implements Serializable {
      * TORNS
      */
     public void takeTurn(Direction direction) {
-        updatePlayerState();
-
-        if (direction != null) {
+        long delta = System.currentTimeMillis() - lastTurn;
+        if (player.getState() == fallingState) {
+            // if (delta > 50) {
+                lastTurn = System.currentTimeMillis();
+                movePlayerDownOne();
+                updatePlayerState();
+                finishTurn();
+                takeTurn();
+            // }
+        } else if (direction != null) {
             player.getState().handleInput(this, direction);
-        } else if (player.getState() == fallingState) {
-            player.getState().handleInput(this, null);
+            updatePlayerState();
+            finishTurn();
+            if (player.getState() == fallingState) {
+                lastTurn = System.currentTimeMillis();
+                takeTurn();
+            }
         }
 
-        finishTurn();
     }
 
     public void takeTurn() {
@@ -595,7 +606,8 @@ public class GameState implements Serializable {
     }
 
     void interact() {
-        if (blocks[player.getRow()][player.getCol()].getType() == TileType.DOOR) {
+        Block bloc = blocks[player.getRow()][player.getCol()]; 
+        if (bloc != null && bloc.getType() == TileType.DOOR) {
             System.out.println("Porta");
             nivellActual++;
             mapObject = mapList.get(nivellActual);
