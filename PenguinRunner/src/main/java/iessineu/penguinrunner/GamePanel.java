@@ -10,6 +10,7 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -51,6 +52,8 @@ public class GamePanel extends JPanel implements Serializable {
     // private String emojiFontPath = "resources/WEBDINGS.ttf";
     // private String emojiFontPath = "resources/google.ttf";
     // private static String printablesPath = "resources/printables_google.json";
+    // private String textFontPath = "resources/sonic.ttf";
+    // private String emojiFontPath = textFontPath;
     private static String printablesPath = "resources/printables.json";
     private String emojiFontPath = "resources/font.ttf";
     private String textFontPath = emojiFontPath;
@@ -96,16 +99,15 @@ public class GamePanel extends JPanel implements Serializable {
         textFont = new Font("Segoe UI Emoji", Font.PLAIN, 30); // per defecte s'empra aquesta, i després llegim l'arxiu 
         emojiFont = new Font("Segoe UI Emoji", Font.PLAIN, 30); // per defecte s'empra aquesta, i després llegim l'arxiu 
         try {
-            // GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             // ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(emojiFontPath)));
             // ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(textFontPath)));
             // emojiFont = Font.createFont(Font.TRUETYPE_FONT, new File(emojiFontPath)).deriveFont(30f);
             // textFont = Font.createFont(Font.TRUETYPE_FONT, new File(textFontPath)).deriveFont(30f);
-            // GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            // ge.registerFont(emojiFont);
-            // ge.registerFont(textFont);
             emojiFont = Font.createFont(Font.TRUETYPE_FONT, new File(emojiFontPath)).deriveFont(30f);
             textFont = Font.createFont(Font.TRUETYPE_FONT, new File(textFontPath)).deriveFont(30f);
+            ge.registerFont(emojiFont);
+            ge.registerFont(textFont);
         } catch (FontFormatException | IOException ex) {
             System.out.println("Error obrint alguna de les font!");
             System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
