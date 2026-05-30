@@ -47,9 +47,15 @@ public class GamePanel extends JPanel implements Serializable {
 
     public static final int TILE_SIZE = 43;
     private static final int HUD_HEIGHT = 100;
-    private static String printablesPath = "resources/printables.json";
+    // private static String printablesPath = "resources/printables_webdings.json";
+    // private String emojiFontPath = "resources/WEBDINGS.ttf";
+    // private String textFontPath = "resources/font.ttf";
+    private static String printablesPath = "resources/printables_google.json";
+    private String emojiFontPath = "resources/google.ttf";
+    private String textFontPath = emojiFontPath;
     private Image blankSprite;
-    private Font font;
+    private Font textFont;
+    private Font emojiFont;
     private final SoundManager soundManager = new SoundManager();
     private GameState gameState = new GameState();
 
@@ -59,9 +65,9 @@ public class GamePanel extends JPanel implements Serializable {
         soundManager.playMusic("resources/music.wav");
         soundManager.setVolume(0.7f);
         // gameState = new GameState();
-        loadFont();
+        loadFonts();
         createSpriteMap();
-        Printable.setFont(font);
+        Printable.setFont(emojiFont);
         mapa = gameState.loadMap();
 
         int width = gameState.getCols() * TILE_SIZE;
@@ -85,15 +91,24 @@ public class GamePanel extends JPanel implements Serializable {
     /*
      * Carrega la font externa. Si falla, usa una font del sistema.
      */
-    private Font loadFont() {
-        font = new Font("Segoe UI Emoji", Font.PLAIN, 30); // per defecte s'empra aquesta, i després llegim l'arxiu 
+    private void loadFonts() {
+        textFont = new Font("Segoe UI Emoji", Font.PLAIN, 30); // per defecte s'empra aquesta, i després llegim l'arxiu 
+        emojiFont = new Font("Segoe UI Emoji", Font.PLAIN, 30); // per defecte s'empra aquesta, i després llegim l'arxiu 
         try {
-            font = Font.createFont(Font.TRUETYPE_FONT, new File("resources/font.ttf")).deriveFont(30f);
+            // GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            // ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(emojiFontPath)));
+            // ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(textFontPath)));
+            // emojiFont = Font.createFont(Font.TRUETYPE_FONT, new File(emojiFontPath)).deriveFont(30f);
+            // textFont = Font.createFont(Font.TRUETYPE_FONT, new File(textFontPath)).deriveFont(30f);
+            // GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            // ge.registerFont(emojiFont);
+            // ge.registerFont(textFont);
+            emojiFont = Font.createFont(Font.TRUETYPE_FONT, new File(emojiFontPath)).deriveFont(30f);
+            textFont = Font.createFont(Font.TRUETYPE_FONT, new File(textFontPath)).deriveFont(30f);
         } catch (FontFormatException | IOException ex) {
-            System.out.println("Error obrint la font!");
+            System.out.println("Error obrint alguna de les font!");
             System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        return font;
     }
 
     /*
@@ -329,20 +344,17 @@ public class GamePanel extends JPanel implements Serializable {
         g2.drawLine(0, hudY, getWidth(), hudY);
 
         Player player = gameState.getPlayer();
+        Block icecream = new Block(0, 0, TileType.ICECREAM);
 
         int padding = 20;
         int textY = hudY + 35;
 
-        g2.setFont(font.deriveFont(16f));
+        g2.setFont(textFont.deriveFont(16f));
         g2.setColor(Color.WHITE);
 
-        g2.drawString("🐧", padding, textY);
-
-        g2.drawString(
-                "🍦 " + player.geticeCream() + " / " + gameState.getIceCream(),
-                padding + 220,
-                textY
-        );
+        player.draw(gameState.getRows(), 1);
+        icecream.draw(gameState.getRows(), 5);
+        g2.drawString(player.geticeCream() + "/ " + gameState.getIceCream(), 250, textY);
 
         g2.drawString(
                 "Nivell: " + gameState.getNivell(),

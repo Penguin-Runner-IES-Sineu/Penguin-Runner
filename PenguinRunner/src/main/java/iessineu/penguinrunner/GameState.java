@@ -38,7 +38,6 @@ public class GameState implements Serializable {
     private List<BrokenBlock> brokenBlocks;
     private List<Stone> stones;
     private String rutaMapes = "resources/maps.json";
-    private String rutaPrintables = "resources/printables.json";
     private final Map<String, List<String>> mapaSprites = GamePanel.createSpriteMap();
     private int nivellActual = 0;
 
