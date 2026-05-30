@@ -22,6 +22,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +43,7 @@ import iessineu.penguinrunner.Entity.Enemy;
 import iessineu.penguinrunner.Entity.Player;
 import iessineu.penguinrunner.Movement.Direction;
 
-public class GamePanel extends JPanel {
+public class GamePanel extends JPanel implements Serializable {
 
     public static final int TILE_SIZE = 43;
     private static final int HUD_HEIGHT = 100;
@@ -237,9 +238,8 @@ public class GamePanel extends JPanel {
         try (ObjectInputStream file = new ObjectInputStream(new FileInputStream(selectedFile))) {
             this.gameState = (GameState) file.readObject();
 
-            resizePanelToGame();
-            repaint();
-
+            // resizePanelToGame();
+            // repaint();
             System.out.println("Partida carregada: " + selectedFile.getAbsolutePath());
 
         } catch (IOException | ClassNotFoundException ex) {
@@ -251,6 +251,8 @@ public class GamePanel extends JPanel {
             );
             ex.printStackTrace();
         }
+        gameState.reloadSprites();
+        repaint();
     }
 
     /*
@@ -281,7 +283,6 @@ public class GamePanel extends JPanel {
                     b.draw(row, col);
                 }
             }
-            System.out.println("");
         }
     }
 

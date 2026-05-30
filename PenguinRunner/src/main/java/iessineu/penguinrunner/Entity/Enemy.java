@@ -62,6 +62,10 @@ public class Enemy extends Printable implements Serializable {
         return respawnCol;
     }
 
+    public int getRespawnRow() {
+        return respawnRow;
+    }
+
     public boolean isDead() {
         return isDead;
     }
@@ -91,13 +95,17 @@ public class Enemy extends Printable implements Serializable {
         this.row = row;
         this.col = col;
     }
-    
+
     public void setPrintables() {
         Map<String, List<String>> mapaSprites = GamePanel.createSpriteMap();
         List<String> atributs = mapaSprites.get("enemy");
-        this.setEmoji(atributs.get(0));
-        this.setColorFromHex(atributs.get(1));
-        this.setSprite(atributs.get(2));
+        if (atributs != null) {
+            this.setEmoji(atributs.get(0));
+            this.setColorFromHex(atributs.get(1));
+            this.setSprite(atributs.get(2));
+        } else {
+            this.setEmoji("#");
+        }
     }
 
 }

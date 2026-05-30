@@ -36,8 +36,8 @@ import iessineu.penguinrunner.States.WalkingState;
 
 public class GameState implements Serializable {
 
-    private final List<BrokenBlock> brokenBlocks = new ArrayList<>();
-    private final List<Stone> stones = new ArrayList<>();
+    private List<BrokenBlock> brokenBlocks;
+    private List<Stone> stones;
     private String rutaMapes = "resources/maps.json";
     private String rutaPrintables = "resources/printables.json";
     private final Map<String, List<String>> mapaSprites = GamePanel.createSpriteMap();
@@ -62,10 +62,14 @@ public class GameState implements Serializable {
     public Block[][] loadMap() {
         String[] level = mapObject.getMap();
         blocks = new Block[level.length][level[0].length()];
+        brokenBlocks = new ArrayList<>();
+        stones = new ArrayList<>();
         enemies = new ArrayList();
         player = null;
         startPlayerRow = 0;
         startPlayerCol = 0;
+        iceCream = 0;
+
         for (int row = 0; row < level.length; row++) {
             for (int col = 0; col < level[row].length(); col++) {
                 char symbol = level[row].charAt(col);
@@ -112,7 +116,44 @@ public class GameState implements Serializable {
             }
         }
         updatePlayerState();
+
         return blocks;
+    }
+
+    public void reloadSprites() {
+        mapObject = mapList.get(nivellActual);
+        loadMap();
+        Block[][] mapa = getBlocks();
+        player = new Player(player.getRow(), player.getCol());
+        List<Stone> newStoneList = new ArrayList();
+        Block[][] mapaNou = new Block[mapa.length][mapa[0].length];
+        for (Stone stone : stones) {
+            mapaNou[stone.getRow()][stone.getCol()] = new Block(stone.getRow(), stone.getCol(), TileType.STONE);
+            mapaNou[stone.getRow()][stone.getCol()] = stone;
+            newStoneList.add(stone);
+        }
+        List<Enemy> newEnemyList = new ArrayList();
+        stones = newStoneList;
+        for (Enemy enem : getEnemies()) {
+            enem = new Enemy(enem.getRow(), enem.getCol(), enem.getRespawnCol(), enem.getRespawnRow());
+            newEnemyList.add(enem);
+        }
+        enemies = newEnemyList;
+        // for (BrokenBlock broken : brokenList) {
+        //     mapaNou[broken.row][broken.col] = broken;
+        // }
+        for (int row = 0; row < mapa.length; row++) {
+            for (int col = 0; col < mapa[row].length; col++) {
+                Block blocAntic = mapa[row][col];
+                if (blocAntic == null) {
+                    mapaNou[row][col] = null;
+                } else {
+                    mapaNou[row][col] = new Block(blocAntic.getRow(), blocAntic.getCol(), blocAntic.getType());
+                }
+            }
+        }
+        blocks = mapaNou;
+        updatePlayerState();
     }
 
     /*
@@ -568,6 +609,22 @@ public class GameState implements Serializable {
 
     public int getNivell() {
         return nivellActual;
+    }
+
+    public List<Stone> getStones() {
+        return stones;
+    }
+
+    public List<BrokenBlock> getBrokenBlocks() {
+        return brokenBlocks;
+    }
+
+    public void setBrokenBlocks(List<BrokenBlock> brokenBlocks) {
+        this.brokenBlocks = brokenBlocks;
+    }
+
+    public void setStones(List<Stone> stones) {
+        this.stones = stones;
     }
 
     /*
