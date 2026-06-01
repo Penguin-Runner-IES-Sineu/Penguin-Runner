@@ -33,5 +33,25 @@
             "#..............................#",
             "################################"
         ]
+    },
+    {
+        "type": "map",
+        "level": 9,
+        "view": [
+            "####################",
+            "#n.pnnnnnnnngnnnnnn#",
+            "#n.......nnnn....nn#",
+            "#nnnnnn.nnPnnnnHnnn#",
+            "#nn.GGn.n---nGnH.nn#",
+            "#.....n........H.nn#",
+            "#nnnnnn.nnnnnnnH.nn#",
+            "#nnEnnn.nnn....Hnnn#",
+            "#nnnnnn.nnnnngnH---#",
+            "#nn............Hnnn#",
+            "#nnnnnnnnnnn.nnHnnn#",
+            "#AnnnnGnnnnnDnnHnnn#",
+            "#...SS.............#",
+            "####################"
+        ]
     }
 ]

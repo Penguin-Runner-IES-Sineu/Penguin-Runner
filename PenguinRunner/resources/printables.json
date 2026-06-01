@@ -64,5 +64,11 @@
         "sprite": "🦭",
         "color": "#00FF00",
         "filename": "enemy.png"
+    },
+    {
+        "type": "enemy2",
+        "sprite": "🦭",
+        "color": "#00FF00",
+        "filename": "enemy2.png"
     }
 ]

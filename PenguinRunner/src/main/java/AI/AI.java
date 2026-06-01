@@ -1,0 +1,348 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package AI;
+
+/**
+ *
+ * @author loren
+ */
+
+import iessineu.penguinrunner.Blocks.TileType;
+import iessineu.penguinrunner.Movement.Direction;
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class AI {
+
+    private static final int BLOCKED = -2;
+
+    private static class Node {
+
+        int row;
+        int col;
+
+        Node(int row, int col) {
+            this.row = row;
+            this.col = col;
+        }
+    }
+
+    public Direction getShortestDirection(
+            int[][] pathMap,
+            TileType[][] tileMap,
+            int startRow,
+            int startCol,
+            int targetRow,
+            int targetCol
+    ) {
+        if (pathMap == null || pathMap.length == 0 || pathMap[0].length == 0) {
+            return null;
+        }
+
+        if (tileMap == null || tileMap.length == 0 || tileMap[0].length == 0) {
+            return null;
+        }
+
+        if (!isInsideBounds(pathMap, startRow, startCol)) {
+            return null;
+        }
+
+        if (!isInsideBounds(pathMap, targetRow, targetCol)) {
+            return null;
+        }
+
+        if (isBlocked(pathMap[startRow][startCol])) {
+            return null;
+        }
+
+        if (isBlocked(pathMap[targetRow][targetCol])) {
+            return null;
+        }
+
+        int rows = pathMap.length;
+        int cols = pathMap[0].length;
+
+        boolean[][] visited = new boolean[rows][cols];
+
+        int[][] previousRow = new int[rows][cols];
+        int[][] previousCol = new int[rows][cols];
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                previousRow[row][col] = -1;
+                previousCol[row][col] = -1;
+            }
+        }
+
+        Queue<Node> queue = new LinkedList<>();
+
+        visited[startRow][startCol] = true;
+        queue.add(new Node(startRow, startCol));
+
+        boolean foundTarget = false;
+
+        while (!queue.isEmpty()) {
+            Node current = queue.poll();
+
+            if (current.row == targetRow && current.col == targetCol) {
+                foundTarget = true;
+                break;
+            }
+
+            tryMove(
+                    pathMap,
+                    tileMap,
+                    queue,
+                    visited,
+                    previousRow,
+                    previousCol,
+                    current.row,
+                    current.col,
+                    Direction.LEFT
+            );
+
+            tryMove(
+                    pathMap,
+                    tileMap,
+                    queue,
+                    visited,
+                    previousRow,
+                    previousCol,
+                    current.row,
+                    current.col,
+                    Direction.UP
+            );
+
+            tryMove(
+                    pathMap,
+                    tileMap,
+                    queue,
+                    visited,
+                    previousRow,
+                    previousCol,
+                    current.row,
+                    current.col,
+                    Direction.RIGHT
+            );
+
+            tryMove(
+                    pathMap,
+                    tileMap,
+                    queue,
+                    visited,
+                    previousRow,
+                    previousCol,
+                    current.row,
+                    current.col,
+                    Direction.DOWN
+            );
+        }
+
+        if (!foundTarget) {
+            return null;
+        }
+
+        return rebuildFirstDirection(
+                startRow,
+                startCol,
+                targetRow,
+                targetCol,
+                previousRow,
+                previousCol
+        );
+    }
+
+    private void tryMove(
+            int[][] pathMap,
+            TileType[][] tileMap,
+            Queue<Node> queue,
+            boolean[][] visited,
+            int[][] previousRow,
+            int[][] previousCol,
+            int currentRow,
+            int currentCol,
+            Direction direction
+    ) {
+        int nextRow = currentRow + direction.getDr();
+        int nextCol = currentCol + direction.getDc();
+
+        if (!isInsideBounds(pathMap, nextRow, nextCol)) {
+            return;
+        }
+
+        if (visited[nextRow][nextCol]) {
+            return;
+        }
+
+        if (!canMove(
+                pathMap,
+                tileMap,
+                currentRow,
+                currentCol,
+                nextRow,
+                nextCol,
+                direction
+        )) {
+            return;
+        }
+
+        visited[nextRow][nextCol] = true;
+
+        previousRow[nextRow][nextCol] = currentRow;
+        previousCol[nextRow][nextCol] = currentCol;
+
+        queue.add(new Node(nextRow, nextCol));
+    }
+
+    private boolean canMove(
+            int[][] pathMap,
+            TileType[][] tileMap,
+            int currentRow,
+            int currentCol,
+            int nextRow,
+            int nextCol,
+            Direction direction
+    ) {
+        if (!isInsideBounds(pathMap, nextRow, nextCol)) {
+            return false;
+        }
+
+        if (isBlocked(pathMap[nextRow][nextCol])) {
+            return false;
+        }
+
+        TileType currentTile = tileMap[currentRow][currentCol];
+        TileType nextTile = tileMap[nextRow][nextCol];
+
+        /*
+         * Moving up:
+         * The enemy can only go up if it is currently on a stair
+         * or if the next tile is a stair.
+         */
+        if (direction == Direction.UP) {
+            return isStair(currentTile) || isStair(nextTile);
+        }
+
+        /*
+         * Moving down:
+         * The enemy can go down if it is on a stair,
+         * if the next tile is a stair,
+         * or if there is no ground under it and it should fall.
+         */
+        if (direction == Direction.DOWN) {
+            return isStair(currentTile)
+                    || isStair(nextTile)
+                    || !hasGroundBelow(pathMap, tileMap, currentRow, currentCol);
+        }
+
+        /*
+         * Moving left or right:
+         * The enemy can move sideways if:
+         * - the next position has ground below
+         * - or the current tile is a rail
+         * - or the next tile is a rail
+         * - or the current tile is a stair
+         * - or the next tile is a stair
+         */
+        if (direction == Direction.LEFT || direction == Direction.RIGHT) {
+            return hasGroundBelow(pathMap, tileMap, nextRow, nextCol)
+                    || isRail(currentTile)
+                    || isRail(nextTile)
+                    || isStair(currentTile)
+                    || isStair(nextTile);
+        }
+
+        return false;
+    }
+
+    private boolean hasGroundBelow(
+            int[][] pathMap,
+            TileType[][] tileMap,
+            int row,
+            int col
+    ) {
+        int rowBelow = row + 1;
+
+        if (!isInsideBounds(pathMap, rowBelow, col)) {
+            return true;
+        }
+
+        /*
+         * If the tile below is blocked, it counts as ground.
+         */
+        if (isBlocked(pathMap[rowBelow][col])) {
+            return true;
+        }
+
+        /*
+         * If the enemy is on a stair or rail,
+         * it does not need ground below.
+         */
+        TileType currentTile = tileMap[row][col];
+
+        return isStair(currentTile) || isRail(currentTile);
+    }
+
+    private Direction rebuildFirstDirection(
+            int startRow,
+            int startCol,
+            int targetRow,
+            int targetCol,
+            int[][] previousRow,
+            int[][] previousCol
+    ) {
+        int currentRow = targetRow;
+        int currentCol = targetCol;
+
+        while (true) {
+            int prevRow = previousRow[currentRow][currentCol];
+            int prevCol = previousCol[currentRow][currentCol];
+
+            if (prevRow == -1 || prevCol == -1) {
+                return null;
+            }
+
+            if (prevRow == startRow && prevCol == startCol) {
+                int dr = currentRow - startRow;
+                int dc = currentCol - startCol;
+
+                for (Direction direction : Direction.values()) {
+                    if (direction.getDr() == dr && direction.getDc() == dc) {
+                        return direction;
+                    }
+                }
+
+                return null;
+            }
+
+            currentRow = prevRow;
+            currentCol = prevCol;
+        }
+    }
+
+    private boolean isInsideBounds(int[][] pathMap, int row, int col) {
+        return row >= 0
+                && row < pathMap.length
+                && col >= 0
+                && col < pathMap[0].length;
+    }
+
+    private boolean isBlocked(int value) {
+        /*
+         * Compatible with:
+         * 1  = blocked tile in a simple grid
+         * -2 = BLOCKED value from GameState
+         */
+        return value == 1 || value == BLOCKED;
+    }
+
+    private boolean isStair(TileType tileType) {
+        return tileType == TileType.STAIR;
+    }
+
+    private boolean isRail(TileType tileType) {
+        return tileType == TileType.RAIL;
+    }
+}

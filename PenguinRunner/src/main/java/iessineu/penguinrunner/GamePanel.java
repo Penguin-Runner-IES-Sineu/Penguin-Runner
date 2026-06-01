@@ -64,6 +64,7 @@ public class GamePanel extends JPanel implements Serializable {
     private final SoundManager soundManager = new SoundManager();
     private final GameFrame gameFrame;
     private GameState gameState;
+    
 
     public GamePanel(GameFrame frame) {
         gameFrame = frame;

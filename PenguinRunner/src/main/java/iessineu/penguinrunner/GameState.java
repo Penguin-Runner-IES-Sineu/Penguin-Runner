@@ -8,13 +8,17 @@ package iessineu.penguinrunner;
  *
  * @author loren
  */
+import AI.*;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,6 +26,7 @@ import org.json.JSONObject;
 import iessineu.penguinrunner.Blocks.Block;
 import iessineu.penguinrunner.Blocks.TileType;
 import iessineu.penguinrunner.Entity.Enemy;
+import iessineu.penguinrunner.Entity.EnemyStarAi;
 import iessineu.penguinrunner.Entity.GameMap;
 import iessineu.penguinrunner.Entity.Player;
 import iessineu.penguinrunner.Movement.Direction;
@@ -39,9 +44,9 @@ public class GameState implements Serializable {
     private final String rutaMapes = "resources/maps.json";
     private int nivellActual = 0;
     // private long lastTurn;
-
+    private final AI buscador = new AI();
     private final List<GameMap> mapList = llegirMapes(rutaMapes);
-    private GameMap mapObject = mapList.get(0);
+    private GameMap mapObject = mapList.get(2);
     private Player player;
     private List<Enemy> enemies;
     private int iceCream = 0;
@@ -54,6 +59,9 @@ public class GameState implements Serializable {
     private final PlayerState railState = new RailState();
     private final PlayerState fallingState = new FallingState();
     private final GameFrame gameFrame;
+
+    private static final int NOT_VISITED = -1;
+    private static final int BLOCKED = -2;
 
     public GameState(GameFrame frame) {
         this.gameFrame = frame;
@@ -109,6 +117,10 @@ public class GameState implements Serializable {
                         enemies.add(new Enemy(row, col, 1, 1));
                         blocks[row][col] = new Block(TileType.BLANK);
                     }
+                    case 'A' -> {
+                        enemies.add(new EnemyStarAi(row, col, 1, 1));
+                        blocks[row][col] = new Block(TileType.BLANK);
+                    }
                     default -> {
                         blocks[row][col] = new Block(TileType.BLANK);
                     }
@@ -118,6 +130,22 @@ public class GameState implements Serializable {
         updatePlayerState();
 
         return blocks;
+    }
+
+    private int[][] createEmptyPathMap() {
+        int[][] pathMap = new int[getRows()][getCols()];
+
+        for (int row = 0; row < getRows(); row++) {
+            for (int col = 0; col < getCols(); col++) {
+                if (isSolid(row, col)) {
+                    pathMap[row][col] = BLOCKED;
+                } else {
+                    pathMap[row][col] = NOT_VISITED;
+                }
+            }
+        }
+
+        return pathMap;
     }
 
     public void reloadSprites() {
@@ -188,6 +216,7 @@ public class GameState implements Serializable {
         updateBrokenBlocks();
         checkCollisions();
         updatePlayerState();
+
     }
 
     /*
@@ -284,7 +313,7 @@ public class GameState implements Serializable {
     }
 
     private void moveBlocks() {
-        for (int row = 0; row < blocks.length; row++) {
+        for (int row = blocks.length - 1; row >= 0; row--) {
             for (int col = 0; col < blocks[row].length; col++) {
                 if (blocks[row][col].getType() == TileType.STONE) {
                     int nextRow = row + 1;
@@ -389,6 +418,30 @@ public class GameState implements Serializable {
 
         if (shouldEnemyDrop(row, col)) {
             enemy.setPosition(row + 1, col);
+            return;
+        }
+
+        if (enemy instanceof EnemyStarAi enemyStarAi) {
+            Direction direction = buscador.getShortestDirection(
+                    createEmptyPathMap(),
+                    createTileMapForAI(),
+                    enemyStarAi.getRow(),
+                    enemyStarAi.getCol(),
+                    player.getRow(),
+                    player.getCol()
+            );
+
+            if (direction == null) {
+                return;
+            }
+
+            int nextRow = enemyStarAi.getRow() + direction.getDr();
+            int nextCol = enemyStarAi.getCol() + direction.getDc();
+
+            if (canMoveTo(nextRow, nextCol)) {
+                enemyStarAi.setPosition(nextRow, nextCol);
+            }
+
             return;
         }
 
@@ -662,4 +715,18 @@ public class GameState implements Serializable {
         return iceCream;
     }
 
+    /*//////////////////////////////////////////////////////////////////////////
+    ///
+    //////////////////////////////////////////////////////////////////////////*/
+    private TileType[][] createTileMapForAI() {
+        TileType[][] tileMap = new TileType[getRows()][getCols()];
+
+        for (int row = 0; row < getRows(); row++) {
+            for (int col = 0; col < getCols(); col++) {
+                tileMap[row][col] = getType(row, col);
+            }
+        }
+
+        return tileMap;
+    }
 }
