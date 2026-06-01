@@ -29,7 +29,6 @@ public class Printable {
     static Graphics g;
 
     public static final int TILE_SIZE = 43;
-    private static final int HUD_HEIGHT = 100;
 
     public String getEmoji() {
         return emoji;

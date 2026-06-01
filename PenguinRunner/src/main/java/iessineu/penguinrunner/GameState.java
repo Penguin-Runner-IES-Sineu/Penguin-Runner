@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,10 +35,10 @@ public class GameState implements Serializable {
 
     private List<BrokenBlock> brokenBlocks;
     private List<Block> stones;
-    private String rutaMapes = "resources/maps.json";
-    private final Map<String, List<String>> mapaSprites = GamePanel.createSpriteMap();
+    // private String rutaMapes = "resources/maps.json";
+    private final String rutaMapes = "resources/maps.json";
     private int nivellActual = 0;
-    private long lastTurn;
+    // private long lastTurn;
 
     private final List<GameMap> mapList = llegirMapes(rutaMapes);
     private GameMap mapObject = mapList.get(0);
@@ -119,7 +118,6 @@ public class GameState implements Serializable {
     }
 
     public void reloadSprites() {
-        // loadMap();
         mapObject = mapList.get(nivellActual);
         Block[][] mapa = getBlocks();
         List<Block> newStoneList = new ArrayList();
@@ -154,10 +152,10 @@ public class GameState implements Serializable {
      * TORNS
      */
     public void takeTurn(Direction direction) {
-        long delta = System.currentTimeMillis() - lastTurn;
+        // long delta = System.currentTimeMillis() - lastTurn;
         if (player.getState() == fallingState) {
             // if (delta > 50) {
-            lastTurn = System.currentTimeMillis();
+            // lastTurn = System.currentTimeMillis();
             movePlayerDownOne();
             updatePlayerState();
             finishTurn();
@@ -168,7 +166,7 @@ public class GameState implements Serializable {
             updatePlayerState();
             finishTurn();
             if (player.getState() == fallingState) {
-                lastTurn = System.currentTimeMillis();
+                // lastTurn = System.currentTimeMillis();
                 takeTurn();
             }
         }
@@ -271,8 +269,6 @@ public class GameState implements Serializable {
 
         while (col != playerCol) {
             Block blockToMove = blocks[row][col];
-
-            // blocks[row][col] = null;
             blocks[row][col] = new Block(row, col, TileType.BLANK);
             blocks[row][col + dc] = blockToMove;
 
@@ -308,7 +304,6 @@ public class GameState implements Serializable {
                 continue;
             }
 
-            // blocks[row][col] = null;
             blocks[row][col] = new Block(row, col, TileType.BLANK);
             blocks[nextRow][nextCol] = stone;
 
@@ -441,7 +436,6 @@ public class GameState implements Serializable {
 
         if (block != null && block.isCollectable()) {
             blocks[row][col] = new Block(row, col, TileType.BLANK);
-            // blocks[row][col] = null;
             soundManager.playSound("resources/nyam.wav");
             player.addIceCream();
 
@@ -471,7 +465,6 @@ public class GameState implements Serializable {
         player.setPosition(startPlayerRow, startPlayerCol);
 
         for (Block stone : stones) {
-            // blocks[stone.getRow()][stone.getCol()] = null;
             blocks[stone.getRow()][stone.getCol()] = new Block(stone.getRow(), stone.getCol(), TileType.BLANK);
 
             stone.moveToOriginalPosition();
@@ -504,14 +497,12 @@ public class GameState implements Serializable {
     private Block getBlock(int row, int col) {
         if (isOutOfBounds(row, col)) {
             return new Block(row, col, TileType.BLANK);
-            // return null;
         }
 
         return blocks[row][col];
     }
 
     private boolean isBlank(int row, int col) {
-        // return !isOutOfBounds(row, col) && blocks[row][col] == null;
         return !isOutOfBounds(row, col) && blocks[row][col].getType() == TileType.BLANK;
     }
 
@@ -529,12 +520,6 @@ public class GameState implements Serializable {
         Block block = getBlock(row, col);
 
         return block != null && block.getType() == TileType.ICE;
-    }
-
-    private boolean isWall(int row, int col) {
-        Block block = getBlock(row, col);
-
-        return block != null && block.getType() == TileType.WALL;
     }
 
     private boolean isRail(int row, int col) {
@@ -576,9 +561,8 @@ public class GameState implements Serializable {
     /*
      * GETTERS
      */
-    public TileType getTile(int row, int col) {
+    public TileType getType(int row, int col) {
         return getBlock(row, col).getType();
-        // return block.getType();
     }
 
     public int getRows() {
@@ -610,15 +594,11 @@ public class GameState implements Serializable {
             nivellActual++;
             mapObject = mapList.get(nivellActual);
             loadMap();
-            // mapObject = mapList.get(1);
-            // blocks = "";
         }
     }
 
     public boolean checkObjective() {
-        // return true;
         return player.geticeCream() >= 2;
-        // return player.geticeCream() >= getIceCream();
     }
 
     public int getNivell() {
@@ -627,14 +607,6 @@ public class GameState implements Serializable {
 
     public List<Block> getStones() {
         return stones;
-    }
-
-    public List<BrokenBlock> getBrokenBlocks() {
-        return brokenBlocks;
-    }
-
-    public void setBrokenBlocks(List<BrokenBlock> brokenBlocks) {
-        this.brokenBlocks = brokenBlocks;
     }
 
     public void setStones(List<Block> stones) {
@@ -663,7 +635,7 @@ public class GameState implements Serializable {
     public List<GameMap> llegirMapes(String rutaMapes) {
 
         JSONArray maps = new JSONArray(llegirJSON(rutaMapes));
-        List<GameMap> mapList = new ArrayList<>();
+        List<GameMap> llista = new ArrayList();
 
         for (int i = 0; i < maps.length(); i++) {
             JSONObject obj = maps.getJSONObject(i);
@@ -675,9 +647,9 @@ public class GameState implements Serializable {
                 view[j] = jsonView.getString(j);
             }
 
-            mapList.add(new GameMap(view));
+            llista.add(new GameMap(view));
         }
-        return mapList;
+        return llista;
     }
 
     public String llegirJSON(String rutaArxiu) {

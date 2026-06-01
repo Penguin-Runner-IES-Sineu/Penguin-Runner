@@ -11,7 +11,6 @@ import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
-import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
@@ -54,17 +53,17 @@ public class GamePanel extends JPanel implements Serializable {
     // private static String printablesPath = "resources/printables_google.json";
     // private String textFontPath = "resources/sonic.ttf";
     // private String emojiFontPath = textFontPath;
-    private static String printablesPath = "resources/printables.json";
-    private String emojiFontPath = "resources/font.ttf";
-    private String textFontPath = emojiFontPath;
-    private Image blankSprite;
+    // private static String printablesPath = "resources/printables.json";
+    // private String emojiFontPath = "resources/font.ttf";
+    // private String textFontPath = emojiFontPath;
+    private final static String printablesPath = "resources/printables.json"; //constants?
+    private final String emojiFontPath = "resources/font.ttf";
+    private final String textFontPath = emojiFontPath;
     private Font textFont;
     private Font emojiFont;
     private final SoundManager soundManager = new SoundManager();
     private GameState gameState = new GameState();
-    private GameFrame gameFrame;
-
-    Block mapa[][] = gameState.loadMap();
+    private final GameFrame gameFrame;
 
     public GamePanel(GameFrame frame) {
         gameFrame = frame;
@@ -74,12 +73,8 @@ public class GamePanel extends JPanel implements Serializable {
         loadFonts();
         createSpriteMap();
         Printable.setFont(emojiFont);
-        mapa = gameState.loadMap();
         resizePanelToGame();
 
-        // int width = gameState.getCols() * TILE_SIZE;
-        // int height = gameState.getRows() * TILE_SIZE;
-        // setPreferredSize(new Dimension(width, height + 100));   
         setBackground(Color.BLACK);
 
         // Necessari perquè el JPanel pugui rebre tecles.
@@ -426,13 +421,6 @@ public class GamePanel extends JPanel implements Serializable {
             spriteMap.put(type, atributs);
         }
         return spriteMap;
-    }
-
-    private void drawSprite(Graphics g, Image image, int row, int col) {
-        int x = col * TILE_SIZE;
-        int y = row * TILE_SIZE;
-
-        g.drawImage(image, x, y, TILE_SIZE, TILE_SIZE, null);
     }
 
 }
