@@ -132,12 +132,17 @@ public class GameState implements Serializable {
         return blocks;
     }
 
-    private int[][] createEmptyPathMap() {
+    private int[][] createPathMapForAI(Enemy currentEnemy) {
         int[][] pathMap = new int[getRows()][getCols()];
 
         for (int row = 0; row < getRows(); row++) {
             for (int col = 0; col < getCols(); col++) {
-                if (isSolid(row, col)) {
+                boolean occupiedByAnotherEnemy = isEnemy(row, col)
+                        && !(currentEnemy.getRow() == row && currentEnemy.getCol() == col);
+
+                boolean molten = isMolten(row, col);
+
+                if ((isSolid(row, col) && !molten) || occupiedByAnotherEnemy) {
                     pathMap[row][col] = BLOCKED;
                 } else {
                     pathMap[row][col] = NOT_VISITED;
@@ -423,7 +428,7 @@ public class GameState implements Serializable {
 
         if (enemy instanceof EnemyStarAi enemyStarAi) {
             Direction direction = buscador.getShortestDirection(
-                    createEmptyPathMap(),
+                    createPathMapForAI(enemyStarAi),
                     createTileMapForAI(),
                     enemyStarAi.getRow(),
                     enemyStarAi.getCol(),
@@ -438,7 +443,8 @@ public class GameState implements Serializable {
             int nextRow = enemyStarAi.getRow() + direction.getDr();
             int nextCol = enemyStarAi.getCol() + direction.getDc();
 
-            if (canMoveTo(nextRow, nextCol)) {
+            if ((canMoveTo(nextRow, nextCol) || isMolten(nextRow, nextCol))
+                    && !isEnemy(nextRow, nextCol)) {
                 enemyStarAi.setPosition(nextRow, nextCol);
             }
 

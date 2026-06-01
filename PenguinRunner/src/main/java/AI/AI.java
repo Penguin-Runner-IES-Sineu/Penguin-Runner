@@ -8,7 +8,6 @@ package AI;
  *
  * @author loren
  */
-
 import iessineu.penguinrunner.Blocks.TileType;
 import iessineu.penguinrunner.Movement.Direction;
 import java.util.LinkedList;
@@ -217,19 +216,25 @@ public class AI {
         TileType nextTile = tileMap[nextRow][nextCol];
 
         /*
-         * Moving up:
-         * The enemy can only go up if it is currently on a stair
-         * or if the next tile is a stair.
+     * MOLTEN is walkable for the AI.
+     * Do NOT reject nextTile == TileType.MOLTEN here.
+         */
+
+ /*
+     * Moving up:
+     * The enemy can only go up if it is currently on a stair
+     * or if the next tile is a stair.
          */
         if (direction == Direction.UP) {
             return isStair(currentTile) || isStair(nextTile);
         }
 
         /*
-         * Moving down:
-         * The enemy can go down if it is on a stair,
-         * if the next tile is a stair,
-         * or if there is no ground under it and it should fall.
+     * Moving down:
+     * The enemy can go down if:
+     * - it is on a stair
+     * - the next tile is a stair
+     * - or there is no ground below, so it is falling
          */
         if (direction == Direction.DOWN) {
             return isStair(currentTile)
@@ -238,16 +243,20 @@ public class AI {
         }
 
         /*
-         * Moving left or right:
-         * The enemy can move sideways if:
-         * - the next position has ground below
-         * - or the current tile is a rail
-         * - or the next tile is a rail
-         * - or the current tile is a stair
-         * - or the next tile is a stair
+     * Moving left or right:
+     *
+     * The enemy can move sideways if:
+     * - the next position has ground below
+     * - or the current position has ground below
+     *   This allows the enemy to walk off an edge and fall afterwards.
+     * - or it is on a rail
+     * - or it is moving onto a rail
+     * - or it is on a stair
+     * - or it is moving onto a stair
          */
         if (direction == Direction.LEFT || direction == Direction.RIGHT) {
             return hasGroundBelow(pathMap, tileMap, nextRow, nextCol)
+                    || hasGroundBelow(pathMap, tileMap, currentRow, currentCol)
                     || isRail(currentTile)
                     || isRail(nextTile)
                     || isStair(currentTile)
@@ -270,18 +279,27 @@ public class AI {
         }
 
         /*
-         * If the tile below is blocked, it counts as ground.
+     * A blocked tile below counts as ground.
+     * This includes walls, stones, ice blocks, etc.
          */
         if (isBlocked(pathMap[rowBelow][col])) {
             return true;
         }
 
         /*
-         * If the enemy is on a stair or rail,
-         * it does not need ground below.
+     * MOLTEN also counts as ground below.
+     * It is walkable, but it can also support movement above it.
          */
+        if (tileMap[rowBelow][col] == TileType.MOLTEN) {
+            return true;
+        }
+
         TileType currentTile = tileMap[row][col];
 
+        /*
+     * If the enemy is on a stair or rail,
+     * it does not need ground below.
+         */
         return isStair(currentTile) || isRail(currentTile);
     }
 
