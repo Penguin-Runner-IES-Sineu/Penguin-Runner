@@ -12,6 +12,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -630,24 +632,47 @@ public class GameState implements Serializable {
     }
 
     public String llegirJSON(String rutaArxiu) {
-        String jsonString = "";
+        BufferedReader fitxer = null;
         try {
-            BufferedReader fitxer = new BufferedReader(new FileReader(rutaArxiu));
-            try {
-                String line;
-
-                while ((line = fitxer.readLine()) != null) {
-                    jsonString += line;
-                }
-
-                fitxer.close();
-
-            } catch (IOException ex) {
-                System.out.println("Problema d'entrada i sortida");
-            }
+            fitxer = new BufferedReader(new FileReader(rutaArxiu));
 
         } catch (FileNotFoundException ex) {
             System.out.println("L'arxiu no s'ha trobat!");
+        }
+        return fitxerJSON(fitxer);
+    }
+
+    public String llegirRecursosJSON(String arxiu) {
+        String json = "";
+        ClassLoader classLoader = PenguinRunner.class.getClassLoader();
+        try (InputStream is = classLoader.getResourceAsStream(arxiu); BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+            if (is == null) {
+                throw new IOException("Resource not found: loop.txt");
+            }
+            json = fitxerJSON(br);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return json;
+
+    }
+
+    public String fitxerJSON(BufferedReader fitxer) {
+        if (fitxer == null) {
+            return "Hi ha hagut un error";
+        }
+        String jsonString = "";
+        try {
+            String line;
+
+            while ((line = fitxer.readLine()) != null) {
+                jsonString += line;
+            }
+
+            fitxer.close();
+
+        } catch (IOException ex) {
+            System.out.println("Problema d'entrada i sortida");
         }
         return jsonString;
     }
