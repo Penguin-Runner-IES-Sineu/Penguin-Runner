@@ -276,6 +276,7 @@ public class GamePanel extends JPanel implements Serializable {
         }
         gameState.reloadSprites();
         resizePanelToGame();
+        repaint();
     }
 
     /*
