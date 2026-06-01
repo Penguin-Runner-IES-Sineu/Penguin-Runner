@@ -27,7 +27,7 @@ public class GameFrame extends JFrame {
         setResizable(false);
 
         // Afegim el panell del joc.
-        add(new GamePanel());
+        add(new GamePanel(this));
 
         // Ajusta la mida de la finestra segons el GamePanel.
         pack();

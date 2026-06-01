@@ -62,10 +62,12 @@ public class GamePanel extends JPanel implements Serializable {
     private Font emojiFont;
     private final SoundManager soundManager = new SoundManager();
     private GameState gameState = new GameState();
+    private GameFrame gameFrame;
 
     Block mapa[][] = gameState.loadMap();
 
-    public GamePanel() {
+    public GamePanel(GameFrame frame) {
+        gameFrame = frame;
         soundManager.playMusic("resources/music.wav");
         soundManager.setVolume(0.7f);
         // gameState = new GameState();
@@ -73,11 +75,11 @@ public class GamePanel extends JPanel implements Serializable {
         createSpriteMap();
         Printable.setFont(emojiFont);
         mapa = gameState.loadMap();
+        resizePanelToGame();
 
-        int width = gameState.getCols() * TILE_SIZE;
-        int height = gameState.getRows() * TILE_SIZE;
-
-        setPreferredSize(new Dimension(width, height + 100));
+        // int width = gameState.getCols() * TILE_SIZE;
+        // int height = gameState.getRows() * TILE_SIZE;
+        // setPreferredSize(new Dimension(width, height + 100));   
         setBackground(Color.BLACK);
 
         // Necessari perquè el JPanel pugui rebre tecles.
@@ -121,8 +123,11 @@ public class GamePanel extends JPanel implements Serializable {
     private void resizePanelToGame() {
         int width = gameState.getCols() * TILE_SIZE;
         int height = gameState.getRows() * TILE_SIZE + HUD_HEIGHT;
-
+        // gameFrame.resize(new Dimension(width, height));
         setPreferredSize(new Dimension(width, height));
+        gameFrame.pack();
+        gameFrame.setLocationRelativeTo(null);
+
         revalidate();
     }
 
@@ -159,7 +164,8 @@ public class GamePanel extends JPanel implements Serializable {
             }
             case KeyEvent.VK_F -> {
                 gameState.interact();
-                repaint();
+                resizePanelToGame();
+                // repaint();
             }
             case KeyEvent.VK_P ->
                 guardarPartida();
@@ -255,9 +261,7 @@ public class GamePanel extends JPanel implements Serializable {
 
         try (ObjectInputStream file = new ObjectInputStream(new FileInputStream(selectedFile))) {
             this.gameState = (GameState) file.readObject();
-            System.out.println(this.gameState);
 
-            // resizePanelToGame();
             // repaint();
             System.out.println("Partida carregada: " + selectedFile.getAbsolutePath());
 
@@ -271,7 +275,7 @@ public class GamePanel extends JPanel implements Serializable {
             ex.printStackTrace();
         }
         gameState.reloadSprites();
-        repaint();
+        resizePanelToGame();
     }
 
     /*

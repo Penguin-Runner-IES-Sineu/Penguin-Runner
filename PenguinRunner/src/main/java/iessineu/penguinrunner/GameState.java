@@ -119,8 +119,8 @@ public class GameState implements Serializable {
     }
 
     public void reloadSprites() {
+        // loadMap();
         mapObject = mapList.get(nivellActual);
-        loadMap();
         Block[][] mapa = getBlocks();
         List<Block> newStoneList = new ArrayList();
         Block[][] mapaNou = new Block[mapa.length][mapa[0].length];
@@ -128,7 +128,7 @@ public class GameState implements Serializable {
             for (int col = 0; col < mapa[row].length; col++) {
                 Block blocAntic = mapa[row][col];
                 if (blocAntic == null) {
-                    // mapaNou[row][col] = null;
+                    System.out.println("Hi ha blocs nuls?");
                     mapaNou[row][col] = new Block(row, col, TileType.BLANK);
                 } else {
                     mapaNou[row][col] = new Block(blocAntic.getRow(), blocAntic.getCol(), blocAntic.getType());
@@ -577,12 +577,8 @@ public class GameState implements Serializable {
      * GETTERS
      */
     public TileType getTile(int row, int col) {
-        Block block = getBlock(row, col);
-
-        // if (block == null) {
-        //     return TileType.BLANK;
-        // }
-        return block.getType();
+        return getBlock(row, col).getType();
+        // return block.getType();
     }
 
     public int getRows() {
@@ -611,8 +607,8 @@ public class GameState implements Serializable {
             System.out.println("Porta");
             nivellActual++;
             mapObject = mapList.get(nivellActual);
-            // mapObject = mapList.get(1);
             loadMap();
+            // mapObject = mapList.get(1);
             // blocks = "";
         }
     }
