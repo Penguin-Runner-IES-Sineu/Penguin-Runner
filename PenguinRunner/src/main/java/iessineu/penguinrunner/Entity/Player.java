@@ -93,7 +93,8 @@ public class Player extends Printable implements Serializable {
     }
 
     public void setPrintables() {
-        Map<String, List<String>> mapaSprites = GamePanel.createSpriteMap();
+        Map<String, List<String>> mapaSprites = GamePanel.getSpriteMap();
+        // Map<String, List<String>> mapaSprites = GamePanel.createSpriteMap();
         List<String> atributs = mapaSprites.get("player");
         if (atributs != null) {
             this.setEmoji(atributs.get(0));

@@ -57,28 +57,28 @@ public class GamePanel extends JPanel implements Serializable {
     // private static String printablesPath = "resources/printables.json";
     // private String emojiFontPath = "resources/font.ttf";
     // private String textFontPath = emojiFontPath;
-    private final static String printablesPath = "resources/printables.json"; //constants?
-    private final String emojiFontPath = "resources/font.ttf";
-    private final String textFontPath = emojiFontPath;
+    // private String textFontPath = "resources/wings.ttf";
+    private static String folderPath = "resources/";
+    private static String musicPath = folderPath + "music.wav";
+    private static String printablesPath = folderPath + "printables.json";
+    private static String emojiFontPath = folderPath + "font.ttf";
+    private static String textFontPath = folderPath + "font.ttf";
+    private static Map<String, List<String>> spriteMap = createSpriteMap();
+
     private Font textFont;
     private Font emojiFont;
     private final SoundManager soundManager = new SoundManager();
     private final GameFrame gameFrame;
     private GameState gameState;
-    private long startTime = System.currentTimeMillis();
-    private long endTime = System.currentTimeMillis();
-    private long delta = 0;
 
     // private InputMap inputMap = getInputMap();
     // private ActionMap actionMap = getActionMap();
-
     public GamePanel(GameFrame frame) {
         gameFrame = frame;
-        gameState = new GameState(this);
-        soundManager.playMusic("resources/music.wav");
+        gameState = new GameState();
+        soundManager.playMusic(musicPath);
         soundManager.setVolume(0.7f);
         loadFonts();
-        createSpriteMap();
         Printable.setFont(emojiFont);
         resizePanelToGame();
 
@@ -380,7 +380,7 @@ public class GamePanel extends JPanel implements Serializable {
     public static Map<String, List<String>> createSpriteMap() {
         String jsonString = "";
         try {
-            BufferedReader fitxer = new BufferedReader(new FileReader(printablesPath));
+            BufferedReader fitxer = new BufferedReader(new FileReader(GamePanel.printablesPath));
             try {
                 String line;
 
@@ -422,6 +422,10 @@ public class GamePanel extends JPanel implements Serializable {
             }
             try {
                 String fileString = obj.getString("filename");
+                File fileSprite = new File(folderPath + "sprites/" + fileString);
+                if (!fileSprite.exists()) {
+                    System.out.println("El fitxer de sprite per " + obj.toString() + " no s'ha trobat");
+                }
                 atributs.add(fileString);
             } catch (JSONException e) {
                 System.out.println("No s'ha trobat Arxiu per l'element" + obj.toString());
@@ -433,6 +437,67 @@ public class GamePanel extends JPanel implements Serializable {
 
     public GameState getGameState() {
         return gameState;
+    }
+
+    public static String getPrintablesPath() {
+        return printablesPath;
+    }
+
+    public static void setPrintablesPath(String printablesPath) {
+        GamePanel.printablesPath = printablesPath;
+    }
+
+    public static String getEmojiFontPath() {
+        return emojiFontPath;
+    }
+
+    public static void setEmojiFontPath(String emojiFontPath) {
+        GamePanel.emojiFontPath = emojiFontPath;
+    }
+
+    public static String getTextFontPath() {
+        return textFontPath;
+    }
+
+    public static void setTextFontPath(String textFontPath) {
+        GamePanel.textFontPath = textFontPath;
+    }
+
+    public static String getMusicPath() {
+        return musicPath;
+    }
+
+    public static void setMusicPath(String musicPath) {
+        GamePanel.musicPath = musicPath;
+    }
+
+    public static String getFolderPath() {
+        return folderPath;
+    }
+
+    public static void setFolderPath(String folderPath) {
+        GamePanel.folderPath = folderPath;
+    }
+
+    public static Map<String, List<String>> getSpriteMap() {
+        return spriteMap;
+    }
+
+    public static void setSpriteMap(Map<String, List<String>> spriteMap) {
+        GamePanel.spriteMap = spriteMap;
+    }
+
+    public static void updatePaths() {
+        musicPath = folderPath + "music.wav";
+        printablesPath = folderPath + "printables.json";
+        emojiFontPath = folderPath + "font.ttf";
+        textFontPath = folderPath + "font.ttf";
+        System.out.println("S'han actualitzat les rutes.");
+        System.out.println("Rutes actuals:");
+        System.out.println("Ruta de musica:" + musicPath);
+        System.out.println("Ruta de printables:" + printablesPath);
+        System.out.println("Ruta de font (emoji)" + emojiFontPath);
+        System.out.println("Ruta de font (text)" + textFontPath);
     }
 
 }

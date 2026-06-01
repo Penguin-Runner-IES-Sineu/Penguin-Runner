@@ -43,7 +43,7 @@ public class Printable {
     }
 
     public void setSprite(String ruta) {
-        ImageIcon icon = new ImageIcon("resources/sprites/" + ruta);
+        ImageIcon icon = new ImageIcon(GamePanel.getFolderPath() + "sprites/" + ruta);
         if (icon.getIconWidth() > 0) {
             sprite = icon.getImage();
         } else {

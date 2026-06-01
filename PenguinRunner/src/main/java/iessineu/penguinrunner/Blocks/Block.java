@@ -112,7 +112,8 @@ public class Block extends Printable implements Serializable {
     }
 
     public void setPrintables() {
-        Map<String, List<String>> mapaSprites = GamePanel.createSpriteMap();
+        Map<String, List<String>> mapaSprites = GamePanel.getSpriteMap();
+        // Map<String, List<String>> mapaSprites = GamePanel.createSpriteMap();
         String tipus = this.getType().toString();
         List<String> atributs = mapaSprites.get(tipus.toLowerCase());
         if (atributs != null) {
