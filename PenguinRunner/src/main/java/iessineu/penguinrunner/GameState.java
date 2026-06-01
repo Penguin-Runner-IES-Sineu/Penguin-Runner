@@ -53,6 +53,11 @@ public class GameState implements Serializable {
     private final PlayerState climbingState = new ClimbingState();
     private final PlayerState railState = new RailState();
     private final PlayerState fallingState = new FallingState();
+    private final GameFrame gameFrame;
+
+    public GameState(GameFrame frame) {
+        this.gameFrame = frame;
+    }
 
     private Block[][] blocks = loadMap();
 
@@ -72,40 +77,40 @@ public class GameState implements Serializable {
                 char symbol = level[row].charAt(col);
                 switch (symbol) {
                     case '#' -> {
-                        blocks[row][col] = new Block(row, col, TileType.WALL);
+                        blocks[row][col] = new Block(TileType.WALL);
                     }
                     case '.' -> {
-                        blocks[row][col] = new Block(row, col, TileType.ICE);
+                        blocks[row][col] = new Block(TileType.ICE);
                     }
                     case 'G' -> {
-                        blocks[row][col] = new Block(row, col, TileType.ICECREAM);
+                        blocks[row][col] = new Block(TileType.ICECREAM);
                         iceCream++;
                     }
                     case 'H' -> {
-                        blocks[row][col] = new Block(row, col, TileType.STAIR);
+                        blocks[row][col] = new Block(TileType.STAIR);
                     }
                     case '-' -> {
-                        blocks[row][col] = new Block(row, col, TileType.RAIL);
+                        blocks[row][col] = new Block(TileType.RAIL);
                     }
                     case 'D' -> {
-                        blocks[row][col] = new Block(row, col, TileType.DOOR);
+                        blocks[row][col] = new Block(TileType.DOOR);
                     }
                     case 'S' -> {
-                        blocks[row][col] = new Block(row, col, TileType.STONE);
+                        blocks[row][col] = new Block(TileType.STONE);
                         stones.add(blocks[row][col]);
                     }
                     case 'P' -> {
                         player = new Player(row, col);
                         startPlayerRow = row;
                         startPlayerCol = col;
-                        blocks[row][col] = new Block(row, col, TileType.BLANK);
+                        blocks[row][col] = new Block(TileType.BLANK);
                     }
                     case 'E' -> {
                         enemies.add(new Enemy(row, col, 1, 1));
-                        blocks[row][col] = new Block(row, col, TileType.BLANK);
+                        blocks[row][col] = new Block(TileType.BLANK);
                     }
                     default -> {
-                        blocks[row][col] = new Block(row, col, TileType.BLANK);
+                        blocks[row][col] = new Block(TileType.BLANK);
                     }
                 }
             }
@@ -125,10 +130,10 @@ public class GameState implements Serializable {
                 Block blocAntic = mapa[row][col];
                 if (blocAntic == null) {
                     System.out.println("Hi ha blocs nuls?");
-                    mapaNou[row][col] = new Block(row, col, TileType.BLANK);
+                    mapaNou[row][col] = new Block(TileType.BLANK);
                 } else {
-                    mapaNou[row][col] = new Block(blocAntic.getRow(), blocAntic.getCol(), blocAntic.getType());
-                    mapaNou[row][col] = new Block(blocAntic.getRow(), blocAntic.getCol(), blocAntic.getType());
+                    mapaNou[row][col] = new Block(blocAntic.getType());
+                    mapaNou[row][col] = new Block(blocAntic.getType());
                     if (blocAntic.getType() == TileType.STONE) {
                         newStoneList.add(mapaNou[row][col]);
                     }
@@ -268,11 +273,10 @@ public class GameState implements Serializable {
 
         while (col != playerCol) {
             Block blockToMove = blocks[row][col];
-            blocks[row][col] = new Block(row, col, TileType.BLANK);
+            blocks[row][col] = new Block(TileType.BLANK);
             blocks[row][col + dc] = blockToMove;
 
-            blockToMove.setPosition(row, col + dc);
-
+            // blockToMove.setPosition(row, col + dc);
             col -= dc;
         }
 
@@ -280,33 +284,32 @@ public class GameState implements Serializable {
     }
 
     private void moveBlocks() {
-        for (Block stone : stones) {
-            int row = stone.getRow();
-            int col = stone.getCol();
+        for (int row = 0; row < blocks.length; row++) {
+            for (int col = 0; col < blocks[row].length; col++) {
+                if (blocks[row][col].getType() == TileType.STONE) {
+                    int nextRow = row + 1;
+                    int nextCol = col;
 
-            int nextRow = row + 1;
-            int nextCol = col;
+                    if (isOutOfBounds(nextRow, nextCol)) {
+                        continue;
+                    }
 
-            if (isOutOfBounds(nextRow, nextCol)) {
-                continue;
+                    if (!isBlank(nextRow, nextCol)) {
+                        continue;
+                    }
+
+                    if (player.getRow() == nextRow && player.getCol() == nextCol) {
+                        continue;
+                    }
+
+                    if (isEnemy(nextRow, nextCol)) {
+                        continue;
+                    }
+
+                    blocks[nextRow][nextCol] = blocks[row][col];
+                    blocks[row][col] = new Block(TileType.BLANK);
+                }
             }
-
-            if (!isBlank(nextRow, nextCol)) {
-                continue;
-            }
-
-            if (player.getRow() == nextRow && player.getCol() == nextCol) {
-                continue;
-            }
-
-            if (isEnemy(nextRow, nextCol)) {
-                continue;
-            }
-
-            blocks[row][col] = new Block(row, col, TileType.BLANK);
-            blocks[nextRow][nextCol] = stone;
-
-            stone.setPosition(nextRow, nextCol);
         }
     }
 
@@ -335,7 +338,7 @@ public class GameState implements Serializable {
         Block block = blocks[row][col];
 
         if (block != null && block.isBreakable()) {
-            blocks[row][col] = new Block(row, col, TileType.MOLTEN);
+            blocks[row][col] = new Block(TileType.MOLTEN);
             brokenBlocks.add(new BrokenBlock(row, col, 5));
         }
     }
@@ -347,7 +350,7 @@ public class GameState implements Serializable {
             block.turnsLeft--;
 
             if (block.turnsLeft <= 0) {
-                blocks[block.row][block.col] = new Block(block.row, block.col, TileType.ICE);
+                blocks[block.row][block.col] = new Block(TileType.ICE);
                 brokenBlocks.remove(i);
             }
         }
@@ -434,7 +437,7 @@ public class GameState implements Serializable {
         Block block = blocks[row][col];
 
         if (block != null && block.isCollectable()) {
-            blocks[row][col] = new Block(row, col, TileType.BLANK);
+            blocks[row][col] = new Block(TileType.BLANK);
             soundManager.playSound("resources/nyam.wav");
             player.addIceCream();
 
@@ -475,7 +478,7 @@ public class GameState implements Serializable {
 
     private Block getBlock(int row, int col) {
         if (isOutOfBounds(row, col)) {
-            return new Block(row, col, TileType.BLANK);
+            return new Block(TileType.BLANK);
         }
 
         return blocks[row][col];

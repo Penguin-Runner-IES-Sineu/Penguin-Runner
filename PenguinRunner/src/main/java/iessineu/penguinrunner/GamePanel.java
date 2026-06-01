@@ -62,14 +62,14 @@ public class GamePanel extends JPanel implements Serializable {
     private Font textFont;
     private Font emojiFont;
     private final SoundManager soundManager = new SoundManager();
-    private GameState gameState = new GameState();
     private final GameFrame gameFrame;
+    private GameState gameState;
 
     public GamePanel(GameFrame frame) {
         gameFrame = frame;
+        gameState = new GameState(frame);
         soundManager.playMusic("resources/music.wav");
         soundManager.setVolume(0.7f);
-        // gameState = new GameState();
         loadFonts();
         createSpriteMap();
         Printable.setFont(emojiFont);
@@ -292,7 +292,7 @@ public class GamePanel extends JPanel implements Serializable {
         for (int row = 0; row < gameState.getRows(); row++) {
             for (int col = 0; col < gameState.getCols(); col++) {
                 Block b = gameState.getBlocks()[row][col];
-                if(b.isDoor()){
+                if (b.isDoor()) {
                     if (gameState.checkObjective()) {
                         b.setType(TileType.DOOR);
                         b.setPrintables();
@@ -340,7 +340,7 @@ public class GamePanel extends JPanel implements Serializable {
         g2.drawLine(0, hudY, getWidth(), hudY);
 
         Player player = gameState.getPlayer();
-        Block icecream = new Block(0, 0, TileType.ICECREAM);
+        Block icecream = new Block(TileType.ICECREAM);
 
         int padding = 20;
         int textY = hudY + 35;
