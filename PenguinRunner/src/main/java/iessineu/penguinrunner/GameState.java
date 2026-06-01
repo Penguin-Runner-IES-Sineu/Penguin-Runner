@@ -53,7 +53,7 @@ public class GameState implements Serializable {
     private final PlayerState climbingState = new ClimbingState();
     private final PlayerState railState = new RailState();
     private final PlayerState fallingState = new FallingState();
-    
+
     private Block[][] blocks = loadMap();
 
     public Block[][] loadMap() {
@@ -99,11 +99,9 @@ public class GameState implements Serializable {
                         startPlayerRow = row;
                         startPlayerCol = col;
                         blocks[row][col] = new Block(row, col, TileType.BLANK);
-                        // blocks[row][col] = null;
                     }
                     case 'E' -> {
                         enemies.add(new Enemy(row, col, 1, 1));
-                        // blocks[row][col] = null;
                         blocks[row][col] = new Block(row, col, TileType.BLANK);
                     }
                     default -> {
@@ -129,6 +127,7 @@ public class GameState implements Serializable {
                     System.out.println("Hi ha blocs nuls?");
                     mapaNou[row][col] = new Block(row, col, TileType.BLANK);
                 } else {
+                    mapaNou[row][col] = new Block(blocAntic.getRow(), blocAntic.getCol(), blocAntic.getType());
                     mapaNou[row][col] = new Block(blocAntic.getRow(), blocAntic.getCol(), blocAntic.getType());
                     if (blocAntic.getType() == TileType.STONE) {
                         newStoneList.add(mapaNou[row][col]);
@@ -448,35 +447,15 @@ public class GameState implements Serializable {
         int playerCol = player.getCol();
 
         for (Enemy enemy : enemies) {
-            if (!enemy.isDead()
-                    && enemy.getRow() == playerRow
-                    && enemy.getCol() == playerCol) {
-                resetPositions();
+            if (!enemy.isDead() && enemy.getRow() == playerRow && enemy.getCol() == playerCol) {
+                loadMap();
                 return;
             }
         }
 
         if (isIce(playerRow, playerCol)) {
-            resetPositions();
+            loadMap();
         }
-    }
-
-    private void resetPositions() {
-        player.setPosition(startPlayerRow, startPlayerCol);
-
-        for (Block stone : stones) {
-            blocks[stone.getRow()][stone.getCol()] = new Block(stone.getRow(), stone.getCol(), TileType.BLANK);
-
-            stone.moveToOriginalPosition();
-
-            blocks[stone.getRow()][stone.getCol()] = stone;
-        }
-
-        for (Enemy enemy : enemies) {
-            enemy.moveToOriginalRow();
-        }
-
-        updatePlayerState();
     }
 
     /*
