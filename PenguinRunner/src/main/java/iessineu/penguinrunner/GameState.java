@@ -44,17 +44,17 @@ public class GameState implements Serializable {
     private GameMap mapObject = mapList.get(0);
     private Player player;
     private List<Enemy> enemies;
-    private Block[][] blocks = loadMap();
-
     private int iceCream = 0;
-
     private int startPlayerRow;
     private int startPlayerCol;
+
     private final SoundManager soundManager = new SoundManager();
     private final PlayerState walkingState = new WalkingState();
     private final PlayerState climbingState = new ClimbingState();
     private final PlayerState railState = new RailState();
     private final PlayerState fallingState = new FallingState();
+    
+    private Block[][] blocks = loadMap();
 
     public Block[][] loadMap() {
         String[] level = mapObject.getMap();
@@ -584,7 +584,8 @@ public class GameState implements Serializable {
     public Block[][] getBlocks() {
         return blocks;
     }
-    public void setBlock(int row,int col, Block block){
+
+    public void setBlock(int row, int col, Block block) {
         blocks[row][col] = block;
     }
 
