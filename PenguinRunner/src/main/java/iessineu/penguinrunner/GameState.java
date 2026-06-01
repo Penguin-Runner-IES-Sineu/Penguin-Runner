@@ -38,7 +38,7 @@ public class GameState implements Serializable {
     private List<BrokenBlock> brokenBlocks;
     private List<Block> stones;
     // private String rutaMapes = "resources/maps.json";
-    private final String rutaMapes = GamePanel.getFolderPath()+"maps.json";
+    private final String rutaMapes = GamePanel.getFolderPath() + "maps.json";
     private int nivellActual = 0;
 
     private final List<GameMap> mapList = llegirMapes(rutaMapes);
@@ -63,7 +63,6 @@ public class GameState implements Serializable {
             takeTurn();
         }
     });
-
 
     private Block[][] blocks = loadMap();
 
@@ -433,7 +432,7 @@ public class GameState implements Serializable {
 
         if (block != null && block.isCollectable()) {
             blocks[row][col] = new Block(TileType.BLANK);
-            soundManager.playSound(GamePanel.getFolderPath()+"nyam.wav");
+            soundManager.playSound(GamePanel.getFolderPath() + "nyam.wav");
             player.addIceCream();
 
             // System.out.println("Gelat: " + player.geticeCream());
