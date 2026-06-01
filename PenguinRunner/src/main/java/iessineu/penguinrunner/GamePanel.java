@@ -300,12 +300,12 @@ public class GamePanel extends JPanel implements Serializable {
         for (int row = 0; row < gameState.getRows(); row++) {
             for (int col = 0; col < gameState.getCols(); col++) {
                 TileType tile = gameState.getTile(row, col);
-                if (tile == TileType.BLANK) {
-                    drawBlank(g, row, col);
-                } else {
+                // if (tile == TileType.BLANK) {
+                //     drawBlank(g, row, col);
+                // } else {
                     Block b = gameState.getBlocks()[row][col];
                     b.draw(row, col);
-                }
+                // }
             }
         }
     }

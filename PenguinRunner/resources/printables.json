@@ -30,6 +30,12 @@
         "filename": "wall.png"
     },
     {
+        "type": "blank",
+        "sprite": "🧱",
+        "color": "#111111",
+        "filename": "blank.png"
+    },
+    {
         "type": "molten",
         "sprite": "🕳️",
         "color": "#23F0Fa",
@@ -38,7 +44,7 @@
     {
         "type": "stone",
         "sprite": "🧱",
-        "color": "#141414",
+        "color": "#666666",
         "filename": "stone.png"
     },
     {
