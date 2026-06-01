@@ -18,12 +18,10 @@ import iessineu.penguinrunner.Printable;
 
 public class Block extends Printable implements Serializable {
 
-    protected int row;
-    protected int col;
-
-    protected final int originalRow;
-    protected final int originalCol;
-
+    // protected int row;
+    // protected int col;
+    // protected final int originalRow;
+    // protected final int originalCol;
     protected String sprite = "";
     protected Color color = new Color(0);
 
@@ -38,13 +36,10 @@ public class Block extends Printable implements Serializable {
 
     protected TileType type;
 
-    public Block(int row, int col, TileType type) {
-        this.row = row;
-        this.col = col;
-        this.originalRow = row;
-        this.originalCol = col;
+    public Block(TileType type) {
         this.type = type;
         switch (type) {
+
             case ICE -> {
                 this.isSolid = true;
                 this.isBreakable = true;
@@ -80,26 +75,8 @@ public class Block extends Printable implements Serializable {
         this.setPrintables();
     }
 
-    public int getRow() {
-        return row;
-    }
-
-    public int getCol() {
-        return col;
-    }
-
     public TileType getType() {
         return type;
-    }
-
-    public void setPosition(int row, int col) {
-        this.row = row;
-        this.col = col;
-    }
-
-    public void moveToOriginalPosition() {
-        this.row = originalRow;
-        this.col = originalCol;
     }
 
     public boolean isSolid() {
