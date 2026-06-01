@@ -11,8 +11,16 @@ import javax.swing.SwingUtilities;
  */
 public class PenguinRunner {
 
-    public static void main(String[] args) {
+    static GameFrame frame;
+    static GameState state;
 
+    // public static void init() {
+    //     frame = new GameFrame();
+    //     frame.setVisible(true);
+    // }
+
+    public static void main(String[] args) {
+        
         /*
          * SwingUtilities.invokeLater fa que la finestra es creï
          * correctament dins el fil d'execució de Swing.
@@ -21,5 +29,20 @@ public class PenguinRunner {
             GameFrame frame = new GameFrame();
             frame.setVisible(true);
         });
+
+        // init();
+        // while (true) {
+        //     update();
+        //     repaint();
+        // }
     }
+
+    // public static void update() {
+    //     state = frame.getGameState();
+    //     state.updateLogic();
+    // }
+
+    // public static void repaint() {
+    //     frame.repaint();
+    // }
 }

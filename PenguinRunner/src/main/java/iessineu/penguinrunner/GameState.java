@@ -16,6 +16,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Timer;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -38,7 +40,8 @@ public class GameState implements Serializable {
     // private String rutaMapes = "resources/maps.json";
     private final String rutaMapes = "resources/maps.json";
     private int nivellActual = 0;
-    // private long lastTurn;
+    private long t1;
+    private long t2;
 
     private final List<GameMap> mapList = llegirMapes(rutaMapes);
     private GameMap mapObject = mapList.get(0);
@@ -53,10 +56,19 @@ public class GameState implements Serializable {
     private final PlayerState climbingState = new ClimbingState();
     private final PlayerState railState = new RailState();
     private final PlayerState fallingState = new FallingState();
-    private final GameFrame gameFrame;
+    private final GamePanel gameFrame;
 
-    public GameState(GameFrame frame) {
-        this.gameFrame = frame;
+    private Timer test = new Timer(50, e -> {
+        if (player.getState() == fallingState) {
+            movePlayerDownOne();
+            updatePlayerState();
+            updateLogic();
+            takeTurn();
+        }
+    });
+
+    public GameState(GamePanel panel) {
+        this.gameFrame = panel;
     }
 
     private Block[][] blocks = loadMap();
@@ -64,7 +76,7 @@ public class GameState implements Serializable {
     public Block[][] loadMap() {
         String[] level = mapObject.getMap();
         blocks = new Block[level.length][level[0].length()];
-        brokenBlocks = new ArrayList<>();
+        brokenBlocks = new ArrayList();
         stones = new ArrayList<>();
         enemies = new ArrayList();
         player = null;
@@ -128,15 +140,10 @@ public class GameState implements Serializable {
         for (int row = 0; row < mapa.length; row++) {
             for (int col = 0; col < mapa[row].length; col++) {
                 Block blocAntic = mapa[row][col];
-                if (blocAntic == null) {
-                    System.out.println("Hi ha blocs nuls?");
-                    mapaNou[row][col] = new Block(TileType.BLANK);
-                } else {
-                    mapaNou[row][col] = new Block(blocAntic.getType());
-                    mapaNou[row][col] = new Block(blocAntic.getType());
-                    if (blocAntic.getType() == TileType.STONE) {
-                        newStoneList.add(mapaNou[row][col]);
-                    }
+                mapaNou[row][col] = new Block(blocAntic.getType());
+                mapaNou[row][col] = new Block(blocAntic.getType());
+                if (blocAntic.getType() == TileType.STONE) {
+                    newStoneList.add(mapaNou[row][col]);
                 }
             }
         }
@@ -156,21 +163,17 @@ public class GameState implements Serializable {
      * TORNS
      */
     public void takeTurn(Direction direction) {
-        // long delta = System.currentTimeMillis() - lastTurn;
+        // test.stop();
         if (player.getState() == fallingState) {
-            // if (delta > 50) {
-            // lastTurn = System.currentTimeMillis();
-            movePlayerDownOne();
-            updatePlayerState();
-            finishTurn();
-            takeTurn();
-            // }
+            if (!test.isRunning()) {
+                test.start();
+            }
         } else if (direction != null) {
+            test.stop();
             player.getState().handleInput(this, direction);
             updatePlayerState();
-            finishTurn();
+            updateLogic();
             if (player.getState() == fallingState) {
-                // lastTurn = System.currentTimeMillis();
                 takeTurn();
             }
         }
@@ -181,13 +184,13 @@ public class GameState implements Serializable {
         takeTurn(null);
     }
 
-    private void finishTurn() {
+    public void updateLogic() {
+        updatePlayerState();
         collectIcecream();
         moveBlocks();
         moveEnemies();
         updateBrokenBlocks();
         checkCollisions();
-        updatePlayerState();
     }
 
     /*
@@ -276,7 +279,6 @@ public class GameState implements Serializable {
             blocks[row][col] = new Block(TileType.BLANK);
             blocks[row][col + dc] = blockToMove;
 
-            // blockToMove.setPosition(row, col + dc);
             col -= dc;
         }
 
@@ -288,25 +290,24 @@ public class GameState implements Serializable {
             for (int col = 0; col < blocks[row].length; col++) {
                 if (blocks[row][col].getType() == TileType.STONE) {
                     int nextRow = row + 1;
-                    int nextCol = col;
 
-                    if (isOutOfBounds(nextRow, nextCol)) {
+                    if (isOutOfBounds(nextRow, col)) {
                         continue;
                     }
 
-                    if (!isBlank(nextRow, nextCol)) {
+                    if (!isBlank(nextRow, col)) {
                         continue;
                     }
 
-                    if (player.getRow() == nextRow && player.getCol() == nextCol) {
+                    if (player.getRow() == nextRow && player.getCol() == col) {
                         continue;
                     }
 
-                    if (isEnemy(nextRow, nextCol)) {
+                    if (isEnemy(nextRow, col)) {
                         continue;
                     }
 
-                    blocks[nextRow][nextCol] = blocks[row][col];
+                    blocks[nextRow][col] = blocks[row][col];
                     blocks[row][col] = new Block(TileType.BLANK);
                 }
             }
@@ -319,14 +320,14 @@ public class GameState implements Serializable {
     public void breakDownLeft() {
         if (canMoveTo(player.getRow(), player.getCol() - 1)) {
             breakBlock(player.getRow() + 1, player.getCol() - 1);
-            finishTurn();
+            // updateLogic();
         }
     }
 
     public void breakDownRight() {
         if (canMoveTo(player.getRow(), player.getCol() + 1)) {
             breakBlock(player.getRow() + 1, player.getCol() + 1);
-            finishTurn();
+            // updateLogic();
         }
     }
 

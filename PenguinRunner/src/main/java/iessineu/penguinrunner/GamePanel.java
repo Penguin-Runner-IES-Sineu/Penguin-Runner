@@ -31,6 +31,7 @@ import java.util.Map;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.json.JSONArray;
@@ -64,10 +65,16 @@ public class GamePanel extends JPanel implements Serializable {
     private final SoundManager soundManager = new SoundManager();
     private final GameFrame gameFrame;
     private GameState gameState;
+    private long startTime = System.currentTimeMillis();
+    private long endTime = System.currentTimeMillis();
+    private long delta = 0;
+
+    // private InputMap inputMap = getInputMap();
+    // private ActionMap actionMap = getActionMap();
 
     public GamePanel(GameFrame frame) {
         gameFrame = frame;
-        gameState = new GameState(frame);
+        gameState = new GameState(this);
         soundManager.playMusic("resources/music.wav");
         soundManager.setVolume(0.7f);
         loadFonts();
@@ -80,6 +87,9 @@ public class GamePanel extends JPanel implements Serializable {
         // Necessari perquè el JPanel pugui rebre tecles.
         setFocusable(true);
 
+        Timer timer = new Timer(20, e -> repaint());
+        timer.start();
+
         // Escoltar teclat.
         addKeyListener(new KeyAdapter() {
             @Override
@@ -87,6 +97,18 @@ public class GamePanel extends JPanel implements Serializable {
                 handleInput(e);
             }
         });
+    }
+
+    /*
+     * Executa un torn normal.
+     *
+     * Important:
+     * No feim un while amb temps dins el KeyListener perquè això bloqueja Swing.
+     * La caiguda ja hauria d'estar gestionada dins GameState/takeTurn().
+     */
+    private void playTurn(Direction direction) {
+        gameState.takeTurn(direction);
+        // gameState.takeTurn(direction);
     }
 
     /*
@@ -137,17 +159,16 @@ public class GamePanel extends JPanel implements Serializable {
      * Espai = passar torn
      */
     private void handleInput(KeyEvent e) {
+        Direction direction = null;
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP ->
-                playTurn(Direction.UP);
+                direction = Direction.UP;
             case KeyEvent.VK_DOWN ->
-                playTurn(Direction.DOWN);
+                direction = Direction.DOWN;
             case KeyEvent.VK_LEFT ->
-                playTurn(Direction.LEFT);
+                direction = Direction.LEFT;
             case KeyEvent.VK_RIGHT ->
-                playTurn(Direction.RIGHT);
-            case KeyEvent.VK_SPACE ->
-                playTurn(null);
+                direction = Direction.RIGHT;
             case KeyEvent.VK_Q -> {
                 gameState.breakDownLeft();
             }
@@ -162,22 +183,12 @@ public class GamePanel extends JPanel implements Serializable {
                 guardarPartida();
             case KeyEvent.VK_O ->
                 carregarPartida();
-            default -> {
-            }
         }
-        repaint();
-    }
-
-    /*
-     * Executa un torn normal.
-     *
-     * Important:
-     * No feim un while amb temps dins el KeyListener perquè això bloqueja Swing.
-     * La caiguda ja hauria d'estar gestionada dins GameState/takeTurn().
-     */
-    private void playTurn(Direction direction) {
-        gameState.takeTurn(direction);
-        repaint();
+        playTurn(direction);
+        if (direction == null) {
+            gameState.updateLogic();
+        }
+        // repaint();
     }
 
     /*
@@ -268,7 +279,7 @@ public class GamePanel extends JPanel implements Serializable {
         }
         gameState.reloadSprites();
         resizePanelToGame();
-        repaint();
+        // repaint();
     }
 
     /*
@@ -418,6 +429,10 @@ public class GamePanel extends JPanel implements Serializable {
             spriteMap.put(type, atributs);
         }
         return spriteMap;
+    }
+
+    public GameState getGameState() {
+        return gameState;
     }
 
 }

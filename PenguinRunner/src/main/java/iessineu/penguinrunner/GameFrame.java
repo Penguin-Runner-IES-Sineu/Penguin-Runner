@@ -17,6 +17,7 @@ import javax.swing.JFrame;
  */
 public class GameFrame extends JFrame {
 
+    // private GameState state = null;
     public GameFrame() {
         setTitle("PenguinRunner");
 
@@ -27,7 +28,10 @@ public class GameFrame extends JFrame {
         setResizable(false);
 
         // Afegim el panell del joc.
-        add(new GamePanel(this));
+        GamePanel panel = new GamePanel(this);
+        add(panel);
+        // add(new GamePanel(this));
+        // state = panel.getGameState();
 
         // Ajusta la mida de la finestra segons el GamePanel.
         pack();
@@ -35,4 +39,8 @@ public class GameFrame extends JFrame {
         // Centra la finestra a la pantalla.
         setLocationRelativeTo(null);
     }
+
+    // public GameState getGameState() {
+    //     return state;
+    // }
 }

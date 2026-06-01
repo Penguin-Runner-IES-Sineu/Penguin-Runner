@@ -39,7 +39,6 @@ public class Block extends Printable implements Serializable {
     public Block(TileType type) {
         this.type = type;
         switch (type) {
-
             case ICE -> {
                 this.isSolid = true;
                 this.isBreakable = true;
