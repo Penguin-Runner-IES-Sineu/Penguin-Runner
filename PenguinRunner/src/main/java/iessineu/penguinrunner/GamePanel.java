@@ -255,6 +255,7 @@ public class GamePanel extends JPanel implements Serializable {
 
         try (ObjectInputStream file = new ObjectInputStream(new FileInputStream(selectedFile))) {
             this.gameState = (GameState) file.readObject();
+            System.out.println(this.gameState);
 
             // resizePanelToGame();
             // repaint();

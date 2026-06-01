@@ -99,14 +99,16 @@ public class GameState implements Serializable {
                         player = new Player(row, col);
                         startPlayerRow = row;
                         startPlayerCol = col;
-                        blocks[row][col] = null;
+                        blocks[row][col] = new Block(row, col, TileType.BLANK);
+                        // blocks[row][col] = null;
                     }
                     case 'E' -> {
                         enemies.add(new Enemy(row, col, 1, 1));
-                        blocks[row][col] = null;
+                        // blocks[row][col] = null;
+                        blocks[row][col] = new Block(row, col, TileType.BLANK);
                     }
                     default -> {
-                        blocks[row][col] = null;
+                        blocks[row][col] = new Block(row, col, TileType.BLANK);
                     }
                 }
             }
@@ -126,7 +128,8 @@ public class GameState implements Serializable {
             for (int col = 0; col < mapa[row].length; col++) {
                 Block blocAntic = mapa[row][col];
                 if (blocAntic == null) {
-                    mapaNou[row][col] = null;
+                    // mapaNou[row][col] = null;
+                    mapaNou[row][col] = new Block(row, col, TileType.BLANK);
                 } else {
                     mapaNou[row][col] = new Block(blocAntic.getRow(), blocAntic.getCol(), blocAntic.getType());
                     if (blocAntic.getType() == TileType.STONE) {
@@ -269,7 +272,8 @@ public class GameState implements Serializable {
         while (col != playerCol) {
             Block blockToMove = blocks[row][col];
 
-            blocks[row][col] = null;
+            // blocks[row][col] = null;
+            blocks[row][col] = new Block(row, col, TileType.BLANK);
             blocks[row][col + dc] = blockToMove;
 
             blockToMove.setPosition(row, col + dc);
@@ -304,7 +308,8 @@ public class GameState implements Serializable {
                 continue;
             }
 
-            blocks[row][col] = null;
+            // blocks[row][col] = null;
+            blocks[row][col] = new Block(row, col, TileType.BLANK);
             blocks[nextRow][nextCol] = stone;
 
             stone.setPosition(nextRow, nextCol);
@@ -435,7 +440,8 @@ public class GameState implements Serializable {
         Block block = blocks[row][col];
 
         if (block != null && block.isCollectable()) {
-            blocks[row][col] = null;
+            blocks[row][col] = new Block(row, col, TileType.BLANK);
+            // blocks[row][col] = null;
             soundManager.playSound("resources/nyam.wav");
             player.addIceCream();
 
@@ -465,7 +471,8 @@ public class GameState implements Serializable {
         player.setPosition(startPlayerRow, startPlayerCol);
 
         for (Block stone : stones) {
-            blocks[stone.getRow()][stone.getCol()] = null;
+            // blocks[stone.getRow()][stone.getCol()] = null;
+            blocks[stone.getRow()][stone.getCol()] = new Block(stone.getRow(), stone.getCol(), TileType.BLANK);
 
             stone.moveToOriginalPosition();
 
@@ -496,14 +503,16 @@ public class GameState implements Serializable {
 
     private Block getBlock(int row, int col) {
         if (isOutOfBounds(row, col)) {
-            return null;
+            return new Block(row, col, TileType.BLANK);
+            // return null;
         }
 
         return blocks[row][col];
     }
 
     private boolean isBlank(int row, int col) {
-        return !isOutOfBounds(row, col) && blocks[row][col] == null;
+        // return !isOutOfBounds(row, col) && blocks[row][col] == null;
+        return !isOutOfBounds(row, col) && blocks[row][col].getType() == TileType.BLANK;
     }
 
     private boolean isSolid(int row, int col) {
@@ -570,10 +579,9 @@ public class GameState implements Serializable {
     public TileType getTile(int row, int col) {
         Block block = getBlock(row, col);
 
-        if (block == null) {
-            return TileType.BLANK;
-        }
-
+        // if (block == null) {
+        //     return TileType.BLANK;
+        // }
         return block.getType();
     }
 

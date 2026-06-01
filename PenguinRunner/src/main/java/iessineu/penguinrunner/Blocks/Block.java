@@ -67,6 +67,9 @@ public class Block extends Printable implements Serializable {
                 this.isSolid = true;
                 this.isPushable = true;
             }
+            case BLANK -> {
+                this.isSolid = false;
+            }
         }
         this.setPrintables();
     }
