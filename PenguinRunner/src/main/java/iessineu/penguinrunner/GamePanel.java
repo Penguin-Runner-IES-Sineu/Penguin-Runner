@@ -287,47 +287,42 @@ public class GamePanel extends JPanel implements Serializable {
         super.paintComponent(g);
 
         Printable.setGraphics(g);
-        drawMap(g);
-        drawEnemies(g);
-        drawPlayer(g);
+        drawMap();
+        drawEnemies();
+        drawPlayer();
         drawHUD(g);
     }
 
     /*
      * Dibuixa el mapa casella per casella.
      */
-    private void drawMap(Graphics g) {
+    private void drawMap() {
         for (int row = 0; row < gameState.getRows(); row++) {
             for (int col = 0; col < gameState.getCols(); col++) {
-                TileType tile = gameState.getTile(row, col);
-                // if (tile == TileType.BLANK) {
-                //     drawBlank(g, row, col);
-                // } else {
-                    Block b = gameState.getBlocks()[row][col];
-                    b.draw(row, col);
-                // }
+                Block b = gameState.getBlocks()[row][col];
+                if(b.isDoor()){
+                    if (gameState.checkObjective()) {
+                        b.setType(TileType.DOOR);
+                        b.setPrintables();
+                    }
+                }
+                b.draw(row, col);
             }
         }
-    }
-
-    private void drawBlank(Graphics g, int row, int col) {
-        drawSprite(g, blankSprite, row, col);
     }
 
     /*
      * Dibuixa el jugador.
      */
-    private void drawPlayer(Graphics g) {
+    private void drawPlayer() {
         Player player = gameState.getPlayer();
         player.draw(player.getRow(), player.getCol());
-
-        // drawSprite(g, playerSprite, player.getRow(), player.getCol());
     }
 
     /*
      * Dibuixa els enemics.
      */
-    private void drawEnemies(Graphics g) {
+    private void drawEnemies() {
         for (Enemy enemy : gameState.getEnemies()) {
             if (!enemy.isDead()) {
                 enemy.draw(enemy.getRow(), enemy.getCol());
@@ -377,15 +372,6 @@ public class GamePanel extends JPanel implements Serializable {
                 padding,
                 textY + 35
         );
-    }
-
-    /*
-     * Comprova si es pot mostrar la porta.
-     */
-    private boolean checkObjective() {
-        Player player = gameState.getPlayer();
-
-        return player.geticeCream() >= gameState.getIceCream();
     }
 
     public static Map<String, List<String>> createSpriteMap() {

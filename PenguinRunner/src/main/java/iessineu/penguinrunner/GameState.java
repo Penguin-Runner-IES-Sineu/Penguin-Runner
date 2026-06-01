@@ -600,17 +600,25 @@ public class GameState implements Serializable {
     public Block[][] getBlocks() {
         return blocks;
     }
+    public void setBlock(int row,int col, Block block){
+        blocks[row][col] = block;
+    }
 
     void interact() {
         Block bloc = blocks[player.getRow()][player.getCol()];
-        if (bloc != null && bloc.getType() == TileType.DOOR) {
-            System.out.println("Porta");
+        if (bloc.getType() == TileType.DOOR) {
             nivellActual++;
             mapObject = mapList.get(nivellActual);
             loadMap();
             // mapObject = mapList.get(1);
             // blocks = "";
         }
+    }
+
+    public boolean checkObjective() {
+        // return true;
+        return player.geticeCream() >= 2;
+        // return player.geticeCream() >= getIceCream();
     }
 
     public int getNivell() {

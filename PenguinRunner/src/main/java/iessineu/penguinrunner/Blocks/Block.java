@@ -34,8 +34,9 @@ public class Block extends Printable implements Serializable {
     private boolean isRail = false;
     private boolean isCollectable = false;
     private boolean isDeadlyForEnemy = false;
+    private boolean isDoor = false;
 
-    protected final TileType type;
+    protected TileType type;
 
     public Block(int row, int col, TileType type) {
         this.row = row;
@@ -70,6 +71,11 @@ public class Block extends Printable implements Serializable {
             case BLANK -> {
                 this.isSolid = false;
             }
+            case DOOR -> {
+                this.isDoor = true;
+                this.type = TileType.BLANK;
+            }
+
         }
         this.setPrintables();
     }
@@ -105,7 +111,12 @@ public class Block extends Printable implements Serializable {
     }
 
     public boolean isPushable() {
+
         return isPushable;
+    }
+
+    public boolean isDoor() {
+        return isDoor;
     }
 
     public boolean isClimbable() {
@@ -132,8 +143,12 @@ public class Block extends Printable implements Serializable {
             this.setEmoji(atributs.get(0));
             this.setColorFromHex(atributs.get(1));
             this.setSprite(atributs.get(2));
-        } else{
+        } else {
             this.setEmoji("#");
         }
+    }
+
+    public void setType(TileType type) {
+        this.type = type;
     }
 }
