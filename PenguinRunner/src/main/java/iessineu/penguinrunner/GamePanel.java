@@ -93,8 +93,8 @@ public class GamePanel extends JPanel implements Serializable {
      * Carrega la font externa. Si falla, usa una font del sistema.
      */
     private void loadFonts() {
-        textFont = new Font("Segoe UI Emoji", Font.PLAIN, 30); // per defecte s'empra aquesta, i després llegim l'arxiu 
         emojiFont = new Font("Segoe UI Emoji", Font.PLAIN, 30); // per defecte s'empra aquesta, i després llegim l'arxiu 
+        textFont = new Font("Segoe UI Emoji", Font.PLAIN, 30); // per defecte s'empra aquesta, i després llegim l'arxiu 
         try {
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             // ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(emojiFontPath)));
@@ -118,7 +118,6 @@ public class GamePanel extends JPanel implements Serializable {
     private void resizePanelToGame() {
         int width = gameState.getCols() * TILE_SIZE;
         int height = gameState.getRows() * TILE_SIZE + HUD_HEIGHT;
-        // gameFrame.resize(new Dimension(width, height));
         setPreferredSize(new Dimension(width, height));
         gameFrame.pack();
         gameFrame.setLocationRelativeTo(null);
@@ -151,16 +150,13 @@ public class GamePanel extends JPanel implements Serializable {
                 playTurn(null);
             case KeyEvent.VK_Q -> {
                 gameState.breakDownLeft();
-                repaint();
             }
             case KeyEvent.VK_E -> {
                 gameState.breakDownRight();
-                repaint();
             }
             case KeyEvent.VK_F -> {
                 gameState.interact();
                 resizePanelToGame();
-                // repaint();
             }
             case KeyEvent.VK_P ->
                 guardarPartida();
@@ -169,6 +165,7 @@ public class GamePanel extends JPanel implements Serializable {
             default -> {
             }
         }
+        repaint();
     }
 
     /*
