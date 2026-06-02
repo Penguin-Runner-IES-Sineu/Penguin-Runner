@@ -381,14 +381,15 @@ public class GamePanel extends JPanel implements Serializable {
         String jsonString = "";
         BufferedReader fitxer;
         ClassLoader classLoader = PenguinRunner.class.getClassLoader();
-        try (InputStream is = classLoader.getResourceAsStream("printables.json");) {
+        try {
             if (GamePanel.hasGame()) {
                 fitxer = new BufferedReader(new FileReader(printablesPath));
             } else {
+                InputStream is = classLoader.getResourceAsStream("printables.json");
                 fitxer = new BufferedReader(new InputStreamReader(is));
-            }
-            if (is == null) {
-                throw new IOException("Resource not found: maps.json");
+                if (is == null) {
+                    throw new IOException("Resource not found: maps.json");
+                }
             }
             try {
                 String line;
