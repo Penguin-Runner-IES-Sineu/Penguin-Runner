@@ -752,11 +752,11 @@ public class GameState implements Serializable {
         String json = "";
         BufferedReader fitxer;
         ClassLoader classLoader = PenguinRunner.class.getClassLoader();
+        InputStream is = classLoader.getResourceAsStream("maps.json");
         try {
             if (GamePanel.hasGame()) {
                 fitxer = new BufferedReader(new FileReader(GamePanel.getFolderPath() + "maps.json"));
             } else {
-                InputStream is = classLoader.getResourceAsStream("maps.json");
                 fitxer = new BufferedReader(new InputStreamReader(is));
             }
             json = fitxerJSON(fitxer);

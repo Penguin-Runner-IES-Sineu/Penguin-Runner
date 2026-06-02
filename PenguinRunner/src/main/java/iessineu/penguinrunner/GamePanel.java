@@ -59,6 +59,7 @@ public class GamePanel extends JPanel implements Serializable {
     // private String emojiFontPath = "resources/font.ttf";
     // private String textFontPath = emojiFontPath;
     // private String textFontPath = "resources/wings.ttf";
+    // private static String folderPath = "/src/main/java/resources/";
     private static String folderPath = "resources/";
     // private static String folderPath = "";
     private static String musicPath = folderPath + "music.wav";
@@ -381,11 +382,13 @@ public class GamePanel extends JPanel implements Serializable {
         String jsonString = "";
         BufferedReader fitxer;
         ClassLoader classLoader = PenguinRunner.class.getClassLoader();
+        InputStream is = classLoader.getResourceAsStream("printables.json");
         try {
             if (GamePanel.hasGame()) {
+                System.out.println("Carregant fitxer");
                 fitxer = new BufferedReader(new FileReader(printablesPath));
             } else {
-                InputStream is = classLoader.getResourceAsStream("printables.json");
+                System.out.println("Carregant recurs");
                 fitxer = new BufferedReader(new InputStreamReader(is));
                 if (is == null) {
                     throw new IOException("Resource not found: maps.json");
