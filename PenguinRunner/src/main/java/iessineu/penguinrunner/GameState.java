@@ -25,11 +25,13 @@ import org.json.JSONObject;
 import AI.AI;
 import iessineu.penguinrunner.Blocks.Block;
 import iessineu.penguinrunner.Blocks.TileType;
+import iessineu.penguinrunner.Entity.AmbushingEnemy;
 import iessineu.penguinrunner.Entity.Enemy;
 import iessineu.penguinrunner.Entity.GameMap;
 import iessineu.penguinrunner.Entity.Player;
 import iessineu.penguinrunner.Entity.SeekerEnemy;
 import iessineu.penguinrunner.Movement.Direction;
+import iessineu.penguinrunner.Movement.PositionHistory;
 import iessineu.penguinrunner.States.ClimbingState;
 import iessineu.penguinrunner.States.FallingState;
 import iessineu.penguinrunner.States.PlayerState;
@@ -38,6 +40,7 @@ import iessineu.penguinrunner.States.WalkingState;
 
 public class GameState implements Serializable {
 
+    private ArrayList<PositionHistory> lastPositions = new ArrayList<>();
     private List<BrokenBlock> brokenBlocks;
     private List<Block> stones;
     // private String rutaMapes = "resources/maps.json";
@@ -116,13 +119,14 @@ public class GameState implements Serializable {
                         startPlayerRow = row;
                         startPlayerCol = col;
                         blocks[row][col] = new Block(TileType.BLANK);
+                        saveLastPosition();
                     }
                     case 'E' -> {
                         enemies.add(new Enemy(row, col, 1, 1));
                         blocks[row][col] = new Block(TileType.BLANK);
                     }
                     case 'A' -> {
-                        enemies.add(new SeekerEnemy(row, col, 1, 1));
+                        enemies.add(new AmbushingEnemy(row, col, 1, 1));
                         blocks[row][col] = new Block(TileType.BLANK);
                     }
                     case 'W' -> {
@@ -219,7 +223,7 @@ public class GameState implements Serializable {
         moveBlocks();
         moveEnemies();
         updateBrokenBlocks();
-
+        saveLastPosition();
         checkCollisions();
         updatePlayerState();
     }
@@ -449,12 +453,39 @@ public class GameState implements Serializable {
             return;
         }
 
-        if (enemy instanceof SeekerEnemy enemyStarAi) {
+        if (enemy instanceof AmbushingEnemy ambushingEnemy) {
+            PositionHistory target = getAmbushingTarget();
+
             Direction direction = buscador.getShortestDirection(
-                    createPathMapForAI(enemyStarAi),
+                    createPathMapForAI(ambushingEnemy),
                     createTileMapForAI(),
-                    enemyStarAi.getRow(),
-                    enemyStarAi.getCol(),
+                    ambushingEnemy.getRow(),
+                    ambushingEnemy.getCol(),
+                    target.getX(),
+                    target.getY()
+            );
+
+            if (direction == null) {
+                return;
+            }
+
+            int nextRow = ambushingEnemy.getRow() + direction.getDr();
+            int nextCol = ambushingEnemy.getCol() + direction.getDc();
+
+            if ((canMoveTo(nextRow, nextCol) || isMolten(nextRow, nextCol))
+                    && !isEnemy(nextRow, nextCol)) {
+                ambushingEnemy.setPosition(nextRow, nextCol);
+            }
+
+            return;
+        }
+
+        if (enemy instanceof SeekerEnemy seekerEnemy) {
+            Direction direction = buscador.getShortestDirection(
+                    createPathMapForAI(seekerEnemy),
+                    createTileMapForAI(),
+                    seekerEnemy.getRow(),
+                    seekerEnemy.getCol(),
                     player.getRow(),
                     player.getCol()
             );
@@ -463,17 +494,16 @@ public class GameState implements Serializable {
                 return;
             }
 
-            int nextRow = enemyStarAi.getRow() + direction.getDr();
-            int nextCol = enemyStarAi.getCol() + direction.getDc();
+            int nextRow = seekerEnemy.getRow() + direction.getDr();
+            int nextCol = seekerEnemy.getCol() + direction.getDc();
 
             if ((canMoveTo(nextRow, nextCol) || isMolten(nextRow, nextCol))
                     && !isEnemy(nextRow, nextCol)) {
-                enemyStarAi.setPosition(nextRow, nextCol);
+                seekerEnemy.setPosition(nextRow, nextCol);
             }
 
             return;
         }
-
         int dr = 0;
         int dc = 0;
 
@@ -724,7 +754,7 @@ public class GameState implements Serializable {
         ClassLoader classLoader = PenguinRunner.class.getClassLoader();
         try (InputStream is = classLoader.getResourceAsStream("maps.json");) {
             if (GamePanel.hasGame()) {
-                fitxer = new BufferedReader(new FileReader(GamePanel.getFolderPath()+"maps.json"));
+                fitxer = new BufferedReader(new FileReader(GamePanel.getFolderPath() + "maps.json"));
             } else {
                 fitxer = new BufferedReader(new InputStreamReader(is));
             }
@@ -777,4 +807,37 @@ public class GameState implements Serializable {
 
         return tileMap;
     }
+
+    public void saveLastPosition() {
+        lastPositions.add(new PositionHistory(player.getRow(), player.getCol()));
+        System.out.println(lastPositions.getLast().getX() + "," + lastPositions.getLast().getY());
+    }
+
+    public PositionHistory calculatePosition() {
+        if (lastPositions.size() < 2) {
+            return new PositionHistory(player.getRow(), player.getCol());
+        }
+
+        PositionHistory previous = lastPositions.get(lastPositions.size() - 2);
+        PositionHistory current = lastPositions.get(lastPositions.size() - 1);
+
+        int deltaRow = current.getX() - previous.getX();
+        int deltaCol = current.getY() - previous.getY();
+
+        int nextRow = player.getRow() + deltaRow;
+        int nextCol = player.getCol() + deltaCol;
+
+        return new PositionHistory(nextRow, nextCol);
+    }
+
+    private PositionHistory getAmbushingTarget() {
+        PositionHistory aimPosition = calculatePosition();
+
+        if (isOutOfBounds(aimPosition.getX(), aimPosition.getY())) {
+            return new PositionHistory(player.getRow(), player.getCol());
+        }
+
+        return aimPosition;
+    }
+
 }
