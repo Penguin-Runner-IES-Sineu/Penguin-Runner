@@ -218,12 +218,12 @@ public class GameState implements Serializable {
     }
 
     public void updateLogic() {
-        updatePlayerState();
+        saveLastPosition();
+        // updatePlayerState();
         collectIcecream();
         moveBlocks();
         moveEnemies();
         updateBrokenBlocks();
-        saveLastPosition();
         checkCollisions();
         updatePlayerState();
     }
