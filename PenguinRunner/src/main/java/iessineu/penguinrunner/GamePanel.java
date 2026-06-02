@@ -377,73 +377,71 @@ public class GamePanel extends JPanel implements Serializable {
         );
     }
 
-    public static Map<String, List<String>> createSpriteMap() {
-        String jsonString = "";
-        BufferedReader fitxer;
-        ClassLoader classLoader = PenguinRunner.class.getClassLoader();
-        try {
-            if (GamePanel.hasGame()) {
-                fitxer = new BufferedReader(new FileReader(printablesPath));
-            } else {
-                InputStream is = classLoader.getResourceAsStream("printables.json");
-                fitxer = new BufferedReader(new InputStreamReader(is));
-                if (is == null) {
-                    throw new IOException("Resource not found: maps.json");
-                }
-            }
-            try {
-                String line;
+public static Map<String, List<String>> createSpriteMap() {
+    StringBuilder jsonString = new StringBuilder();
 
-                while ((line = fitxer.readLine()) != null) {
-                    jsonString += line;
-                }
+    try (BufferedReader fitxer = new BufferedReader(new FileReader(printablesPath))) {
+        String line;
 
-                fitxer.close();
-
-            } catch (IOException ex) {
-                System.out.println("Problema d'entrada i sortida");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        while ((line = fitxer.readLine()) != null) {
+            jsonString.append(line);
         }
 
-        Map<String, List<String>> spriteMap = new HashMap();
-        JSONArray entities = new JSONArray(jsonString);
-        for (int i = 0; i < entities.length(); i++) {
-            JSONObject obj = entities.getJSONObject(i);
-            String type = "";
-            List<String> atributs = new ArrayList();
-            try {
-                type = obj.getString("type");
-            } catch (JSONException e) {
-                System.out.println("No s'ha trobat el tipus per l'element " + obj.toString());
+    } catch (IOException e) {
+        throw new RuntimeException("No s'ha pogut llegir el fitxer: " + printablesPath, e);
+    }
+
+    Map<String, List<String>> spriteMap = new HashMap<>();
+
+    JSONArray entities = new JSONArray(jsonString.toString());
+
+    for (int i = 0; i < entities.length(); i++) {
+        JSONObject obj = entities.getJSONObject(i);
+
+        String type = "";
+        List<String> atributs = new ArrayList<>();
+
+        try {
+            type = obj.getString("type");
+        } catch (JSONException e) {
+            System.out.println("No s'ha trobat el tipus per l'element " + obj.toString());
+        }
+
+        try {
+            String emoji = obj.getString("sprite");
+            atributs.add(emoji);
+        } catch (JSONException e) {
+            System.out.println("No s'ha trobat Emoji per l'element " + obj.toString());
+        }
+
+        try {
+            String colorString = obj.getString("color");
+            atributs.add(colorString);
+        } catch (JSONException e) {
+            System.out.println("No s'ha trobat Color per l'element " + obj.toString());
+        }
+
+        try {
+            String fileString = obj.getString("filename");
+
+            File fileSprite = new File(folderPath + "sprites/" + fileString);
+
+            if (!fileSprite.exists()) {
+                System.out.println("El fitxer de sprite per " + obj.toString() + " no s'ha trobat");
             }
-            try {
-                String emoji = obj.getString("sprite");
-                atributs.add(emoji);
-            } catch (JSONException e) {
-                System.out.println("No s'ha trobat Emoji per l'element " + obj.toString());
-            }
-            try {
-                String colorString = obj.getString("color");
-                atributs.add(colorString);
-            } catch (JSONException e) {
-                System.out.println("No s'ha trobat Color per l'element " + obj.toString());
-            }
-            try {
-                String fileString = obj.getString("filename");
-                File fileSprite = new File(folderPath + "sprites/" + fileString);
-                if (!fileSprite.exists()) {
-                    System.out.println("El fitxer de sprite per " + obj.toString() + " no s'ha trobat");
-                }
-                atributs.add(fileString);
-            } catch (JSONException e) {
-                System.out.println("No s'ha trobat Arxiu per l'element" + obj.toString());
-            }
+
+            atributs.add(fileString);
+        } catch (JSONException e) {
+            System.out.println("No s'ha trobat Arxiu per l'element " + obj.toString());
+        }
+
+        if (!type.isEmpty()) {
             spriteMap.put(type, atributs);
         }
-        return spriteMap;
     }
+
+    return spriteMap;
+}
 
     public GameState getGameState() {
         return gameState;

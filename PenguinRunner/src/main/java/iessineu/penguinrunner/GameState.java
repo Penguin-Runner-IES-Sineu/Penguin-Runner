@@ -728,10 +728,8 @@ public class GameState implements Serializable {
      * LECTURA MAPES
      */
     public List<GameMap> llegirMapes(String rutaMapes) {
-
-        JSONArray maps = new JSONArray(llegirMapaJSON());
-        // JSONArray maps = new JSONArray(llegirJSON(rutaMapes));
-        List<GameMap> llista = new ArrayList();
+        JSONArray maps = new JSONArray(llegirMapaJSON(rutaMapes));
+        List<GameMap> llista = new ArrayList<>();
 
         for (int i = 0; i < maps.length(); i++) {
             JSONObject obj = maps.getJSONObject(i);
@@ -745,26 +743,25 @@ public class GameState implements Serializable {
 
             llista.add(new GameMap(view));
         }
+
         return llista;
     }
 
-    public String llegirMapaJSON() {
-        String json = "";
-        BufferedReader fitxer;
-        ClassLoader classLoader = PenguinRunner.class.getClassLoader();
-        try {
-            if (GamePanel.hasGame()) {
-                fitxer = new BufferedReader(new FileReader(GamePanel.getFolderPath() + "maps.json"));
-            } else {
-                InputStream is = classLoader.getResourceAsStream("maps.json");
-                fitxer = new BufferedReader(new InputStreamReader(is));
-            }
-            json = fitxerJSON(fitxer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return json;
+    public String llegirMapaJSON(String rutaArxiu) {
+        StringBuilder jsonString = new StringBuilder();
 
+        try (BufferedReader fitxer = new BufferedReader(new FileReader(rutaArxiu))) {
+            String line;
+
+            while ((line = fitxer.readLine()) != null) {
+                jsonString.append(line);
+            }
+
+        } catch (IOException ex) {
+            throw new RuntimeException("No s'ha pogut llegir el fitxer: " + rutaArxiu, ex);
+        }
+
+        return jsonString.toString();
     }
 
     public String fitxerJSON(BufferedReader fitxer) {
