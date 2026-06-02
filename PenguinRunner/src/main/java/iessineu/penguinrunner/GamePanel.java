@@ -70,6 +70,7 @@ public class GamePanel extends JPanel implements Serializable {
     private final SoundManager soundManager = new SoundManager();
     private final GameFrame gameFrame;
     private GameState gameState;
+    
 
     // private InputMap inputMap = getInputMap();
     // private ActionMap actionMap = getActionMap();

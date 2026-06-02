@@ -23,11 +23,13 @@ import javax.swing.Timer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import AI.AI;
 import iessineu.penguinrunner.Blocks.Block;
 import iessineu.penguinrunner.Blocks.TileType;
 import iessineu.penguinrunner.Entity.Enemy;
 import iessineu.penguinrunner.Entity.GameMap;
 import iessineu.penguinrunner.Entity.Player;
+import iessineu.penguinrunner.Entity.SeekerEnemy;
 import iessineu.penguinrunner.Movement.Direction;
 import iessineu.penguinrunner.States.ClimbingState;
 import iessineu.penguinrunner.States.FallingState;
@@ -42,9 +44,10 @@ public class GameState implements Serializable {
     // private String rutaMapes = "resources/maps.json";
     private final String rutaMapes = GamePanel.getFolderPath() + "maps.json";
     private int nivellActual = 0;
-
+    // private long lastTurn;
+    private final AI buscador = new AI();
     private final List<GameMap> mapList = llegirMapes(rutaMapes);
-    private GameMap mapObject = mapList.get(0);
+    private GameMap mapObject = mapList.get(2);
     private Player player;
     private List<Enemy> enemies;
     private int iceCream = 0;
@@ -56,6 +59,9 @@ public class GameState implements Serializable {
     private final PlayerState climbingState = new ClimbingState();
     private final PlayerState railState = new RailState();
     private final PlayerState fallingState = new FallingState();
+
+    private static final int NOT_VISITED = -1;
+    private static final int BLOCKED = -2;
 
     private final Timer fallingTimer = new Timer(50, e -> {
         if (player.getState() == fallingState) {
@@ -116,6 +122,14 @@ public class GameState implements Serializable {
                         enemies.add(new Enemy(row, col, 1, 1));
                         blocks[row][col] = new Block(TileType.BLANK);
                     }
+                    case 'A' -> {
+                        enemies.add(new SeekerEnemy(row, col, 1, 1));
+                        blocks[row][col] = new Block(TileType.BLANK);
+                    }
+                    case 'W' -> {
+                        enemies.add(new SeekerEnemy(row, col, 1, 1));
+                        blocks[row][col] = new Block(TileType.WOOD);
+                    }
                     default -> {
                         blocks[row][col] = new Block(TileType.BLANK);
                     }
@@ -125,6 +139,27 @@ public class GameState implements Serializable {
         updatePlayerState();
 
         return blocks;
+    }
+
+    private int[][] createPathMapForAI(Enemy currentEnemy) {
+        int[][] pathMap = new int[getRows()][getCols()];
+
+        for (int row = 0; row < getRows(); row++) {
+            for (int col = 0; col < getCols(); col++) {
+                boolean occupiedByAnotherEnemy = isEnemy(row, col)
+                        && !(currentEnemy.getRow() == row && currentEnemy.getCol() == col);
+
+                boolean molten = isMolten(row, col);
+
+                if ((isSolid(row, col) && !molten) || occupiedByAnotherEnemy) {
+                    pathMap[row][col] = BLOCKED;
+                } else {
+                    pathMap[row][col] = NOT_VISITED;
+                }
+            }
+        }
+
+        return pathMap;
     }
 
     public void reloadSprites() {
@@ -185,7 +220,9 @@ public class GameState implements Serializable {
         moveBlocks();
         moveEnemies();
         updateBrokenBlocks();
+
         checkCollisions();
+        updatePlayerState();
     }
 
     /*
@@ -281,7 +318,7 @@ public class GameState implements Serializable {
     }
 
     private void moveBlocks() {
-        for (int row = 0; row < blocks.length; row++) {
+        for (int row = blocks.length - 1; row >= 0; row--) {
             for (int col = 0; col < blocks[row].length; col++) {
                 if (blocks[row][col].getType() == TileType.STONE) {
                     int nextRow = row + 1;
@@ -351,6 +388,31 @@ public class GameState implements Serializable {
             }
         }
     }
+//    private void burnBlock(int row, int col) {
+//        if (isOutOfBounds(row, col)) {
+//            return;
+//        }
+//
+//        Block block = blocks[row][col];
+//
+//        if (block != null && block.isBurnable()) {
+//            blocks[row][col] = new Block(TileType.MOLTEN);
+//            brokenBlocks.add(new BrokenBlock(row, col, 5));
+//        }
+//    }
+//
+//    private void updateBurningBlocks() {
+//        for (int i = brokenBlocks.size() - 1; i >= 0; i--) {
+//            BrokenBlock block = brokenBlocks.get(i);
+//
+//            block.turnsLeft--;
+//
+//            if (block.turnsLeft <= 0) {
+//                blocks[block.row][block.col] = new Block(TileType.ICE);
+//                brokenBlocks.remove(i);
+//            }
+//        }
+//    }
 
     /*
      * ENEMICS
@@ -385,6 +447,31 @@ public class GameState implements Serializable {
 
         if (shouldEnemyDrop(row, col)) {
             enemy.setPosition(row + 1, col);
+            return;
+        }
+
+        if (enemy instanceof SeekerEnemy enemyStarAi) {
+            Direction direction = buscador.getShortestDirection(
+                    createPathMapForAI(enemyStarAi),
+                    createTileMapForAI(),
+                    enemyStarAi.getRow(),
+                    enemyStarAi.getCol(),
+                    player.getRow(),
+                    player.getCol()
+            );
+
+            if (direction == null) {
+                return;
+            }
+
+            int nextRow = enemyStarAi.getRow() + direction.getDr();
+            int nextCol = enemyStarAi.getCol() + direction.getDc();
+
+            if ((canMoveTo(nextRow, nextCol) || isMolten(nextRow, nextCol))
+                    && !isEnemy(nextRow, nextCol)) {
+                enemyStarAi.setPosition(nextRow, nextCol);
+            }
+
             return;
         }
 
@@ -681,4 +768,18 @@ public class GameState implements Serializable {
         return iceCream;
     }
 
+    /*//////////////////////////////////////////////////////////////////////////
+    ///
+    //////////////////////////////////////////////////////////////////////////*/
+    private TileType[][] createTileMapForAI() {
+        TileType[][] tileMap = new TileType[getRows()][getCols()];
+
+        for (int row = 0; row < getRows(); row++) {
+            for (int col = 0; col < getCols(); col++) {
+                tileMap[row][col] = getType(row, col);
+            }
+        }
+
+        return tileMap;
+    }
 }

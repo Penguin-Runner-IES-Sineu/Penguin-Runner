@@ -41,6 +41,7 @@ public class Enemy extends Printable implements Serializable {
         this.setPrintables();
     }
 
+
     public int getRow() {
         return row;
     }
