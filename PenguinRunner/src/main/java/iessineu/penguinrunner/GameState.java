@@ -57,7 +57,7 @@ public class GameState implements Serializable {
     private final PlayerState railState = new RailState();
     private final PlayerState fallingState = new FallingState();
 
-    private final Timer test = new Timer(50, e -> {
+    private final Timer fallingTimer = new Timer(50, e -> {
         if (player.getState() == fallingState) {
             movePlayerDownOne();
             updatePlayerState();
@@ -160,11 +160,11 @@ public class GameState implements Serializable {
     public void takeTurn(Direction direction) {
         // test.stop();
         if (player.getState() == fallingState) {
-            if (!test.isRunning()) {
-                test.start();
+            if (!fallingTimer.isRunning()) {
+                fallingTimer.start();
             }
         } else if (direction != null) {
-            test.stop();
+            fallingTimer.stop();
             player.getState().handleInput(this, direction);
             updatePlayerState();
             updateLogic();

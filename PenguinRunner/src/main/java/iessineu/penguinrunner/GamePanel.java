@@ -61,7 +61,7 @@ public class GamePanel extends JPanel implements Serializable {
     private static String folderPath = "resources/";
     private static String musicPath = folderPath + "music.wav";
     private static String printablesPath = folderPath + "printables.json";
-    private static String emojiFontPath = folderPath + "font.ttf";
+    private static String emojiFontPath = folderPath + "emoji.ttf";
     private static String textFontPath = folderPath + "font.ttf";
     private static Map<String, List<String>> spriteMap = createSpriteMap();
 
