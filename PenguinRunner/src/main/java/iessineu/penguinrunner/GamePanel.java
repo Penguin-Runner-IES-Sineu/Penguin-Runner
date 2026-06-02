@@ -16,10 +16,11 @@ import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -59,21 +60,19 @@ public class GamePanel extends JPanel implements Serializable {
     // private String textFontPath = emojiFontPath;
     // private String textFontPath = "resources/wings.ttf";
     private static String folderPath = "resources/";
+    // private static String folderPath = "";
     private static String musicPath = folderPath + "music.wav";
     private static String printablesPath = folderPath + "printables.json";
     private static String emojiFontPath = folderPath + "emoji.ttf";
     private static String textFontPath = folderPath + "font.ttf";
     private static Map<String, List<String>> spriteMap = createSpriteMap();
-
+    private static boolean game = false;
     private Font textFont;
     private Font emojiFont;
     private final SoundManager soundManager = new SoundManager();
     private final GameFrame gameFrame;
     private GameState gameState;
-    
 
-    // private InputMap inputMap = getInputMap();
-    // private ActionMap actionMap = getActionMap();
     public GamePanel(GameFrame frame) {
         gameFrame = frame;
         gameState = new GameState();
@@ -380,8 +379,17 @@ public class GamePanel extends JPanel implements Serializable {
 
     public static Map<String, List<String>> createSpriteMap() {
         String jsonString = "";
-        try {
-            BufferedReader fitxer = new BufferedReader(new FileReader(GamePanel.printablesPath));
+        BufferedReader fitxer;
+        ClassLoader classLoader = PenguinRunner.class.getClassLoader();
+        try (InputStream is = classLoader.getResourceAsStream("printables.json");) {
+            if (GamePanel.hasGame()) {
+                fitxer = new BufferedReader(new FileReader(printablesPath));
+            } else {
+                fitxer = new BufferedReader(new InputStreamReader(is));
+            }
+            if (is == null) {
+                throw new IOException("Resource not found: maps.json");
+            }
             try {
                 String line;
 
@@ -394,10 +402,10 @@ public class GamePanel extends JPanel implements Serializable {
             } catch (IOException ex) {
                 System.out.println("Problema d'entrada i sortida");
             }
-
-        } catch (FileNotFoundException ex) {
-            System.out.println("L'arxiu no s'ha trobat!");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
         Map<String, List<String>> spriteMap = new HashMap();
         JSONArray entities = new JSONArray(jsonString);
         for (int i = 0; i < entities.length(); i++) {
@@ -486,6 +494,14 @@ public class GamePanel extends JPanel implements Serializable {
 
     public static void setSpriteMap(Map<String, List<String>> spriteMap) {
         GamePanel.spriteMap = spriteMap;
+    }
+
+    public static boolean hasGame() {
+        return game;
+    }
+
+    public static void setGame(boolean game) {
+        GamePanel.game = game;
     }
 
     public static void updatePaths() {

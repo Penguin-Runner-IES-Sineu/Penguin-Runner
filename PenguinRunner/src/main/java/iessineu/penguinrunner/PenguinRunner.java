@@ -13,8 +13,6 @@ import javax.swing.SwingUtilities;
  */
 public class PenguinRunner {
 
-    static GameFrame frame;
-    static GameState state;
 
     public static void main(String[] args) {
 
@@ -40,6 +38,7 @@ public class PenguinRunner {
                 case "-g", "-game" -> {
                     GamePanel.setFolderPath(seleccio);
                     GamePanel.updatePaths();
+                    GamePanel.setGame(true);
                 }
                 case "-m", "-mod" -> {
                     
@@ -52,6 +51,9 @@ public class PenguinRunner {
          * correctament dins el fil d'execució de Swing.
          */
         SwingUtilities.invokeLater(() -> {
+            // GamePanel.setFolderPath("");
+            // GamePanel.setFolderPath("resources/");
+            GamePanel.setGame(false);
             GameFrame frame = new GameFrame();
             frame.setVisible(true);
         });

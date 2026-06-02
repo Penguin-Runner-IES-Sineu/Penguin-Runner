@@ -9,7 +9,6 @@ package iessineu.penguinrunner;
  * @author loren
  */
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -700,7 +699,8 @@ public class GameState implements Serializable {
      */
     public List<GameMap> llegirMapes(String rutaMapes) {
 
-        JSONArray maps = new JSONArray(llegirJSON(rutaMapes));
+        JSONArray maps = new JSONArray(llegirMapaJSON());
+        // JSONArray maps = new JSONArray(llegirJSON(rutaMapes));
         List<GameMap> llista = new ArrayList();
 
         for (int i = 0; i < maps.length(); i++) {
@@ -718,25 +718,20 @@ public class GameState implements Serializable {
         return llista;
     }
 
-    public String llegirJSON(String rutaArxiu) {
-        BufferedReader fitxer = null;
-        try {
-            fitxer = new BufferedReader(new FileReader(rutaArxiu));
-
-        } catch (FileNotFoundException ex) {
-            System.out.println("L'arxiu no s'ha trobat!");
-        }
-        return fitxerJSON(fitxer);
-    }
-
-    public String llegirRecursosJSON(String arxiu) {
+    public String llegirMapaJSON() {
         String json = "";
+        BufferedReader fitxer;
         ClassLoader classLoader = PenguinRunner.class.getClassLoader();
-        try (InputStream is = classLoader.getResourceAsStream(arxiu); BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
-            if (is == null) {
-                throw new IOException("Resource not found: loop.txt");
+        try (InputStream is = classLoader.getResourceAsStream("maps.json");) {
+            if (GamePanel.hasGame()) {
+                fitxer = new BufferedReader(new FileReader(GamePanel.getFolderPath()+"maps.json"));
+            } else {
+                fitxer = new BufferedReader(new InputStreamReader(is));
             }
-            json = fitxerJSON(br);
+            if (is == null) {
+                throw new IOException("Resource not found: maps.json");
+            }
+            json = fitxerJSON(fitxer);
         } catch (IOException e) {
             e.printStackTrace();
         }
