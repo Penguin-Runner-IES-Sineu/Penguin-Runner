@@ -33,6 +33,7 @@ public class Block extends Printable implements Serializable {
     private boolean isCollectable = false;
     private boolean isDeadlyForEnemy = false;
     private boolean isDoor = false;
+    private boolean isBurnable = false;
 
     protected TileType type;
 
@@ -63,6 +64,11 @@ public class Block extends Printable implements Serializable {
                 this.isSolid = true;
                 this.isPushable = true;
             }
+            case WOOD -> {
+                this.isSolid = true;
+                this.isPushable = true;
+                this.isBurnable = true;
+            }
             case BLANK -> {
                 this.isSolid = false;
             }
@@ -90,6 +96,10 @@ public class Block extends Printable implements Serializable {
     public boolean isPushable() {
 
         return isPushable;
+    }
+    public boolean isBurnable() {
+
+        return isBurnable;
     }
 
     public boolean isDoor() {

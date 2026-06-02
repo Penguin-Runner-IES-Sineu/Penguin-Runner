@@ -15,11 +15,11 @@ import iessineu.penguinrunner.Printable;
  *
  * @author loren
  */
-public final class EnemyStarAi extends Enemy {
+public final class SeekerEnemy extends Enemy {
 
     private int[][] pathMap;
     
-    public EnemyStarAi(int row, int col, int respawnRow, int respawnCol) {
+    public SeekerEnemy(int row, int col, int respawnRow, int respawnCol) {
         super(row, col, respawnRow, respawnCol);
         
         setPrintables();

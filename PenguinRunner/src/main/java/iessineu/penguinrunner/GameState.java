@@ -26,7 +26,7 @@ import org.json.JSONObject;
 import iessineu.penguinrunner.Blocks.Block;
 import iessineu.penguinrunner.Blocks.TileType;
 import iessineu.penguinrunner.Entity.Enemy;
-import iessineu.penguinrunner.Entity.EnemyStarAi;
+import iessineu.penguinrunner.Entity.SeekerEnemy;
 import iessineu.penguinrunner.Entity.GameMap;
 import iessineu.penguinrunner.Entity.Player;
 import iessineu.penguinrunner.Movement.Direction;
@@ -118,8 +118,12 @@ public class GameState implements Serializable {
                         blocks[row][col] = new Block(TileType.BLANK);
                     }
                     case 'A' -> {
-                        enemies.add(new EnemyStarAi(row, col, 1, 1));
+                        enemies.add(new SeekerEnemy(row, col, 1, 1));
                         blocks[row][col] = new Block(TileType.BLANK);
+                    }
+                    case 'W' -> {
+                        enemies.add(new SeekerEnemy(row, col, 1, 1));
+                        blocks[row][col] = new Block(TileType.WOOD);
                     }
                     default -> {
                         blocks[row][col] = new Block(TileType.BLANK);
@@ -219,6 +223,7 @@ public class GameState implements Serializable {
         moveBlocks();
         moveEnemies();
         updateBrokenBlocks();
+        
         checkCollisions();
         updatePlayerState();
 
@@ -389,6 +394,31 @@ public class GameState implements Serializable {
             }
         }
     }
+//    private void burnBlock(int row, int col) {
+//        if (isOutOfBounds(row, col)) {
+//            return;
+//        }
+//
+//        Block block = blocks[row][col];
+//
+//        if (block != null && block.isBurnable()) {
+//            blocks[row][col] = new Block(TileType.MOLTEN);
+//            brokenBlocks.add(new BrokenBlock(row, col, 5));
+//        }
+//    }
+//
+//    private void updateBurningBlocks() {
+//        for (int i = brokenBlocks.size() - 1; i >= 0; i--) {
+//            BrokenBlock block = brokenBlocks.get(i);
+//
+//            block.turnsLeft--;
+//
+//            if (block.turnsLeft <= 0) {
+//                blocks[block.row][block.col] = new Block(TileType.ICE);
+//                brokenBlocks.remove(i);
+//            }
+//        }
+//    }
 
     /*
      * ENEMICS
@@ -426,7 +456,7 @@ public class GameState implements Serializable {
             return;
         }
 
-        if (enemy instanceof EnemyStarAi enemyStarAi) {
+        if (enemy instanceof SeekerEnemy enemyStarAi) {
             Direction direction = buscador.getShortestDirection(
                     createPathMapForAI(enemyStarAi),
                     createTileMapForAI(),

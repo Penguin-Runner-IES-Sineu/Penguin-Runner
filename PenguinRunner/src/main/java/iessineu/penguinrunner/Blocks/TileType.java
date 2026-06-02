@@ -23,6 +23,7 @@ public enum TileType implements Serializable {
     MOLTEN,
     DOOR,
     STONE,
+    WOOD,
     BLANK;
 
     public boolean equals(TileType tyle) {
