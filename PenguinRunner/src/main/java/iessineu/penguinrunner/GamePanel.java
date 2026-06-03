@@ -10,7 +10,6 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
@@ -49,19 +48,7 @@ public class GamePanel extends JPanel implements Serializable {
 
     public static final int TILE_SIZE = 43;
     private static final int HUD_HEIGHT = 100;
-    // private static String printablesPath = "resources/printables_webdings.json";
-    // private String emojiFontPath = "resources/WEBDINGS.ttf";
-    // private String emojiFontPath = "resources/google.ttf";
-    // private static String printablesPath = "resources/printables_google.json";
-    // private String textFontPath = "resources/sonic.ttf";
-    // private String emojiFontPath = textFontPath;
-    // private static String printablesPath = "resources/printables.json";
-    // private String emojiFontPath = "resources/font.ttf";
-    // private String textFontPath = emojiFontPath;
-    // private String textFontPath = "resources/wings.ttf";
-    // private static String folderPath = "/src/main/java/resources/";
     private static String folderPath = "resources/";
-    // private static String folderPath = "";
     private static String musicPath = folderPath + "music.wav";
     private static String printablesPath = folderPath + "printables.json";
     private static String emojiFontPath = folderPath + "emoji.ttf";
@@ -117,20 +104,30 @@ public class GamePanel extends JPanel implements Serializable {
      */
     private void loadFonts() {
         emojiFont = new Font("Segoe UI Emoji", Font.PLAIN, 30); // per defecte s'empra aquesta, i després llegim l'arxiu 
-        textFont = new Font("Segoe UI Emoji", Font.PLAIN, 30); // per defecte s'empra aquesta, i després llegim l'arxiu 
-        try {
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            // ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(emojiFontPath)));
-            // ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(textFontPath)));
-            // emojiFont = Font.createFont(Font.TRUETYPE_FONT, new File(emojiFontPath)).deriveFont(30f);
-            // textFont = Font.createFont(Font.TRUETYPE_FONT, new File(textFontPath)).deriveFont(30f);
-            emojiFont = Font.createFont(Font.TRUETYPE_FONT, new File(emojiFontPath)).deriveFont(30f);
-            textFont = Font.createFont(Font.TRUETYPE_FONT, new File(textFontPath)).deriveFont(30f);
-            ge.registerFont(emojiFont);
-            ge.registerFont(textFont);
-        } catch (FontFormatException | IOException ex) {
-            System.out.println("Error obrint alguna de les font!");
-            System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        textFont = new Font("Segoe UI Emoji", Font.PLAIN, 16); // per defecte s'empra aquesta, i després llegim l'arxiu
+        ClassLoader classLoader = PenguinRunner.class.getClassLoader();
+        InputStream recTextFont = classLoader.getResourceAsStream("font.ttf");
+        InputStream recEmojiFont = classLoader.getResourceAsStream("emoji.ttf");
+        System.out.print("Caregant fonts: ");
+        if (GamePanel.hasGame()) {
+            System.out.println("Carregant fitxer");
+            try {
+                emojiFont = Font.createFont(Font.TRUETYPE_FONT, new File(emojiFontPath)).deriveFont(30f);
+                textFont = Font.createFont(Font.TRUETYPE_FONT, new File(textFontPath)).deriveFont(16f);
+            } catch (FontFormatException | IOException ex) {
+                System.out.println("Error obrint alguna de les font!");
+                System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+        } else {
+            System.out.println("Carregant recurs");
+            try {
+                emojiFont = Font.createFont(Font.TRUETYPE_FONT, recEmojiFont).deriveFont(30f);
+                textFont = Font.createFont(Font.TRUETYPE_FONT, recTextFont).deriveFont(16f);
+                // textFont = Font.createFont(Font.TRUETYPE_FONT, recTextFont);
+            } catch (FontFormatException | IOException ex) {
+                System.out.println("Error obrint alguna de les font!");
+                System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
         }
     }
 
@@ -383,6 +380,7 @@ public class GamePanel extends JPanel implements Serializable {
         BufferedReader fitxer;
         ClassLoader classLoader = PenguinRunner.class.getClassLoader();
         InputStream is = classLoader.getResourceAsStream("printables.json");
+        System.out.print("Caregant Printables: ");
         try {
             if (GamePanel.hasGame()) {
                 System.out.println("Carregant fitxer");
@@ -435,9 +433,11 @@ public class GamePanel extends JPanel implements Serializable {
             }
             try {
                 String fileString = obj.getString("filename");
-                File fileSprite = new File(folderPath + "sprites/" + fileString);
-                if (!fileSprite.exists()) {
-                    System.out.println("El fitxer de sprite per " + obj.toString() + " no s'ha trobat");
+                if (hasGame()) {
+                    File fileSprite = new File(folderPath + "sprites/" + fileString);
+                    if (!fileSprite.exists()) {
+                        System.out.println("El fitxer de sprite per " + obj.toString() + " no s'ha trobat");
+                    }
                 }
                 atributs.add(fileString);
             } catch (JSONException e) {

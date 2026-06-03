@@ -53,8 +53,8 @@ public class PenguinRunner {
         SwingUtilities.invokeLater(() -> {
             // GamePanel.setFolderPath("");
             // GamePanel.setFolderPath("resources/");
-            GamePanel.setGame(false);
-            GameFrame frame = new GameFrame();
+            // GamePanel.setGame(false);
+            GameFrame frame = new GameFrame();  
             frame.setVisible(true);
         });
 
