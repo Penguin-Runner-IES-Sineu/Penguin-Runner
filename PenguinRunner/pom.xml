@@ -26,4 +26,5 @@
             </plugin> 
         </plugins> 
     </build>
+    <name>PenguinRunner</name>
 </project>
