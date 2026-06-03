@@ -28,7 +28,7 @@ public class SoundManager implements Serializable {
     public void playMusic(String path) {
         stopMusic();
         ClassLoader classLoader = PenguinRunner.class.getClassLoader();
-        InputStream musicStream = new BufferedInputStream(classLoader.getResourceAsStream(path));
+        InputStream musicStream = new BufferedInputStream(classLoader.getResourceAsStream("music.wav"));
         System.out.print("Caregant fonts: ");
         try {
             AudioInputStream audioStream = null;
