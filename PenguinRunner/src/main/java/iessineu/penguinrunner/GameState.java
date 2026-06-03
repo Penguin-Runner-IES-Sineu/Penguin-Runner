@@ -49,7 +49,7 @@ public class GameState implements Serializable {
     // private long lastTurn;
     private final AI buscador = new AI();
     private final List<GameMap> mapList = llegirMapes(rutaMapes);
-    private GameMap mapObject = mapList.get(2);
+    private GameMap mapObject = mapList.get(0);
     private Player player;
     private List<Enemy> enemies;
     private int iceCream = 0;
@@ -196,7 +196,6 @@ public class GameState implements Serializable {
      * TORNS
      */
     public void takeTurn(Direction direction) {
-        // test.stop();
         if (player.getState() == fallingState) {
             if (!fallingTimer.isRunning()) {
                 fallingTimer.start();
@@ -219,7 +218,6 @@ public class GameState implements Serializable {
 
     public void updateLogic() {
         saveLastPosition();
-        // updatePlayerState();
         collectIcecream();
         moveBlocks();
         moveEnemies();
@@ -355,14 +353,14 @@ public class GameState implements Serializable {
     public void breakDownLeft() {
         if (canMoveTo(player.getRow(), player.getCol() - 1)) {
             breakBlock(player.getRow() + 1, player.getCol() - 1);
-            // updateLogic();
+            updateLogic();
         }
     }
 
     public void breakDownRight() {
         if (canMoveTo(player.getRow(), player.getCol() + 1)) {
             breakBlock(player.getRow() + 1, player.getCol() + 1);
-            // updateLogic();
+            updateLogic();
         }
     }
 
@@ -562,8 +560,8 @@ public class GameState implements Serializable {
         int playerCol = player.getCol();
 
         for (Enemy enemy : enemies) {
-            if (!enemy.isDead() && enemy.getRow() == playerRow && enemy.getCol() == playerCol || 
-                    (!enemy.isDead() && enemy.getRow()-1 == playerRow && enemy.getCol() == playerCol &&  blocks[enemy.getRow()][enemy.getCol()].getType() != TileType.MOLTEN)) {
+            if (!enemy.isDead() && enemy.getRow() == playerRow && enemy.getCol() == playerCol
+                    || (!enemy.isDead() && enemy.getRow() - 1 == playerRow && enemy.getCol() == playerCol && blocks[enemy.getRow()][enemy.getCol()].getType() != TileType.MOLTEN)) {
                 loadMap();
                 return;
             }
@@ -694,7 +692,7 @@ public class GameState implements Serializable {
     }
 
     public boolean checkObjective() {
-        return player.geticeCream() >= 2;
+        return player.geticeCream() >= iceCream;
     }
 
     public int getNivell() {
@@ -731,12 +729,12 @@ public class GameState implements Serializable {
     public List<GameMap> llegirMapes(String rutaMapes) {
 
         JSONArray maps = new JSONArray(llegirMapaJSON());
-        // JSONArray maps = new JSONArray(llegirJSON(rutaMapes));
         List<GameMap> llista = new ArrayList();
 
         for (int i = 0; i < maps.length(); i++) {
             JSONObject obj = maps.getJSONObject(i);
             JSONArray jsonView = obj.getJSONArray("view");
+            int mapIndex = obj.getInt("level");
 
             String[] view = new String[jsonView.length()];
 
@@ -744,8 +742,14 @@ public class GameState implements Serializable {
                 view[j] = jsonView.getString(j);
             }
 
-            llista.add(new GameMap(view));
+            GameMap map = new GameMap(view);
+            if (mapIndex < llista.size() && llista.get(mapIndex) != null) {
+                llista.set(mapIndex, map);
+            } else {
+                llista.add(map);
+            }
         }
+
         return llista;
     }
 
