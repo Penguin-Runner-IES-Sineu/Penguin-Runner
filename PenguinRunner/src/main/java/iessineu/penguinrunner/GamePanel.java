@@ -53,7 +53,7 @@ public class GamePanel extends JPanel implements Serializable {
     private static String printablesPath = folderPath + "printables.json";
     private static String emojiFontPath = folderPath + "emoji.ttf";
     private static String textFontPath = folderPath + "font.ttf";
-    private static Map<String, List<String>> spriteMap = createSpriteMap();
+    private static Map<String, List<String>> spriteMap = createSpriteMap(GamePanel.hasGame());
     private static boolean game = false;
     private Font textFont;
     private Font emojiFont;
@@ -66,7 +66,7 @@ public class GamePanel extends JPanel implements Serializable {
         gameState = new GameState();
         soundManager.playMusic(musicPath);
         soundManager.setVolume(0.7f);
-        loadFonts();
+        loadFonts(GamePanel.hasGame());
         Printable.setFont(emojiFont);
         resizePanelToGame();
 
@@ -102,31 +102,26 @@ public class GamePanel extends JPanel implements Serializable {
     /*
      * Carrega la font externa. Si falla, usa una font del sistema.
      */
-    private void loadFonts() {
+    private void loadFonts(boolean fromResource) {
         emojiFont = new Font("Segoe UI Emoji", Font.PLAIN, 30); // per defecte s'empra aquesta, i després llegim l'arxiu 
         textFont = new Font("Segoe UI Emoji", Font.PLAIN, 16); // per defecte s'empra aquesta, i després llegim l'arxiu
         ClassLoader classLoader = PenguinRunner.class.getClassLoader();
         InputStream recTextFont = classLoader.getResourceAsStream("font.ttf");
         InputStream recEmojiFont = classLoader.getResourceAsStream("emoji.ttf");
         System.out.print("Caregant fonts: ");
-        if (GamePanel.hasGame()) {
-            System.out.println("Carregant fitxer");
-            try {
-                emojiFont = Font.createFont(Font.TRUETYPE_FONT, new File(emojiFontPath)).deriveFont(30f);
-                textFont = Font.createFont(Font.TRUETYPE_FONT, new File(textFontPath)).deriveFont(16f);
-            } catch (FontFormatException | IOException ex) {
-                System.out.println("Error obrint alguna de les font!");
-                System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            }
-        } else {
-            System.out.println("Carregant recurs");
-            try {
+        try {
+            if (fromResource) {
+                System.out.println("Carregant recurs");
                 emojiFont = Font.createFont(Font.TRUETYPE_FONT, recEmojiFont).deriveFont(30f);
                 textFont = Font.createFont(Font.TRUETYPE_FONT, recTextFont).deriveFont(16f);
-            } catch (FontFormatException | IOException ex) {
-                System.out.println("Error obrint alguna de les fonts!");
-                System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            } else {
+                System.out.println("Carregant fitxer");
+                emojiFont = Font.createFont(Font.TRUETYPE_FONT, new File(emojiFontPath)).deriveFont(30f);
+                textFont = Font.createFont(Font.TRUETYPE_FONT, new File(textFontPath)).deriveFont(16f);
             }
+        } catch (FontFormatException | IOException ex) {
+            System.out.println("Error obrint alguna de les font!");
+            System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }
 
@@ -382,22 +377,22 @@ public class GamePanel extends JPanel implements Serializable {
         );
     }
 
-    public static Map<String, List<String>> createSpriteMap() {
+    public static Map<String, List<String>> createSpriteMap(boolean fromResource) {
         String jsonString = "";
         BufferedReader fitxer;
         ClassLoader classLoader = PenguinRunner.class.getClassLoader();
         InputStream is = classLoader.getResourceAsStream("printables.json");
         System.out.print("Caregant Printables: ");
         try {
-            if (GamePanel.hasGame()) {
-                System.out.println("Carregant fitxer");
-                fitxer = new BufferedReader(new FileReader(printablesPath));
-            } else {
+            if (fromResource) {
                 System.out.println("Carregant recurs");
                 fitxer = new BufferedReader(new InputStreamReader(is));
                 if (is == null) {
                     throw new IOException("Resource not found: maps.json");
                 }
+            } else {
+                System.out.println("Carregant fitxer");
+                fitxer = new BufferedReader(new FileReader(printablesPath));
             }
             try {
                 String line;

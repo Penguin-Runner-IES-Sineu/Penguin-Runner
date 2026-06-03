@@ -35,13 +35,13 @@ public final class SeekerEnemy extends Enemy {
 
     @Override
     public void setPrintables() {
-        Map<String, List<String>> mapaSprites = GamePanel.createSpriteMap();
+        Map<String, List<String>> mapaSprites = GamePanel.createSpriteMap(GamePanel.hasGame());
         List<String> atributs = mapaSprites.get("enemy2");
 
         if (atributs != null) {
             this.setEmoji(atributs.get(0));
             this.setColorFromHex(atributs.get(1));
-            this.setSprite(atributs.get(2));
+            this.setSprite(atributs.get(2), GamePanel.hasGame());
         } else {
             this.setEmoji("#");
         }

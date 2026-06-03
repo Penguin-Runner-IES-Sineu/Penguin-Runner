@@ -43,15 +43,15 @@ public class Printable {
         return sprite;
     }
 
-    public void setSprite(String ruta) {
+    public void setSprite(String ruta, boolean fromResource) {
         ImageIcon icon = null;
-        if (GamePanel.hasGame()) {
-            icon = new ImageIcon(GamePanel.getFolderPath() + "sprites/" + ruta);
-        } else {
+        if (fromResource) {
             URL url = getClass().getResource("/sprites/" + ruta);
             if (url != null) {
                 icon = new ImageIcon(url);
             }
+        } else {
+            icon = new ImageIcon(GamePanel.getFolderPath() + "sprites/" + ruta);
         }
         if (icon != null && icon.getIconHeight() > 0) {
             sprite = icon.getImage();

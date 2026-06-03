@@ -104,7 +104,7 @@ public class Enemy extends Printable implements Serializable {
         if (atributs != null) {
             this.setEmoji(atributs.get(0));
             this.setColorFromHex(atributs.get(1));
-            this.setSprite(atributs.get(2));
+            this.setSprite(atributs.get(2), GamePanel.hasGame());
         } else {
             this.setEmoji("#");
         }

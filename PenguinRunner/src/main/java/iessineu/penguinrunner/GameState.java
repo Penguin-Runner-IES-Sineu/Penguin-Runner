@@ -728,7 +728,7 @@ public class GameState implements Serializable {
      */
     public List<GameMap> llegirMapes(String rutaMapes) {
 
-        JSONArray maps = new JSONArray(llegirMapaJSON());
+        JSONArray maps = new JSONArray(llegirMapaJSON(GamePanel.hasGame()));
         List<GameMap> llista = new ArrayList();
 
         for (int i = 0; i < maps.length(); i++) {
@@ -753,16 +753,16 @@ public class GameState implements Serializable {
         return llista;
     }
 
-    public String llegirMapaJSON() {
+    public String llegirMapaJSON(boolean fromResource) {
         String json = "";
         BufferedReader fitxer;
         ClassLoader classLoader = PenguinRunner.class.getClassLoader();
         InputStream is = classLoader.getResourceAsStream("maps.json");
         try {
-            if (GamePanel.hasGame()) {
-                fitxer = new BufferedReader(new FileReader(GamePanel.getFolderPath() + "maps.json"));
-            } else {
+            if (fromResource) {
                 fitxer = new BufferedReader(new InputStreamReader(is));
+            } else {
+                fitxer = new BufferedReader(new FileReader(GamePanel.getFolderPath() + "maps.json"));
             }
             json = fitxerJSON(fitxer);
         } catch (IOException e) {
