@@ -562,7 +562,8 @@ public class GameState implements Serializable {
         int playerCol = player.getCol();
 
         for (Enemy enemy : enemies) {
-            if (!enemy.isDead() && enemy.getRow() == playerRow && enemy.getCol() == playerCol) {
+            if (!enemy.isDead() && enemy.getRow() == playerRow && enemy.getCol() == playerCol || 
+                    (!enemy.isDead() && enemy.getRow()-1 == playerRow && enemy.getCol() == playerCol &&  blocks[enemy.getRow()][enemy.getCol()].getType() != TileType.MOLTEN)) {
                 loadMap();
                 return;
             }
@@ -828,11 +829,33 @@ public class GameState implements Serializable {
     private PositionHistory getAmbushingTarget() {
         PositionHistory aimPosition = calculatePosition();
 
+        int pRow = player.getRow();
+        int pCol = player.getCol();
+
+        if (player.getState() == fallingState) {
+
+            int targetRow = pRow;
+
+            while (!isOutOfBounds(targetRow, pCol) && shouldDropAt(targetRow, pCol)) {
+                targetRow++;
+            }
+
+            return new PositionHistory(targetRow, pCol);
+        }
+
         if (isOutOfBounds(aimPosition.getX(), aimPosition.getY())) {
-            return new PositionHistory(player.getRow(), player.getCol());
+            return new PositionHistory(pRow, pCol);
         }
 
         return aimPosition;
+    }
+
+    private boolean shouldDropAt(int row, int col) {
+        return !isSolid(row + 1, col)
+                && !isRail(row, col)
+                && !isStair(row, col)
+                && !isStair(row + 1, col)
+                && !isEnemy(row + 1, col);
     }
 
 }
