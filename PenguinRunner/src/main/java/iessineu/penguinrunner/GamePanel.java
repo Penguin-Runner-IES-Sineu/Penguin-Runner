@@ -46,6 +46,7 @@ import iessineu.penguinrunner.Movement.Direction;
 
 public class GamePanel extends JPanel implements Serializable {
 
+    private static boolean game = false;
     public static final int TILE_SIZE = 43;
     private static final int HUD_HEIGHT = 100;
     private static String folderPath = "resources/";
@@ -53,8 +54,7 @@ public class GamePanel extends JPanel implements Serializable {
     private static String printablesPath = folderPath + "printables.json";
     private static String emojiFontPath = folderPath + "emoji.ttf";
     private static String textFontPath = folderPath + "font.ttf";
-    private static Map<String, List<String>> spriteMap = createSpriteMap(GamePanel.hasGame());
-    private static boolean game = false;
+    private static Map<String, List<String>> spriteMap = createSpriteMap(!GamePanel.hasGame());
     private Font textFont;
     private Font emojiFont;
     private final SoundManager soundManager = new SoundManager();
@@ -66,7 +66,7 @@ public class GamePanel extends JPanel implements Serializable {
         gameState = new GameState();
         soundManager.playMusic(musicPath);
         soundManager.setVolume(0.7f);
-        loadFonts(GamePanel.hasGame());
+        loadFonts(!GamePanel.hasGame());
         Printable.setFont(emojiFont);
         resizePanelToGame();
 

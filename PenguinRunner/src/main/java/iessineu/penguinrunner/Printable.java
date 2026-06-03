@@ -14,6 +14,8 @@ import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 
@@ -57,6 +59,19 @@ public class Printable {
             sprite = icon.getImage();
         } else {
             sprite = null;
+        }
+    }
+
+    public void setPrintables(String type) {
+        Map<String, List<String>> mapaSprites = GamePanel.getSpriteMap();
+        List<String> atributs = mapaSprites.get(type);
+
+        if (atributs != null) {
+            this.setEmoji(atributs.get(0));
+            this.setColorFromHex(atributs.get(1));
+            this.setSprite(atributs.get(2), !GamePanel.hasGame());
+        } else {
+            this.setEmoji("#");
         }
     }
 

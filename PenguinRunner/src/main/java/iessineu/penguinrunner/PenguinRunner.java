@@ -13,7 +13,6 @@ import javax.swing.SwingUtilities;
  */
 public class PenguinRunner {
 
-
     public static void main(String[] args) {
 
         String[] claus = new String[0];
@@ -36,15 +35,13 @@ public class PenguinRunner {
             String seleccio = valors[i];
             switch (clau) {
                 case "-g", "-game" -> {
-                    GamePanel.setFolderPath(seleccio);
+                    GamePanel.setFolderPath(seleccio + "/");
                     GamePanel.updatePaths();
                     GamePanel.setGame(true);
                 }
                 case "-m", "-mod" -> {
-                    
                 }
             }
-
         }
         /*
          * SwingUtilities.invokeLater fa que la finestra es creï
@@ -54,7 +51,7 @@ public class PenguinRunner {
             // GamePanel.setFolderPath("");
             // GamePanel.setFolderPath("resources/");
             // GamePanel.setGame(false);
-            GameFrame frame = new GameFrame();  
+            GameFrame frame = new GameFrame();
             frame.setVisible(true);
         });
 

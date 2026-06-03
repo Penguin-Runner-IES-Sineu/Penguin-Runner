@@ -96,6 +96,7 @@ public class Block extends Printable implements Serializable {
 
         return isPushable;
     }
+
     public boolean isBurnable() {
 
         return isBurnable;
@@ -123,13 +124,12 @@ public class Block extends Printable implements Serializable {
 
     public void setPrintables() {
         Map<String, List<String>> mapaSprites = GamePanel.getSpriteMap();
-        // Map<String, List<String>> mapaSprites = GamePanel.createSpriteMap();
         String tipus = this.getType().toString();
         List<String> atributs = mapaSprites.get(tipus.toLowerCase());
         if (atributs != null) {
             this.setEmoji(atributs.get(0));
             this.setColorFromHex(atributs.get(1));
-            this.setSprite(atributs.get(2), GamePanel.hasGame());
+            this.setSprite(atributs.get(2), !GamePanel.hasGame());
         } else {
             this.setEmoji("#");
         }

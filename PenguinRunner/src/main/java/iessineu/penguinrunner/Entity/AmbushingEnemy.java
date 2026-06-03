@@ -4,10 +4,6 @@
  */
 package iessineu.penguinrunner.Entity;
 
-import iessineu.penguinrunner.GamePanel;
-import java.util.List;
-import java.util.Map;
-
 /**
  *
  * @author loren
@@ -32,15 +28,6 @@ public class AmbushingEnemy extends Enemy {
 
     @Override
     public void setPrintables() {
-        Map<String, List<String>> mapaSprites = GamePanel.createSpriteMap(GamePanel.hasGame());
-        List<String> atributs = mapaSprites.get("ambushingEnemy");
-
-        if (atributs != null) {
-            this.setEmoji(atributs.get(0));
-            this.setColorFromHex(atributs.get(1));
-            this.setSprite(atributs.get(2), GamePanel.hasGame());
-        } else {
-            this.setEmoji("#");
-        }
+        super.setPrintables("ambushingEnemy");
     }
 }
