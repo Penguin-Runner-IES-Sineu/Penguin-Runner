@@ -550,7 +550,7 @@ public class GameState implements Serializable {
 
         if (block != null && block.isCollectable()) {
             blocks[row][col] = new Block(TileType.BLANK);
-            soundManager.playSound(GamePanel.getFolderPath() + "nyam.wav");
+            soundManager.playSound("nyam.wav");
             player.addIceCream();
 
             // System.out.println("Gelat: " + player.geticeCream());

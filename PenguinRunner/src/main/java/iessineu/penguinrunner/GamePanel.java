@@ -123,9 +123,8 @@ public class GamePanel extends JPanel implements Serializable {
             try {
                 emojiFont = Font.createFont(Font.TRUETYPE_FONT, recEmojiFont).deriveFont(30f);
                 textFont = Font.createFont(Font.TRUETYPE_FONT, recTextFont).deriveFont(16f);
-                // textFont = Font.createFont(Font.TRUETYPE_FONT, recTextFont);
             } catch (FontFormatException | IOException ex) {
-                System.out.println("Error obrint alguna de les font!");
+                System.out.println("Error obrint alguna de les fonts!");
                 System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             }
         }
@@ -511,7 +510,7 @@ public class GamePanel extends JPanel implements Serializable {
     public static void updatePaths() {
         musicPath = folderPath + "music.wav";
         printablesPath = folderPath + "printables.json";
-        emojiFontPath = folderPath + "font.ttf";
+        emojiFontPath = folderPath + "emoji.ttf";
         textFontPath = folderPath + "font.ttf";
         System.out.println("S'han actualitzat les rutes.");
         System.out.println("Rutes actuals:");

@@ -13,6 +13,7 @@ import java.awt.RenderingHints;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
+import java.net.URL;
 
 import javax.swing.ImageIcon;
 
@@ -43,8 +44,16 @@ public class Printable {
     }
 
     public void setSprite(String ruta) {
-        ImageIcon icon = new ImageIcon(GamePanel.getFolderPath() + "sprites/" + ruta);
-        if (icon.getIconWidth() > 0) {
+        ImageIcon icon = null;
+        if (GamePanel.hasGame()) {
+            icon = new ImageIcon(GamePanel.getFolderPath() + "sprites/" + ruta);
+        } else {
+            URL url = getClass().getResource("/sprites/" + ruta);
+            if (url != null) {
+                icon = new ImageIcon(url);
+            }
+        }
+        if (icon != null && icon.getIconHeight() > 0) {
             sprite = icon.getImage();
         } else {
             sprite = null;

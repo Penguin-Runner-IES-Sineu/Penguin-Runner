@@ -76,5 +76,11 @@
         "sprite": "🦭",
         "color": "#00FF00",
         "filename": "ambushingEnemy.png"
+    },
+    {
+        "type": "wood",
+        "sprite": "🪵",
+        "color": "#6E4442",
+        "filename": "wood.png"
     }
 ]

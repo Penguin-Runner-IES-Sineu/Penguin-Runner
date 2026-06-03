@@ -8,10 +8,12 @@ package iessineu.penguinrunner;
  *
  * @author loren
  */
-
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -25,21 +27,30 @@ public class SoundManager implements Serializable {
 
     public void playMusic(String path) {
         stopMusic();
-
+        ClassLoader classLoader = PenguinRunner.class.getClassLoader();
+        InputStream musicStream = new BufferedInputStream(classLoader.getResourceAsStream(path));
+        System.out.print("Caregant fonts: ");
         try {
-            File musicFile = new File(path);
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(musicFile);
+            AudioInputStream audioStream = null;
+            if (GamePanel.hasGame()) {
+                System.out.println("Carregant fitxer");
+                File soundFile = new File(path);
+                audioStream = AudioSystem.getAudioInputStream(soundFile);
+            } else {
+                System.out.println("Carregant recurs");
+                audioStream = AudioSystem.getAudioInputStream(musicStream);
+            }
 
             musicClip = AudioSystem.getClip();
-            musicClip.open(audioStream);
+            if (audioStream != null) {
+                musicClip.open(audioStream);
+                musicClip.loop(Clip.LOOP_CONTINUOUSLY);
+                musicClip.start();
+            }
 
-            // Repetir infinitamente
-            musicClip.loop(Clip.LOOP_CONTINUOUSLY);
-            musicClip.start();
-
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
-            System.out.println("No se pudo reproducir la música: " + path);
-            ex.printStackTrace();
+        } catch (LineUnavailableException | UnsupportedAudioFileException | IOException ex) {
+            System.out.println("Error obrint l'arxiu d'audio!" + path);
+            System.getLogger(SoundManager.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }
 
@@ -57,8 +68,8 @@ public class SoundManager implements Serializable {
         }
 
         if (musicClip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-            FloatControl gainControl =
-                    (FloatControl) musicClip.getControl(FloatControl.Type.MASTER_GAIN);
+            FloatControl gainControl
+                    = (FloatControl) musicClip.getControl(FloatControl.Type.MASTER_GAIN);
 
             // volume entre 0.0f y 1.0f
             float min = gainControl.getMinimum();
@@ -68,18 +79,27 @@ public class SoundManager implements Serializable {
             gainControl.setValue(gain);
         }
     }
+
     public void playSound(String path) {
-    try {
-        File soundFile = new File(path);
-        AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
-
-        Clip clip = AudioSystem.getClip();
-        clip.open(audioStream);
-        clip.start();
-
-    } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
-        System.out.println("No se pudo reproducir el sonido: " + path);
-        ex.printStackTrace();
+        ClassLoader classLoader = PenguinRunner.class.getClassLoader();
+        InputStream musicStream = new BufferedInputStream(classLoader.getResourceAsStream(path));
+        System.out.print("Caregant fonts: ");
+        try {
+            AudioInputStream audioStream;
+            if (GamePanel.hasGame()) {
+                System.out.println("Carregant fitxer");
+                File soundFile = new File(GamePanel.getFolderPath() + path);
+                audioStream = AudioSystem.getAudioInputStream(soundFile);
+            } else {
+                System.out.println("Carregant recurs");
+                audioStream = AudioSystem.getAudioInputStream(musicStream);
+            }
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.start();
+        } catch (LineUnavailableException | UnsupportedAudioFileException | IOException ex) {
+            System.out.println("Error obrint l'arxiu d'audio!" + path);
+            System.getLogger(SoundManager.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
     }
-}
 }
