@@ -22,9 +22,9 @@ import javax.swing.Timer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import AI.AI;
 import iessineu.penguinrunner.Blocks.Block;
 import iessineu.penguinrunner.Blocks.TileType;
+import iessineu.penguinrunner.Entity.AI;
 import iessineu.penguinrunner.Entity.AmbushingEnemy;
 import iessineu.penguinrunner.Entity.Enemy;
 import iessineu.penguinrunner.Entity.GameMap;

@@ -2,22 +2,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package AI;
+package iessineu.penguinrunner.Entity;
 
 /**
  *
  * @author loren
  */
-import iessineu.penguinrunner.Blocks.TileType;
-import iessineu.penguinrunner.Movement.Direction;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class AI {
+import iessineu.penguinrunner.Blocks.TileType;
+import iessineu.penguinrunner.Movement.Direction;
+
+public class AI implements Serializable {
 
     private static final int BLOCKED = -2;
 
-    private static class Node {
+    private static class Node implements Serializable {
 
         int row;
         int col;

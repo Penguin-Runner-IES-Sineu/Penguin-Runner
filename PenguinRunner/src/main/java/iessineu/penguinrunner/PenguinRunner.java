@@ -30,6 +30,7 @@ public class PenguinRunner {
             }
         }
 
+        // GamePanel.setSpriteMap(GamePanel.createSpriteMap(true));
         for (int i = 0; i < claus.length; i++) {
             String clau = claus[i];
             String seleccio = valors[i];
@@ -38,6 +39,7 @@ public class PenguinRunner {
                     GamePanel.setFolderPath(seleccio + "/");
                     GamePanel.updatePaths();
                     GamePanel.setGame(true);
+                    GamePanel.setSpriteMap(GamePanel.createSpriteMap(false));
                 }
                 case "-m", "-mod" -> {
                 }
