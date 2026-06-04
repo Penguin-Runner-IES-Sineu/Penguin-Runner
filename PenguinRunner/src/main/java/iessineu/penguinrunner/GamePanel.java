@@ -41,8 +41,8 @@ import org.json.JSONObject;
 
 import iessineu.penguinrunner.Blocks.Block;
 import iessineu.penguinrunner.Blocks.TileType;
-import iessineu.penguinrunner.Entity.Enemy;
 import iessineu.penguinrunner.Entity.Player;
+import iessineu.penguinrunner.Entity.enemies.Enemy;
 import iessineu.penguinrunner.Movement.Direction;
 
 public class GamePanel extends JPanel implements Serializable {
@@ -191,8 +191,7 @@ public class GamePanel extends JPanel implements Serializable {
                 gameState.breakDownRight();
             }
             case KeyEvent.VK_F -> {
-                gameState.interact();
-                resizePanelToGame();
+                gameState.useItem("flamethrower");
             }
             case KeyEvent.VK_P ->
                 guardarPartida();

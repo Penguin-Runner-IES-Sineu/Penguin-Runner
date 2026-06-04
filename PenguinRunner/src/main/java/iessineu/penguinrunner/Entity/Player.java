@@ -5,7 +5,12 @@
 package iessineu.penguinrunner.Entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import iessineu.penguinrunner.Entity.Items.Flamethrower;
+import iessineu.penguinrunner.Entity.Items.Item;
+import iessineu.penguinrunner.Movement.Direction;
 import iessineu.penguinrunner.Printable;
 import iessineu.penguinrunner.States.PlayerState;
 import iessineu.penguinrunner.States.WalkingState;
@@ -35,6 +40,8 @@ public class Player extends Printable implements Serializable {
     private int iceCream = 0;
 
     private PlayerState state;
+    private List<Item> items = new ArrayList();
+    private Direction lastDirection = Direction.RIGHT;
 
     public Player(int row, int col) {
         this.row = row;
@@ -81,6 +88,37 @@ public class Player extends Printable implements Serializable {
         return iceCream;
     }
 
+    public void addItem(String type) {
+        switch (type) {
+            case "flamethrower" -> {
+                Flamethrower f = new Flamethrower();
+                items.add(f);
+                System.out.println("Has agafat un lanzallamas!");
+            }
+            case "teleport" -> {
+
+            }
+        }
+    }
+
+    public void useItem(String type) {
+        for (int i = 0; i < items.size(); i++) {
+            Item item = items.get(i);
+            if (item.getName().equals(type)) {
+                switch (type) {
+                    case "flamethrower" -> {
+                        Flamethrower f = (Flamethrower) item;
+                        f.use(this.lastDirection);
+                        // items.remove(i);
+                    }
+                    case "teleport" -> {
+
+                    }
+                }
+            }
+        }
+    }
+
     public PlayerState getState() {
         return state;
     }
@@ -91,5 +129,13 @@ public class Player extends Printable implements Serializable {
 
     public void setPrintables() {
         super.setPrintables("player");
+    }
+
+    public Direction getLastDirection() {
+        return lastDirection;
+    }
+
+    public void setLastDirection(Direction lastDirection) {
+        this.lastDirection = lastDirection;
     }
 }

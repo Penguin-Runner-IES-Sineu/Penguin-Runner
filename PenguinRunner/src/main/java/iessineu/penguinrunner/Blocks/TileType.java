@@ -17,20 +17,23 @@ import java.io.Serializable;
 public enum TileType implements Serializable {
     ICE,
     WALL,
-    ICECREAM,
     STAIR,
     RAIL,
+    ITEM,
     MOLTEN,
     DOOR,
     STONE,
     WOOD,
-    BLANK;
+    BLANK,
+    ICECREAM,
+    FLAMETHROWER,
+    TELEPORT;
 
     public boolean equals(TileType tyle) {
-        if(true){
-            
+        if (true) {
+
         }
         return true;
     }
-    
+
 }

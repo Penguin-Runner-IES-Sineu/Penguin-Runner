@@ -27,12 +27,12 @@ import org.json.JSONObject;
 
 import iessineu.penguinrunner.Blocks.Block;
 import iessineu.penguinrunner.Blocks.TileType;
-import iessineu.penguinrunner.Entity.AI;
-import iessineu.penguinrunner.Entity.AmbushingEnemy;
-import iessineu.penguinrunner.Entity.Enemy;
 import iessineu.penguinrunner.Entity.GameMap;
 import iessineu.penguinrunner.Entity.Player;
-import iessineu.penguinrunner.Entity.SeekerEnemy;
+import iessineu.penguinrunner.Entity.enemies.AI;
+import iessineu.penguinrunner.Entity.enemies.AmbushingEnemy;
+import iessineu.penguinrunner.Entity.enemies.Enemy;
+import iessineu.penguinrunner.Entity.enemies.SeekerEnemy;
 import iessineu.penguinrunner.Movement.Direction;
 import iessineu.penguinrunner.Movement.PositionHistory;
 import iessineu.penguinrunner.States.ClimbingState;
@@ -117,6 +117,9 @@ public class GameState implements Serializable {
                     case 'S' -> {
                         blocks[row][col] = new Block(TileType.STONE);
                         stones.add(blocks[row][col]);
+                    }
+                    case 'F' -> {
+                        blocks[row][col] = new Block(TileType.FLAMETHROWER);
                     }
                     case 'P' -> {
                         player = new Player(row, col);
@@ -208,6 +211,7 @@ public class GameState implements Serializable {
             }
         } else if (direction != null) {
             fallingTimer.stop();
+            player.setLastDirection(direction);
             player.getState().handleInput(this, direction);
             updatePlayerState();
             updateLogic();
@@ -224,12 +228,50 @@ public class GameState implements Serializable {
 
     public void updateLogic() {
         saveLastPosition();
-        collectIcecream();
+        collectItem();
         moveBlocks();
         updateBrokenBlocks();
         moveEnemies();
         checkCollisions();
         updatePlayerState();
+    }
+
+    public void useItem(String type) {
+        player.useItem(type);
+        switch (type) {
+            case "flamethrower" -> {
+                Direction lastDirection = player.getLastDirection();
+                int playerRow = player.getRow();
+                int playerCol = player.getCol();
+                // 0,0 1,0 
+                // 0,1
+                switch (lastDirection) {
+                    case Direction.UP -> {
+                        breakBlock(playerRow - 1, playerCol + 1);
+                        breakBlock(playerRow - 2, playerCol + 1);
+                        breakBlock(playerRow - 3, playerCol + 1);
+                    }
+                    case Direction.DOWN -> {
+                        breakBlock(playerRow + 1, playerCol + 1);
+                        breakBlock(playerRow + 2, playerCol + 1);
+                        breakBlock(playerRow + 3, playerCol + 1);
+                    }
+                    case Direction.LEFT -> {
+                        breakBlock(playerRow + 1, playerCol - 1);
+                        breakBlock(playerRow + 1, playerCol - 2);
+                        breakBlock(playerRow + 1, playerCol - 3);
+                    }
+                    case Direction.RIGHT -> {
+                        breakBlock(playerRow + 1, playerCol + 1);
+                        breakBlock(playerRow + 1, playerCol + 2);
+                        breakBlock(playerRow + 1, playerCol + 3);
+                    }
+                }
+            }
+            case "teleport" -> {
+
+            }
+        }
     }
 
     /*
@@ -546,7 +588,7 @@ public class GameState implements Serializable {
     /*
      * OBJECTES I COL·LISIONS
      */
-    private void collectIcecream() {
+    private void collectItem() {
         int row = player.getRow();
         int col = player.getCol();
 
@@ -554,8 +596,15 @@ public class GameState implements Serializable {
 
         if (block != null && block.isCollectable()) {
             blocks[row][col] = new Block(TileType.BLANK);
-            soundManager.playSound("icecream", !GamePanel.hasGame());
-            player.addIceCream();
+            switch (block.getType()) {
+                case TileType.ICECREAM -> {
+                    soundManager.playSound("icecream", !GamePanel.hasGame());
+                    player.addIceCream();
+                }
+                case TileType.FLAMETHROWER -> {
+                    player.addItem("flamethrower");
+                }
+            }
 
             // System.out.println("Gelat: " + player.geticeCream());
         }

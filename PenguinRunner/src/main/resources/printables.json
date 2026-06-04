@@ -88,5 +88,11 @@
     "sprite": "",
     "color": "#FFFFFF",
     "filename": "ice.png"
+  },
+  {
+    "type": "flamethrower",
+    "sprite": "F",
+    "color": "#FF0000",
+    "filename": "flamethrower.png"
   }
 ]

@@ -41,7 +41,7 @@ public class Block extends Printable implements Serializable {
             case WALL -> {
                 this.isSolid = true;
             }
-            case ICECREAM -> {
+            case ICECREAM, FLAMETHROWER, TELEPORT -> {
                 this.isCollectable = true;
             }
             case STAIR -> {
@@ -70,7 +70,6 @@ public class Block extends Printable implements Serializable {
                 this.type = TileType.BLANK;
             }
         }
-
         this.setPrintables();
     }
 
@@ -116,13 +115,8 @@ public class Block extends Printable implements Serializable {
 
     public void setType(TileType type) {
         this.type = type;
-
-        // this.printableKey = null;
     }
 
-    // public String getPrintableKey() {
-    //     return printableKey;
-    // }
     public void setPrintables() {
         super.setPrintables(this.getType().toString().toLowerCase());
     }
