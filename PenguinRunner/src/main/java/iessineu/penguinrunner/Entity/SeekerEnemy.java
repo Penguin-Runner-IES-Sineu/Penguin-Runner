@@ -4,11 +4,13 @@
  */
 package iessineu.penguinrunner.Entity;
 
+import java.io.Serializable;
+
 /**
  *
  * @author loren
  */
-public final class SeekerEnemy extends Enemy {
+public final class SeekerEnemy extends Enemy implements Serializable {
 
     private int[][] pathMap;
     
