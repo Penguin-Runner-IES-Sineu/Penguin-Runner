@@ -14,5 +14,12 @@
             "type": "music",
             "filename": "yaris.wav"
         }
+    },
+    {
+        "modtype": "font",
+        "modvalue": {
+            "type": "text",
+            "filename": "racesport.ttf"
+        }
     }
 ]

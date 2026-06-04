@@ -124,6 +124,19 @@ public class GamePanel extends JPanel implements Serializable {
         }
     }
 
+    private void loadModdedFont(String type) {
+        try {
+            if (type.equals("emoji")) {
+                emojiFont = Font.createFont(Font.TRUETYPE_FONT, new File(emojiFontPath)).deriveFont(30f);
+            } else {
+                textFont = Font.createFont(Font.TRUETYPE_FONT, new File(textFontPath)).deriveFont(16f);
+            }
+        } catch (FontFormatException | IOException ex) {
+            System.out.println("Error obrint alguna de les font!");
+            System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+    }
+
     /*
      * Ajusta la mida del panell al mapa actual.
      * És útil també després de carregar una partida.
@@ -479,6 +492,16 @@ public class GamePanel extends JPanel implements Serializable {
             String modType = mod.getString("modtype");
             JSONObject modValue = mod.getJSONObject("modvalue");
             gameState.addMod(modType, modValue, path);
+            if (modType.equals("font")) {
+                String originalFilename = modValue.getString("filename");
+                modValue.put("filename", path + "/" + originalFilename);
+                if (modValue.getString("type").equals("emoji")) {
+                    setEmojiFontPath(modValue.getString("filename"));
+                } else {
+                    setTextFontPath(modValue.getString("filename"));
+                }
+                loadModdedFont(modType);
+            }
         }
     }
 

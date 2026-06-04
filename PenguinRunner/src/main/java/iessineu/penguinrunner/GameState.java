@@ -906,6 +906,15 @@ public class GameState implements Serializable {
         playMusic(false);
     }
 
+    private void addModdedFont(JSONObject mod) {
+        String fontType = mod.getString("type");
+        if (fontType.equals("emoji")) {
+            GamePanel.setEmojiFontPath(mod.getString("filename"));
+        } else {
+            GamePanel.setTextFontPath(mod.getString("filename"));
+        }
+    }
+
     public void playMusic(boolean fromResource) {
         soundManager.playMusic(fromResource);
     }
