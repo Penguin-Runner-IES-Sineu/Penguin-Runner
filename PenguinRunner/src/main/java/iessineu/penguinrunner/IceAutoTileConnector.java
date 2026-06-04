@@ -41,9 +41,10 @@ public class IceAutoTileConnector {
                 }
 
                 String printableKey = getIcePrintableKey(blocks, row, col);
+                // System.out.println(printableKey);
 
-                block.setPrintableKey(printableKey);
-                block.setPrintables();
+                block.setPrintables(printableKey);
+                // block.setPrintables();
             }
         }
     }

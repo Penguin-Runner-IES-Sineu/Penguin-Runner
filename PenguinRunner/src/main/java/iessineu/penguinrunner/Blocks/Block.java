@@ -30,8 +30,6 @@ public class Block extends Printable implements Serializable {
 
     protected TileType type;
 
-    private String printableKey = null;
-
     public Block(TileType type) {
         this.type = type;
 
@@ -119,23 +117,18 @@ public class Block extends Printable implements Serializable {
     public void setType(TileType type) {
         this.type = type;
 
-        this.printableKey = null;
+        // this.printableKey = null;
     }
 
-    public String getPrintableKey() {
-        return printableKey;
-    }
-
-    public void setPrintableKey(String printableKey) {
-        this.printableKey = printableKey;
-    }
-
-    public void clearPrintableKey() {
-        this.printableKey = null;
-    }
-
+    // public String getPrintableKey() {
+    //     return printableKey;
+    // }
     public void setPrintables() {
         super.setPrintables(this.getType().toString().toLowerCase());
+    }
+
+    public void setPrintables(String path) {
+        super.setPrintables(path);
     }
 
     public void setDoor(boolean isDoor) {
