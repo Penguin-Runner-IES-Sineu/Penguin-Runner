@@ -3,12 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package iessineu.penguinrunner.Movement;
+import java.io.Serializable;
 
 /**
  *
  * @author loren
  */
-public class PositionHistory {
+public class PositionHistory implements Serializable {
+
     private int x;
     private int y;
 

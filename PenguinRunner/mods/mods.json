@@ -3,7 +3,7 @@
         "modtype": "map",
         "modvalue": {
             "type": "map",
-            "level": 2,
+            "level": 5,
             "view": [
                 "################################",
                 "#..............................#",
@@ -24,6 +24,20 @@
             "sprite": "😀",
             "color": "#FFFF00",
             "filename": "mods/image.png"
+        }
+    },
+    {
+        "modtype": "sfx",
+        "modvalue": {
+            "type": "icecream",
+            "path": "mods/acdc.wav"
+        }
+    },
+    {
+        "modtype": "music",
+        "modvalue": {
+            "type": "music",
+            "path": "mods/colacao.wav"
         }
     }
 ]

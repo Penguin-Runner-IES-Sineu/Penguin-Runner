@@ -58,15 +58,19 @@ public class GamePanel extends JPanel implements Serializable {
     private static Map<String, List<String>> spriteMap = createSpriteMap(!GamePanel.hasGame());
     private Font textFont;
     private Font emojiFont;
-    private final SoundManager soundManager = new SoundManager();
+    // private final SoundManager soundManager = new SoundManager();
     private final GameFrame gameFrame;
     private GameState gameState;
 
     public GamePanel(GameFrame frame) {
         gameFrame = frame;
         gameState = new GameState();
-        soundManager.playMusic(musicPath, !GamePanel.hasGame());
-        soundManager.setVolume(0.7f);
+        gameState.playMusic(!GamePanel.hasGame());
+        // if (!gameState.isModdedMusic()) {
+        //     soundManager.generateSoundMap();
+        //     soundManager.playMusic(!GamePanel.hasGame());
+        //     soundManager.setVolume(0.7f);
+        // }
         loadFonts(!GamePanel.hasGame());
         Printable.setFont(emojiFont);
         resizePanelToGame();
@@ -367,7 +371,7 @@ public class GamePanel extends JPanel implements Serializable {
         g2.drawString(player.geticeCream() + "/ " + gameState.getIceCream(), 250, textY);
 
         g2.drawString(
-                "Nivell: " + gameState.getNivell() + 1,
+                "Nivell: " + (gameState.getNivell() + 1),
                 padding + 430,
                 textY
         );

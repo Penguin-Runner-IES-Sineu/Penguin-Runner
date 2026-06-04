@@ -58,6 +58,7 @@ public class GameState implements Serializable {
     private int iceCream = 0;
     private int startPlayerRow;
     private int startPlayerCol;
+    private boolean moddedMusic = false;
 
     private final SoundManager soundManager = new SoundManager();
     private final PlayerState walkingState = new WalkingState();
@@ -553,7 +554,7 @@ public class GameState implements Serializable {
 
         if (block != null && block.isCollectable()) {
             blocks[row][col] = new Block(TileType.BLANK);
-            soundManager.playSound("nyam.wav", !GamePanel.hasGame());
+            soundManager.playSound("icecream", !GamePanel.hasGame());
             player.addIceCream();
 
             // System.out.println("Gelat: " + player.geticeCream());
@@ -720,6 +721,14 @@ public class GameState implements Serializable {
         this.mapList = mapList;
     }
 
+    public boolean isModdedMusic() {
+        return moddedMusic;
+    }
+
+    public void setModdedMusic(boolean moddedMusic) {
+        this.moddedMusic = moddedMusic;
+    }
+
     /*
      * BLOCS ROMPUTS
      */
@@ -816,7 +825,7 @@ public class GameState implements Serializable {
             case "sprite" -> {
                 addModSprite(mod);
             }
-            case "sound" -> {
+            case "sfx" -> {
                 addModSound(mod);
             }
             case "music" -> {
@@ -885,11 +894,26 @@ public class GameState implements Serializable {
     }
 
     private void addModMusic(JSONObject mod) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String soundType = mod.getString("type");
+        String soundPath = mod.getString("path");
+        Map<String, String> newMap = soundManager.getSoundsMap();
+        newMap.put(soundType, soundPath);
+        soundManager.setSoundsMap(newMap);
+        soundManager.stopMusic();
+        // playMusic();
+        soundManager.playMusic(false);
+    }
+
+    public void playMusic(boolean fromResource) {
+        soundManager.playMusic(fromResource);
     }
 
     private void addModSound(JSONObject mod) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String soundType = mod.getString("type");
+        String soundPath = mod.getString("path");
+        Map<String, String> newMap = soundManager.getSoundsMap();
+        newMap.put(soundType, soundPath);
+        soundManager.setSoundsMap(newMap);
     }
 
     public int getIceCream() {
