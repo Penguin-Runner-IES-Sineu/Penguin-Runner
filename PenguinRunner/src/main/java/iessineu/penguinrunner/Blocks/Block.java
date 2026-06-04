@@ -8,7 +8,6 @@ package iessineu.penguinrunner.Blocks;
  *
  * @author loren
  */
-
 import java.awt.Color;
 import java.io.Serializable;
 
@@ -30,7 +29,6 @@ public class Block extends Printable implements Serializable {
     private boolean isBurnable = false;
 
     protected TileType type;
-
 
     private String printableKey = null;
 
@@ -121,7 +119,6 @@ public class Block extends Printable implements Serializable {
     public void setType(TileType type) {
         this.type = type;
 
-
         this.printableKey = null;
     }
 
@@ -139,10 +136,6 @@ public class Block extends Printable implements Serializable {
 
     public void setPrintables() {
         super.setPrintables(this.getType().toString().toLowerCase());
-    }
-
-    public void setType(TileType type) {
-        this.type = type;
     }
 
     public void setDoor(boolean isDoor) {
