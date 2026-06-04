@@ -47,7 +47,7 @@ public class PenguinRunner {
                     System.out.println("Carregant mods...");
                     GamePanel panel = frame.getPanel();
 
-                    panel.loadMods(seleccio);
+                    panel.loadMods("mods/" + seleccio);
                 }
             }
         }

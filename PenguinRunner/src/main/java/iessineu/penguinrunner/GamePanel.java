@@ -64,7 +64,6 @@ public class GamePanel extends JPanel implements Serializable {
     public GamePanel(GameFrame frame) {
         gameFrame = frame;
         gameState = new GameState();
-        // gameState.playMusic(!GamePanel.hasGame());
         gameState.playMusic(!GamePanel.hasGame());
         loadFonts(!GamePanel.hasGame());
         Printable.setFont(emojiFont);

@@ -1,0 +1,18 @@
+[
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "player",
+            "sprite": "😀",
+            "color": "#FFFF00",
+            "filename": "mods/yaris/yaris.gif"
+        }
+    },
+    {
+        "modtype": "music",
+        "modvalue": {
+            "type": "music",
+            "path": "mods/yaris/yaris.wav"
+        }
+    }
+]

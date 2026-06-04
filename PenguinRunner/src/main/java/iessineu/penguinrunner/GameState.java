@@ -193,7 +193,6 @@ public class GameState implements Serializable {
         }
         enemies = newEnemyList;
         player = new Player(player.getRow(), player.getCol());
-        System.out.println(player.getSprite());
         stones = newStoneList;
         blocks = mapaNou;
         updatePlayerState();
@@ -851,14 +850,12 @@ public class GameState implements Serializable {
         } else {
             mapList.add(map);
         }
-        System.out.println(mapList);
     }
 
     private void addModSprite(JSONObject mod) {
         Map<String, List<String>> spriteMap = GamePanel.getSpriteMap();
         String type = "";
         List<String> atributs = new ArrayList();
-        System.out.println(mod);
         try {
             type = mod.getString("type");
         } catch (JSONException e) {

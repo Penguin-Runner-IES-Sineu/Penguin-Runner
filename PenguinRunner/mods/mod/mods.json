@@ -1,0 +1,43 @@
+[
+    {
+        "modtype": "map",
+        "modvalue": {
+            "type": "map",
+            "level": 5,
+            "view": [
+                "################################",
+                "#..............................#",
+                "#..D..D...D....................#",
+                "#..DDDD...D....................#",
+                "#..D..D...D............E.......#",
+                "#..............................#",
+                "#.....P.....L..................#",
+                "#..............................#",
+                "################################"
+            ]
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "player",
+            "sprite": "😀",
+            "color": "#FFFF00",
+            "filename": "mods/mod/image.png"
+        }
+    },
+    {
+        "modtype": "sfx",
+        "modvalue": {
+            "type": "icecream",
+            "path": "mods/mod/acdc.wav"
+        }
+    },
+    {
+        "modtype": "music",
+        "modvalue": {
+            "type": "music",
+            "path": "mods/mod/colacao.wav"
+        }
+    }
+]
