@@ -42,7 +42,6 @@ import org.json.JSONObject;
 import iessineu.penguinrunner.Blocks.Block;
 import iessineu.penguinrunner.Blocks.TileType;
 import iessineu.penguinrunner.Entity.Enemy;
-import iessineu.penguinrunner.Entity.GameMap;
 import iessineu.penguinrunner.Entity.Player;
 import iessineu.penguinrunner.Movement.Direction;
 
@@ -478,20 +477,8 @@ public class GamePanel extends JPanel implements Serializable {
         for (int i = 0; i < modsArray.length(); i++) {
             JSONObject mod = modsArray.getJSONObject(i);
             String modType = mod.getString("modtype");
-            switch (modType) {
-                case "map" -> {
-                    gameState.addModMap(mod.getJSONObject("modvalue"));
-                }
-                case "sprite" -> {
-
-                }
-                case "sound" -> {
-
-                }
-                case "music" -> {
-
-                }
-            }
+            JSONObject modValue = mod.getJSONObject("modvalue");
+            gameState.addMod(modType, modValue);
         }
     }
 

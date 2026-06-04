@@ -9,6 +9,7 @@ package iessineu.penguinrunner;
  * @author loren
  */
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,10 +17,12 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.Timer;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import iessineu.penguinrunner.Blocks.Block;
@@ -174,7 +177,9 @@ public class GameState implements Serializable {
             for (int col = 0; col < mapa[row].length; col++) {
                 Block blocAntic = mapa[row][col];
                 mapaNou[row][col] = new Block(blocAntic.getType());
-                mapaNou[row][col] = new Block(blocAntic.getType());
+                if (blocAntic.isDoor()) {
+                    mapaNou[row][col].setDoor(true);
+                }
                 if (blocAntic.getType() == TileType.STONE) {
                     newStoneList.add(mapaNou[row][col]);
                 }
@@ -804,6 +809,23 @@ public class GameState implements Serializable {
         return jsonString;
     }
 
+    public void addMod(String modType, JSONObject mod) {
+        switch (modType) {
+            case "map" -> {
+                addModMap(mod);
+            }
+            case "sprite" -> {
+                addModSprite(mod);
+            }
+            case "sound" -> {
+                addModSound(mod);
+            }
+            case "music" -> {
+                addModMusic(mod);
+            }
+        }
+    }
+
     public void addModMap(JSONObject modMap) {
         JSONArray jsonView = modMap.getJSONArray("view");
         int mapIndex = modMap.getInt("level") - 1;
@@ -821,6 +843,54 @@ public class GameState implements Serializable {
             mapList.add(map);
         }
         System.out.println(mapList);
+    }
+
+    private void addModSprite(JSONObject mod) {
+        Map<String, List<String>> spriteMap = GamePanel.getSpriteMap();
+        String type = "";
+        List<String> atributs = new ArrayList();
+        System.out.println(mod);
+        try {
+            type = mod.getString("type");
+        } catch (JSONException e) {
+            System.out.println("No s'ha trobat el tipus per l'element " + mod.toString());
+        }
+        try {
+            String emoji = mod.getString("sprite");
+            atributs.add(emoji);
+        } catch (JSONException e) {
+            System.out.println("No s'ha trobat Emoji per l'element " + mod.toString());
+        }
+        try {
+            String colorString = mod.getString("color");
+            atributs.add(colorString);
+        } catch (JSONException e) {
+            System.out.println("No s'ha trobat Color per l'element " + mod.toString());
+        }
+        try {
+            String fileString = mod.getString("filename");
+            if (GamePanel.hasGame()) {
+                File fileSprite = new File(fileString);
+                if (!fileSprite.exists()) {
+                    System.out.println("El fitxer de sprite per " + mod.toString() + " no s'ha trobat");
+                }
+            }
+            atributs.add(fileString);
+        } catch (JSONException e) {
+            System.out.println("No s'ha trobat Arxiu per l'element" + mod.toString());
+        }
+        atributs.add("modded");
+        spriteMap.put(type, atributs);
+        GamePanel.setSpriteMap(spriteMap);
+        reloadSprites();
+    }
+
+    private void addModMusic(JSONObject mod) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private void addModSound(JSONObject mod) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public int getIceCream() {

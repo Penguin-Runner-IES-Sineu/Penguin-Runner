@@ -10,10 +10,7 @@ package iessineu.penguinrunner.Blocks;
  */
 import java.awt.Color;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
 
-import iessineu.penguinrunner.GamePanel;
 import iessineu.penguinrunner.Printable;
 
 public class Block extends Printable implements Serializable {
@@ -123,19 +120,24 @@ public class Block extends Printable implements Serializable {
     }
 
     public void setPrintables() {
-        Map<String, List<String>> mapaSprites = GamePanel.getSpriteMap();
-        String tipus = this.getType().toString();
-        List<String> atributs = mapaSprites.get(tipus.toLowerCase());
-        if (atributs != null) {
-            this.setEmoji(atributs.get(0));
-            this.setColorFromHex(atributs.get(1));
-            this.setSprite(atributs.get(2), !GamePanel.hasGame());
-        } else {
-            this.setEmoji("#");
-        }
+        // Map<String, List<String>> mapaSprites = GamePanel.getSpriteMap();
+        // String tipus = this.getType().toString();
+        // List<String> atributs = mapaSprites.get(tipus.toLowerCase());
+        // if (atributs != null) {
+        //     this.setEmoji(atributs.get(0));
+        //     this.setColorFromHex(atributs.get(1));
+        //     this.setSprite(atributs.get(2), !GamePanel.hasGame(), false);
+        // } else {
+        //     this.setEmoji("#");
+        // }
+        super.setPrintables(this.getType().toString().toLowerCase());
     }
 
     public void setType(TileType type) {
         this.type = type;
+    }
+
+    public void setDoor(boolean isDoor) {
+        this.isDoor = isDoor;
     }
 }

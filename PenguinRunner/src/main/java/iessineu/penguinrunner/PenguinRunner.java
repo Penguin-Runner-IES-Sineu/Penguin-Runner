@@ -35,6 +35,7 @@ public class PenguinRunner {
             String seleccio = valors[i];
             switch (clau) {
                 case "-g", "-game" -> {
+                    System.out.println("Carregant joc personalitzat...");
                     GamePanel.setFolderPath(seleccio + "/");
                     cls();
                     GamePanel.updatePaths();
@@ -43,12 +44,9 @@ public class PenguinRunner {
                     frame = new GameFrame();
                 }
                 case "-m", "-mod" -> {
-                    // GameState.loadMods(seleccio);
+                    System.out.println("Carregant mods...");
                     GamePanel panel = frame.getPanel();
-                    // GameState state = panel.getGameState();
-                    System.out.println("mod");
                     panel.loadMods(seleccio);
-                    
                 }
             }
         }

@@ -45,7 +45,7 @@ public class Printable {
         return sprite;
     }
 
-    public void setSprite(String ruta, boolean fromResource) {
+    public void setSprite(String ruta, boolean fromResource, boolean modFolder) {
         ImageIcon icon = null;
         if (fromResource) {
             URL url = getClass().getResource("/sprites/" + ruta);
@@ -53,7 +53,12 @@ public class Printable {
                 icon = new ImageIcon(url);
             }
         } else {
-            icon = new ImageIcon(GamePanel.getFolderPath() + "sprites/" + ruta);
+            if (modFolder) {
+                System.out.println("Carregant mod...");
+                icon = new ImageIcon(ruta);
+            } else {
+                icon = new ImageIcon(GamePanel.getFolderPath() + "sprites/" + ruta);
+            }
         }
         if (icon != null && icon.getIconHeight() > 0) {
             sprite = icon.getImage();
@@ -69,7 +74,11 @@ public class Printable {
         if (atributs != null) {
             this.setEmoji(atributs.get(0));
             this.setColorFromHex(atributs.get(1));
-            this.setSprite(atributs.get(2), !GamePanel.hasGame());
+            if (atributs.size() > 3) {
+                this.setSprite(atributs.get(2), !GamePanel.hasGame(), true);
+            } else {
+                this.setSprite(atributs.get(2), !GamePanel.hasGame(), false);
+            }
         } else {
             this.setEmoji("#");
         }
