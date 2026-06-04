@@ -314,15 +314,19 @@ public class GamePanel extends JPanel implements Serializable {
      * Dibuixa el mapa casella per casella.
      */
     private void drawMap() {
+        IceAutoTileConnector.update(gameState.getBlocks());
+
         for (int row = 0; row < gameState.getRows(); row++) {
             for (int col = 0; col < gameState.getCols(); col++) {
                 Block b = gameState.getBlocks()[row][col];
+
                 if (b.isDoor()) {
                     if (gameState.checkObjective()) {
                         b.setType(TileType.DOOR);
                         b.setPrintables();
                     }
                 }
+
                 b.draw(row, col);
             }
         }

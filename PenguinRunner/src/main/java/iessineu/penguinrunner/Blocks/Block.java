@@ -8,6 +8,7 @@ package iessineu.penguinrunner.Blocks;
  *
  * @author loren
  */
+
 import java.awt.Color;
 import java.io.Serializable;
 
@@ -15,10 +16,6 @@ import iessineu.penguinrunner.Printable;
 
 public class Block extends Printable implements Serializable {
 
-    // protected int row;
-    // protected int col;
-    // protected final int originalRow;
-    // protected final int originalCol;
     protected String sprite = "";
     protected Color color = new Color(0);
 
@@ -34,8 +31,12 @@ public class Block extends Printable implements Serializable {
 
     protected TileType type;
 
+
+    private String printableKey = null;
+
     public Block(TileType type) {
         this.type = type;
+
         switch (type) {
             case ICE -> {
                 this.isSolid = true;
@@ -72,8 +73,8 @@ public class Block extends Printable implements Serializable {
                 this.isDoor = true;
                 this.type = TileType.BLANK;
             }
-
         }
+
         this.setPrintables();
     }
 
@@ -90,12 +91,10 @@ public class Block extends Printable implements Serializable {
     }
 
     public boolean isPushable() {
-
         return isPushable;
     }
 
     public boolean isBurnable() {
-
         return isBurnable;
     }
 
@@ -119,17 +118,26 @@ public class Block extends Printable implements Serializable {
         return isDeadlyForEnemy;
     }
 
+    public void setType(TileType type) {
+        this.type = type;
+
+
+        this.printableKey = null;
+    }
+
+    public String getPrintableKey() {
+        return printableKey;
+    }
+
+    public void setPrintableKey(String printableKey) {
+        this.printableKey = printableKey;
+    }
+
+    public void clearPrintableKey() {
+        this.printableKey = null;
+    }
+
     public void setPrintables() {
-        // Map<String, List<String>> mapaSprites = GamePanel.getSpriteMap();
-        // String tipus = this.getType().toString();
-        // List<String> atributs = mapaSprites.get(tipus.toLowerCase());
-        // if (atributs != null) {
-        //     this.setEmoji(atributs.get(0));
-        //     this.setColorFromHex(atributs.get(1));
-        //     this.setSprite(atributs.get(2), !GamePanel.hasGame(), false);
-        // } else {
-        //     this.setEmoji("#");
-        // }
         super.setPrintables(this.getType().toString().toLowerCase());
     }
 
