@@ -28,11 +28,10 @@ public class PenguinRunner {
             }
         }
 
-        // GamePanel.setSpriteMap(GamePanel.createSpriteMap(true));
         GameFrame frame = new GameFrame();
         for (int i = 0; i < claus.length; i++) {
             String clau = claus[i];
-            if ("break".equals(clau)) {
+            if ("v".equals(clau)) { //parametre -v per carregar vanilla si o si
                 break;
             }
             String seleccio = valors[i];
