@@ -220,10 +220,11 @@ public class GameState implements Serializable {
         saveLastPosition();
         collectIcecream();
         moveBlocks();
-        moveEnemies();
         updateBrokenBlocks();
+        moveEnemies();
         checkCollisions();
         updatePlayerState();
+        interact();
     }
 
     /*
