@@ -323,7 +323,7 @@ public class GameState implements Serializable {
         int row = player.getRow();
         int col = player.getCol();
         if (isEnemy(row + 1, col)) {
-            System.out.println("Tens un enemic davall");
+            // System.out.println("Tens un enemic davall");
             return false;
         }
 

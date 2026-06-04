@@ -54,7 +54,7 @@ public class Printable {
             }
         } else {
             if (modFolder) {
-                System.out.println("Carregant mod...");
+                // System.out.println("Carregant mod...");
                 icon = new ImageIcon(ruta);
             } else {
                 icon = new ImageIcon(GamePanel.getFolderPath() + "sprites/" + ruta);
