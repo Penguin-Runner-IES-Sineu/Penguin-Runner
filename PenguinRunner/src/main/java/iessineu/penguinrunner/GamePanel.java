@@ -453,7 +453,7 @@ public class GamePanel extends JPanel implements Serializable {
 
     public void loadMods(String path) {
         String jsonString = "";
-        System.out.println("Carregant Fitxer");
+        System.out.print("Carregant Mod: ");
         BufferedReader fitxer = null;
         System.out.println(path + "/mods.json");
         try {
@@ -478,7 +478,7 @@ public class GamePanel extends JPanel implements Serializable {
             JSONObject mod = modsArray.getJSONObject(i);
             String modType = mod.getString("modtype");
             JSONObject modValue = mod.getJSONObject("modvalue");
-            gameState.addMod(modType, modValue);
+            gameState.addMod(modType, modValue, path);
         }
     }
 

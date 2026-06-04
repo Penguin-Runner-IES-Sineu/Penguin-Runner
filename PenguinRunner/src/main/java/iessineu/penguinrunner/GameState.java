@@ -817,18 +817,24 @@ public class GameState implements Serializable {
         return jsonString;
     }
 
-    public void addMod(String modType, JSONObject mod) {
+    public void addMod(String modType, JSONObject mod, String modPath) {
         switch (modType) {
             case "map" -> {
                 addModMap(mod);
             }
             case "sprite" -> {
+                String originalFilename = mod.getString("filename");
+                mod.put("filename", modPath + "/" + originalFilename);
                 addModSprite(mod);
             }
             case "sfx" -> {
+                String originalFilename = mod.getString("filename");
+                mod.put("filename", modPath + "/" + originalFilename);
                 addModSound(mod);
             }
             case "music" -> {
+                String originalFilename = mod.getString("filename");
+                mod.put("filename", modPath + "/" + originalFilename);
                 addModMusic(mod);
             }
         }
@@ -891,7 +897,7 @@ public class GameState implements Serializable {
 
     private void addModMusic(JSONObject mod) {
         String soundType = mod.getString("type");
-        String soundPath = mod.getString("path");
+        String soundPath = mod.getString("filename");
         Map<String, String> newMap = soundManager.getSoundsMap();
         newMap.put(soundType, soundPath);
         soundManager.setSoundsMap(newMap);
@@ -906,7 +912,7 @@ public class GameState implements Serializable {
 
     private void addModSound(JSONObject mod) {
         String soundType = mod.getString("type");
-        String soundPath = mod.getString("path");
+        String soundPath = mod.getString("filename");
         Map<String, String> newMap = soundManager.getSoundsMap();
         newMap.put(soundType, soundPath);
         soundManager.setSoundsMap(newMap);

@@ -25,13 +25,14 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class SoundManager implements Serializable {
 
-    private Clip musicClip;
+    private transient Clip musicClip;
     private String collectedPath = "nyam.wav";
     private String musicPath = "music.wav";
     private Map<String, String> originalMap = generateSoundMap(); //tipo, ruta
     private Map<String, String> soundsMap = generateSoundMap(); //tipo, ruta
 
     public void playMusic(boolean fromResource) {
+        this.setVolume(0.5f);
         boolean modded = false;
         if (!soundsMap.get("music").equals(originalMap.get("music"))) {
             modded = true;
