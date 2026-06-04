@@ -58,19 +58,14 @@ public class GamePanel extends JPanel implements Serializable {
     private static Map<String, List<String>> spriteMap = createSpriteMap(!GamePanel.hasGame());
     private Font textFont;
     private Font emojiFont;
-    // private final SoundManager soundManager = new SoundManager();
     private final GameFrame gameFrame;
     private GameState gameState;
 
     public GamePanel(GameFrame frame) {
         gameFrame = frame;
         gameState = new GameState();
+        // gameState.playMusic(!GamePanel.hasGame());
         gameState.playMusic(!GamePanel.hasGame());
-        // if (!gameState.isModdedMusic()) {
-        //     soundManager.generateSoundMap();
-        //     soundManager.playMusic(!GamePanel.hasGame());
-        //     soundManager.setVolume(0.7f);
-        // }
         loadFonts(!GamePanel.hasGame());
         Printable.setFont(emojiFont);
         resizePanelToGame();

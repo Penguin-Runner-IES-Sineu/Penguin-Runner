@@ -46,6 +46,7 @@ public class PenguinRunner {
                 case "-m", "-mod" -> {
                     System.out.println("Carregant mods...");
                     GamePanel panel = frame.getPanel();
+
                     panel.loadMods(seleccio);
                 }
             }

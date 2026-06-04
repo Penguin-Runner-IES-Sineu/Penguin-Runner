@@ -70,12 +70,11 @@ public class Printable {
     public void setPrintables(String type) {
         Map<String, List<String>> mapaSprites = GamePanel.getSpriteMap();
         List<String> atributs = mapaSprites.get(type);
-
         if (atributs != null) {
             this.setEmoji(atributs.get(0));
             this.setColorFromHex(atributs.get(1));
             if (atributs.size() > 3) {
-                this.setSprite(atributs.get(2), !GamePanel.hasGame(), true);
+                this.setSprite(atributs.get(2), false, true);
             } else {
                 this.setSprite(atributs.get(2), !GamePanel.hasGame(), false);
             }

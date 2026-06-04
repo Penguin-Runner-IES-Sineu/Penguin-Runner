@@ -25,7 +25,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class SoundManager implements Serializable {
 
-    private transient Clip musicClip;
+    private Clip musicClip;
     private String collectedPath = "nyam.wav";
     private String musicPath = "music.wav";
     private Map<String, String> originalMap = generateSoundMap(); //tipo, ruta
@@ -33,10 +33,10 @@ public class SoundManager implements Serializable {
 
     public void playMusic(boolean fromResource) {
         boolean modded = false;
-        // stopMusic();
         if (!soundsMap.get("music").equals(originalMap.get("music"))) {
             modded = true;
         }
+
         ClassLoader classLoader = PenguinRunner.class.getClassLoader();
         InputStream musicStream = new BufferedInputStream(classLoader.getResourceAsStream("music.wav"));
         System.out.print("Caregant audio: ");

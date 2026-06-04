@@ -193,6 +193,7 @@ public class GameState implements Serializable {
         }
         enemies = newEnemyList;
         player = new Player(player.getRow(), player.getCol());
+        System.out.println(player.getSprite());
         stones = newStoneList;
         blocks = mapaNou;
         updatePlayerState();
@@ -877,11 +878,9 @@ public class GameState implements Serializable {
         }
         try {
             String fileString = mod.getString("filename");
-            if (GamePanel.hasGame()) {
-                File fileSprite = new File(fileString);
-                if (!fileSprite.exists()) {
-                    System.out.println("El fitxer de sprite per " + mod.toString() + " no s'ha trobat");
-                }
+            File fileSprite = new File(fileString);
+            if (!fileSprite.exists()) {
+                System.out.println("El fitxer de sprite per " + mod.toString() + " no s'ha trobat");
             }
             atributs.add(fileString);
         } catch (JSONException e) {
@@ -900,8 +899,8 @@ public class GameState implements Serializable {
         newMap.put(soundType, soundPath);
         soundManager.setSoundsMap(newMap);
         soundManager.stopMusic();
-        // playMusic();
-        soundManager.playMusic(false);
+        // soundManager.playMusic(false);
+        playMusic(false);
     }
 
     public void playMusic(boolean fromResource) {
