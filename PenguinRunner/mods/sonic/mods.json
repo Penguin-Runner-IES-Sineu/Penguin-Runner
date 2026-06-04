@@ -5,7 +5,7 @@
             "type": "player",
             "sprite": "😀",
             "color": "#FFFF00",
-            "filename": "sonic.gif"
+            "filename": "sonic.png"
         }
     },
     {
@@ -15,6 +15,33 @@
             "sprite": "😀",
             "color": "#FFFF00",
             "filename": "ring.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice",
+            "sprite": "😀",
+            "color": "#FFFF00",
+            "filename": "block.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "enemy",
+            "sprite": "😀",
+            "color": "#FFFF00",
+            "filename": "enemy.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ambushingenemy",
+            "sprite": "😀",
+            "color": "#FFFF00",
+            "filename": "enemy2.png"
         }
     },
     {

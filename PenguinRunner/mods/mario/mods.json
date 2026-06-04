@@ -1,0 +1,70 @@
+[
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "player",
+            "sprite": "😀",
+            "color": "#FFFF00",
+            "filename": "mario.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "flamethrower",
+            "sprite": "😀",
+            "color": "#FFFF00",
+            "filename": "leaf.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "icecream",
+            "sprite": "😀",
+            "color": "#FFFF00",
+            "filename": "coin.png"
+        }
+    },
+    {
+        "modtype": "sfx",
+        "modvalue": {
+            "type": "icecream",
+            "filename": "coin.wav"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice",
+            "sprite": "😀",
+            "color": "#FFFF00",
+            "filename": "block.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "enemy",
+            "sprite": "😀",
+            "color": "#FFFF00",
+            "filename": "goomba.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ambushingEnemy",
+            "sprite": "😀",
+            "color": "#FFFF00",
+            "filename": "rkoopa.png"
+        }
+    },
+    {
+        "modtype": "music",
+        "modvalue": {
+            "type": "music",
+            "filename": "overworld.wav"
+        }
+    }
+]
