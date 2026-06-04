@@ -32,6 +32,9 @@ public class PenguinRunner {
         GameFrame frame = new GameFrame();
         for (int i = 0; i < claus.length; i++) {
             String clau = claus[i];
+            if ("break".equals(clau)) {
+                break;
+            }
             String seleccio = valors[i];
             switch (clau) {
                 case "-g", "-game" -> {
