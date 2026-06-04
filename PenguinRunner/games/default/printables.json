@@ -45,7 +45,7 @@
     "type": "stone",
     "sprite": "🧱",
     "color": "#666666",
-    "filename": "icestone.png"
+    "filename": "stone.png"
   },
   {
     "type": "icecream",

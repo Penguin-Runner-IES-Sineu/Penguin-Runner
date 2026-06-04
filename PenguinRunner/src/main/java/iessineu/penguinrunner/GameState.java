@@ -243,8 +243,6 @@ public class GameState implements Serializable {
                 Direction lastDirection = player.getLastDirection();
                 int playerRow = player.getRow();
                 int playerCol = player.getCol();
-                // 0,0 1,0 
-                // 0,1
                 switch (lastDirection) {
                     case Direction.UP -> {
                         breakBlock(playerRow - 1, playerCol + 1);
@@ -324,12 +322,16 @@ public class GameState implements Serializable {
     private boolean shouldPlayerDrop() {
         int row = player.getRow();
         int col = player.getCol();
+        if (isEnemy(row + 1, col)) {
+            System.out.println("Tens un enemic davall");
+            return false;
+        }
 
         return !isSolid(row + 1, col)
                 && !isRail(row, col)
                 && !isStair(row, col)
-                && !isStair(row + 1, col)
-                && !isEnemy(row + 1, col);
+                && !isStair(row + 1, col);
+        // && !isEnemy(row + 1, col);
     }
 
     /*
@@ -472,10 +474,15 @@ public class GameState implements Serializable {
                 enemy.subtractTimeToRevive(1);
 
                 if (enemy.getTimeToRevive() <= 0) {
-                    enemy.revive();
+                    if (!isEnemy(enemy.getRespawnRow(), enemy.getRespawnRow())) {
+                        enemy.revive();
+                    }
                 }
 
                 continue;
+            }
+            if (isEnemy(enemy.getRow(), enemy.getCol() + 1)) {
+
             }
 
             if (!isMolten(enemy.getRow(), enemy.getCol())) {
@@ -613,10 +620,18 @@ public class GameState implements Serializable {
     private void checkCollisions() {
         int playerRow = player.getRow();
         int playerCol = player.getCol();
+        boolean dead = false;
 
         for (Enemy enemy : enemies) {
-            if (!enemy.isDead() && enemy.getRow() == playerRow && enemy.getCol() == playerCol
-                    || (!enemy.isDead() && enemy.getRow() - 1 == playerRow && enemy.getCol() == playerCol && blocks[enemy.getRow()][enemy.getCol()].getType() != TileType.MOLTEN)) {
+            if (!enemy.isDead() && isEnemy(playerRow, playerCol)) {
+                System.out.println("Condicio 1");
+                dead = true;
+            }
+            if (!enemy.isDead() && isEnemy(playerRow, playerCol) && blocks[enemy.getRow()][enemy.getCol()].getType() != TileType.MOLTEN) {
+                System.out.println("Condicio 2");
+                dead = true;
+            }
+            if (dead) {
                 loadMap();
                 return;
             }
@@ -631,6 +646,9 @@ public class GameState implements Serializable {
      * CONSULTES DE BLOCS
      */
     private boolean canMoveTo(int row, int col) {
+        if (blocks[row][col].getType() == TileType.MOLTEN && isEnemy(row, col)) {
+            return false;
+        }
         return !isOutOfBounds(row, col)
                 && !isSolid(row, col);
     }
