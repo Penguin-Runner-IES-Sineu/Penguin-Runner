@@ -22,5 +22,10 @@ public class GameMap implements Serializable {
         return map;
     }
 
+    @Override
+    public String toString(){
+        return map[0];
+        // return Arrays.toString(map);
+    }
 
 }

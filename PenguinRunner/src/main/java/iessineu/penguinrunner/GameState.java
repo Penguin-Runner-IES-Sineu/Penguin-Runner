@@ -48,7 +48,7 @@ public class GameState implements Serializable {
     private int nivellActual = 0;
     // private long lastTurn;
     private final AI buscador = new AI();
-    private final List<GameMap> mapList = llegirMapes(rutaMapes);
+    private List<GameMap> mapList = llegirMapes(rutaMapes);
     private GameMap mapObject = mapList.get(0);
     private Player player;
     private List<Enemy> enemies;
@@ -548,7 +548,7 @@ public class GameState implements Serializable {
 
         if (block != null && block.isCollectable()) {
             blocks[row][col] = new Block(TileType.BLANK);
-            soundManager.playSound("nyam.wav");
+            soundManager.playSound("nyam.wav", !GamePanel.hasGame());
             player.addIceCream();
 
             // System.out.println("Gelat: " + player.geticeCream());
@@ -707,6 +707,14 @@ public class GameState implements Serializable {
         this.stones = stones;
     }
 
+    public List<GameMap> getMapList() {
+        return mapList;
+    }
+
+    public void setMapList(List<GameMap> mapList) {
+        this.mapList = mapList;
+    }
+
     /*
      * BLOCS ROMPUTS
      */
@@ -734,7 +742,7 @@ public class GameState implements Serializable {
         for (int i = 0; i < maps.length(); i++) {
             JSONObject obj = maps.getJSONObject(i);
             JSONArray jsonView = obj.getJSONArray("view");
-            int mapIndex = obj.getInt("level");
+            int mapIndex = obj.getInt("level") - 1;
 
             String[] view = new String[jsonView.length()];
 
@@ -795,6 +803,25 @@ public class GameState implements Serializable {
         return jsonString;
     }
 
+    public void addModMap(JSONObject modMap) {
+        JSONArray jsonView = modMap.getJSONArray("view");
+        int mapIndex = modMap.getInt("level") - 1;
+
+        String[] view = new String[jsonView.length()];
+
+        for (int j = 0; j < view.length; j++) {
+            view[j] = jsonView.getString(j);
+        }
+
+        GameMap map = new GameMap(view);
+        if (mapIndex < mapList.size() && mapList.get(mapIndex) != null) {
+            mapList.set(mapIndex, map);
+        } else {
+            mapList.add(map);
+        }
+        System.out.println(mapList);
+    }
+
     public int getIceCream() {
         return iceCream;
     }
@@ -816,7 +843,7 @@ public class GameState implements Serializable {
 
     public void saveLastPosition() {
         lastPositions.add(new PositionHistory(player.getRow(), player.getCol()));
-        System.out.println(lastPositions.getLast().getX() + "," + lastPositions.getLast().getY());
+        // System.out.println(lastPositions.getLast().getX() + "," + lastPositions.getLast().getY());
     }
 
     public PositionHistory calculatePosition() {

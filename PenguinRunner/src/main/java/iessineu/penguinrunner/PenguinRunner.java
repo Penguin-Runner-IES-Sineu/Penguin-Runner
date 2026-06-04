@@ -5,8 +5,6 @@ package iessineu.penguinrunner;
 
 import java.util.Arrays;
 
-import javax.swing.SwingUtilities;
-
 /**
  *
  * @author loren
@@ -31,17 +29,26 @@ public class PenguinRunner {
         }
 
         // GamePanel.setSpriteMap(GamePanel.createSpriteMap(true));
+        GameFrame frame = new GameFrame();
         for (int i = 0; i < claus.length; i++) {
             String clau = claus[i];
             String seleccio = valors[i];
             switch (clau) {
                 case "-g", "-game" -> {
                     GamePanel.setFolderPath(seleccio + "/");
+                    cls();
                     GamePanel.updatePaths();
                     GamePanel.setGame(true);
                     GamePanel.setSpriteMap(GamePanel.createSpriteMap(false));
+                    frame = new GameFrame();
                 }
                 case "-m", "-mod" -> {
+                    // GameState.loadMods(seleccio);
+                    GamePanel panel = frame.getPanel();
+                    // GameState state = panel.getGameState();
+                    System.out.println("mod");
+                    panel.loadMods(seleccio);
+                    
                 }
             }
         }
@@ -49,13 +56,18 @@ public class PenguinRunner {
          * SwingUtilities.invokeLater fa que la finestra es creï
          * correctament dins el fil d'execució de Swing.
          */
-        SwingUtilities.invokeLater(() -> {
-            // GamePanel.setFolderPath("");
-            // GamePanel.setFolderPath("resources/");
-            // GamePanel.setGame(false);
-            GameFrame frame = new GameFrame();
-            frame.setVisible(true);
-        });
+        // SwingUtilities.invokeLater(() -> {
+        // GamePanel.setFolderPath("");
+        // GamePanel.setFolderPath("resources/");
+        // GamePanel.setGame(false);
+        frame.setVisible(true);
+        // });
 
+    }
+
+    public static void cls() {
+        for (int i = 0; i < 100; i++) {
+            System.out.println("");
+        }
     }
 }

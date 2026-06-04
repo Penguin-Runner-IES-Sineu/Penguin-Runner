@@ -25,20 +25,20 @@ public class SoundManager implements Serializable {
 
     private transient Clip musicClip;
 
-    public void playMusic(String path) {
+    public void playMusic(String path, boolean fromResource) {
         stopMusic();
         ClassLoader classLoader = PenguinRunner.class.getClassLoader();
         InputStream musicStream = new BufferedInputStream(classLoader.getResourceAsStream("music.wav"));
-        System.out.print("Caregant fonts: ");
+        System.out.print("Caregant audio: ");
         try {
             AudioInputStream audioStream = null;
-            if (GamePanel.hasGame()) {
-                System.out.println("Carregant fitxer");
+            if (fromResource) {
+                System.out.println("Carregant Recurs");
+                audioStream = AudioSystem.getAudioInputStream(musicStream);
+            } else {
+                System.out.println("Carregant Fitxer");
                 File soundFile = new File(path);
                 audioStream = AudioSystem.getAudioInputStream(soundFile);
-            } else {
-                System.out.println("Carregant recurs");
-                audioStream = AudioSystem.getAudioInputStream(musicStream);
             }
 
             musicClip = AudioSystem.getClip();
@@ -80,19 +80,19 @@ public class SoundManager implements Serializable {
         }
     }
 
-    public void playSound(String path) {
+    public void playSound(String path, boolean fromResource) {
         ClassLoader classLoader = PenguinRunner.class.getClassLoader();
         InputStream musicStream = new BufferedInputStream(classLoader.getResourceAsStream(path));
-        System.out.print("Caregant fonts: ");
+        System.out.print("Caregant audio: ");
         try {
             AudioInputStream audioStream;
-            if (GamePanel.hasGame()) {
-                System.out.println("Carregant fitxer");
+            if (fromResource) {
+                System.out.println("Carregant Recurs");
+                audioStream = AudioSystem.getAudioInputStream(musicStream);
+            } else {
+                System.out.println("Carregant Fitxer");
                 File soundFile = new File(GamePanel.getFolderPath() + path);
                 audioStream = AudioSystem.getAudioInputStream(soundFile);
-            } else {
-                System.out.println("Carregant recurs");
-                audioStream = AudioSystem.getAudioInputStream(musicStream);
             }
             Clip clip = AudioSystem.getClip();
             clip.open(audioStream);

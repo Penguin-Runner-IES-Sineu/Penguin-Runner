@@ -15,6 +15,7 @@ import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -41,6 +42,7 @@ import org.json.JSONObject;
 import iessineu.penguinrunner.Blocks.Block;
 import iessineu.penguinrunner.Blocks.TileType;
 import iessineu.penguinrunner.Entity.Enemy;
+import iessineu.penguinrunner.Entity.GameMap;
 import iessineu.penguinrunner.Entity.Player;
 import iessineu.penguinrunner.Movement.Direction;
 
@@ -64,7 +66,7 @@ public class GamePanel extends JPanel implements Serializable {
     public GamePanel(GameFrame frame) {
         gameFrame = frame;
         gameState = new GameState();
-        soundManager.playMusic(musicPath);
+        soundManager.playMusic(musicPath, !GamePanel.hasGame());
         soundManager.setVolume(0.7f);
         loadFonts(!GamePanel.hasGame());
         Printable.setFont(emojiFont);
@@ -111,11 +113,11 @@ public class GamePanel extends JPanel implements Serializable {
         System.out.print("Caregant fonts: ");
         try {
             if (fromResource) {
-                System.out.println("Carregant recurs");
+                System.out.println("Carregant Recurs");
                 emojiFont = Font.createFont(Font.TRUETYPE_FONT, recEmojiFont).deriveFont(30f);
                 textFont = Font.createFont(Font.TRUETYPE_FONT, recTextFont).deriveFont(16f);
             } else {
-                System.out.println("Carregant fitxer");
+                System.out.println("Carregant Fitxer");
                 emojiFont = Font.createFont(Font.TRUETYPE_FONT, new File(emojiFontPath)).deriveFont(30f);
                 textFont = Font.createFont(Font.TRUETYPE_FONT, new File(textFontPath)).deriveFont(16f);
             }
@@ -385,13 +387,13 @@ public class GamePanel extends JPanel implements Serializable {
         System.out.print("Caregant Printables: ");
         try {
             if (fromResource) {
-                System.out.println("Carregant recurs");
+                System.out.println("Carregant Recurs");
                 fitxer = new BufferedReader(new InputStreamReader(is));
                 if (is == null) {
                     throw new IOException("Resource not found: maps.json");
                 }
             } else {
-                System.out.println("Carregant fitxer");
+                System.out.println("Carregant Fitxer");
                 fitxer = new BufferedReader(new FileReader(printablesPath));
             }
             try {
@@ -448,6 +450,49 @@ public class GamePanel extends JPanel implements Serializable {
             spriteMap.put(type, atributs);
         }
         return spriteMap;
+    }
+
+    public void loadMods(String path) {
+        String jsonString = "";
+        System.out.println("Carregant Fitxer");
+        BufferedReader fitxer = null;
+        System.out.println(path + "/mods.json");
+        try {
+            fitxer = new BufferedReader(new FileReader(path + "/mods.json"));
+            try {
+                String line;
+
+                while ((line = fitxer.readLine()) != null) {
+                    jsonString += line;
+                }
+
+                fitxer.close();
+
+            } catch (IOException ex) {
+                System.out.println("Problema d'entrada i sortida");
+            }
+        } catch (FileNotFoundException ex) {
+            System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        JSONArray modsArray = new JSONArray(jsonString);
+        for (int i = 0; i < modsArray.length(); i++) {
+            JSONObject mod = modsArray.getJSONObject(i);
+            String modType = mod.getString("modtype");
+            switch (modType) {
+                case "map" -> {
+                    gameState.addModMap(mod.getJSONObject("modvalue"));
+                }
+                case "sprite" -> {
+
+                }
+                case "sound" -> {
+
+                }
+                case "music" -> {
+
+                }
+            }
+        }
     }
 
     public GameState getGameState() {
