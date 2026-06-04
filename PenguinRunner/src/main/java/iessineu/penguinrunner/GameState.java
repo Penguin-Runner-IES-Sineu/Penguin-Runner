@@ -229,7 +229,6 @@ public class GameState implements Serializable {
         moveEnemies();
         checkCollisions();
         updatePlayerState();
-        interact();
     }
 
     /*

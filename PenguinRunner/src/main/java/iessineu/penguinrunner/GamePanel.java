@@ -130,7 +130,6 @@ public class GamePanel extends JPanel implements Serializable {
      * Ajusta la mida del panell al mapa actual.
      * És útil també després de carregar una partida.
      */
-    
     private void resizePanelToGame() {
         int width = gameState.getCols() * TILE_SIZE;
         int height = gameState.getRows() * TILE_SIZE + HUD_HEIGHT;
@@ -191,6 +190,8 @@ public class GamePanel extends JPanel implements Serializable {
             default -> {
             }
         }
+        gameState.interact();
+        resizePanelToGame();
     }
 
     /*
@@ -366,7 +367,7 @@ public class GamePanel extends JPanel implements Serializable {
         g2.drawString(player.geticeCream() + "/ " + gameState.getIceCream(), 250, textY);
 
         g2.drawString(
-                "Nivell: " + gameState.getNivell(),
+                "Nivell: " + gameState.getNivell() + 1,
                 padding + 430,
                 textY
         );
