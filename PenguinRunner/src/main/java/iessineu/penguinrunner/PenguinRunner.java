@@ -36,7 +36,7 @@ public class PenguinRunner {
             switch (clau) {
                 case "-g", "-game" -> {
                     System.out.println("Carregant joc personalitzat...");
-                    GamePanel.setFolderPath(seleccio + "/");
+                    GamePanel.setFolderPath("games/" + seleccio + "/");
                     cls();
                     GamePanel.updatePaths();
                     GamePanel.setGame(true);
