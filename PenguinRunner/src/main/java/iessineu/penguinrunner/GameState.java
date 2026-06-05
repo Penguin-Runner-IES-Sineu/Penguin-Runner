@@ -481,6 +481,7 @@ public class GameState implements Serializable {
             }
         }
     }
+
     /*
      * ENEMICS
      */
@@ -684,13 +685,15 @@ public class GameState implements Serializable {
                 dead = true;
             }
             if (dead) {
+                System.out.println("You died");
                 loadMap();
                 player.setItems(new ArrayList());
                 return;
             }
         }
 
-        if (isIce(playerRow, playerCol)) {
+        if (isIce(playerRow, playerCol) || isFire(playerRow, playerCol)) {
+            System.out.println("You died");
             loadMap();
         }
     }
@@ -739,6 +742,11 @@ public class GameState implements Serializable {
         Block block = getBlock(row, col);
 
         return block != null && block.getType() == TileType.ICE;
+    }
+    
+    private boolean isFire(int row, int col) {
+        Block block = getBlock(row, col);
+        return block.isFire();
     }
 
     private boolean isRail(int row, int col) {

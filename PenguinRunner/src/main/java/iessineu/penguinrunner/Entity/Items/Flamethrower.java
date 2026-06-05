@@ -28,40 +28,16 @@ public class Flamethrower extends Item implements Serializable {
         int playerCol = p.getCol();
         switch (p.getLastDirection()) {
             case Direction.UP -> {
-                gs.breakBlock(playerRow - 1, playerCol + 1);
-                gs.breakBlock(playerRow - 2, playerCol + 1);
-                gs.breakBlock(playerRow - 3, playerCol + 1);
-                Block[][] map = gs.getBlocks();
-                Block b;
-                b = map[playerRow - 1][playerCol + 1];
-                burnBlock(b);
-                b = map[playerRow - 2][playerCol + 1];
-                burnBlock(b);
-                b = map[playerRow - 3][playerCol + 1];
-                burnBlock(b);
+                burnUp(playerRow, playerCol, gs);
             }
             case Direction.DOWN -> {
-                gs.breakBlock(playerRow + 1, playerCol + 1);
-                gs.breakBlock(playerRow + 2, playerCol + 1);
-                gs.breakBlock(playerRow + 3, playerCol + 1);
+                burnDown(playerRow, playerCol, gs);
             }
             case Direction.LEFT -> {
-                gs.breakBlock(playerRow + 1, playerCol - 1);
-                gs.breakBlock(playerRow + 1, playerCol - 2);
-                gs.breakBlock(playerRow + 1, playerCol - 3);
-                Block[][] map = gs.getBlocks();
-                Block b;
-                b = map[playerRow + 1][playerCol - 1];
-                burnBlock(b);
-                b = map[playerRow + 1][playerCol - 2];
-                burnBlock(b);
-                b = map[playerRow - +1][playerCol - 3];
-                burnBlock(b);
+                burnLeft(playerRow, playerCol, gs);
             }
             case Direction.RIGHT -> {
-                gs.breakBlock(playerRow + 1, playerCol + 1);
-                gs.breakBlock(playerRow + 1, playerCol + 2);
-                gs.breakBlock(playerRow + 1, playerCol + 3);
+                burnRight(playerRow, playerCol, gs);
             }
         }
         System.out.println("Te queden " + usesLeft + " usos");
@@ -72,8 +48,67 @@ public class Flamethrower extends Item implements Serializable {
     }
 
     public void burnBlock(Block b) {
-        b.setType(TileType.BURNT);
-        b.setPrintables();
-        b.setType(TileType.MOLTEN);
+        if (b.getType() == TileType.MOLTEN) {
+            b.setType(TileType.BURNT);
+            b.setFire(true);
+            b.setPrintables();
+            b.setType(TileType.MOLTEN);
+        }
+    }
+
+    public void burnUp(int playerRow, int playerCol, GameState gs) {
+        gs.breakBlock(playerRow - 1, playerCol + 1);
+        gs.breakBlock(playerRow - 2, playerCol + 1);
+        gs.breakBlock(playerRow - 3, playerCol + 1);
+        Block[][] map = gs.getBlocks();
+        Block b;
+        b = map[playerRow - 1][playerCol + 1];
+        burnBlock(b);
+        b = map[playerRow - 2][playerCol + 1];
+        burnBlock(b);
+        b = map[playerRow - 3][playerCol + 1];
+        burnBlock(b);
+    }
+
+    public void burnDown(int playerRow, int playerCol, GameState gs) {
+        gs.breakBlock(playerRow + 1, playerCol + 1);
+        gs.breakBlock(playerRow + 2, playerCol + 1);
+        gs.breakBlock(playerRow + 3, playerCol + 1);
+        Block[][] map = gs.getBlocks();
+        Block b;
+        b = map[playerRow + 1][playerCol + 1];
+        burnBlock(b);
+        b = map[playerRow + 2][playerCol + 1];
+        burnBlock(b);
+        b = map[playerRow + 3][playerCol + 1];
+        burnBlock(b);
+    }
+
+    public void burnRight(int playerRow, int playerCol, GameState gs) {
+        gs.breakBlock(playerRow + 1, playerCol + 1);
+        gs.breakBlock(playerRow + 1, playerCol + 2);
+        gs.breakBlock(playerRow + 1, playerCol + 3);
+        Block[][] map = gs.getBlocks();
+        Block b;
+        b = map[playerRow + 1][playerCol + 1];
+        burnBlock(b);
+        b = map[playerRow + 1][playerCol + 2];
+        burnBlock(b);
+        b = map[playerRow + 1][playerCol + 3];
+        burnBlock(b);
+    }
+
+    public void burnLeft(int playerRow, int playerCol, GameState gs) {
+        gs.breakBlock(playerRow + 1, playerCol - 1);
+        gs.breakBlock(playerRow + 1, playerCol - 2);
+        gs.breakBlock(playerRow + 1, playerCol - 3);
+        Block[][] map = gs.getBlocks();
+        Block b;
+        b = map[playerRow + 1][playerCol - 1];
+        burnBlock(b);
+        b = map[playerRow + 1][playerCol - 2];
+        burnBlock(b);
+        b = map[playerRow + 1][playerCol - 3];
+        burnBlock(b);
     }
 }

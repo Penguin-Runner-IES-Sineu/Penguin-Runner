@@ -29,6 +29,7 @@ public class Block extends Printable implements Serializable {
     private boolean isBurnable = false;
     private boolean isTrapdoor = false;
     private boolean isPressed = false;
+    private boolean isFire = false;
 
     protected TileType type;
 
@@ -150,5 +151,13 @@ public class Block extends Printable implements Serializable {
 
     public void setCollectable(boolean isCollectable) {
         this.isCollectable = isCollectable;
+    }
+
+    public boolean isFire() {
+        return isFire;
+    }
+
+    public void setFire(boolean isFire) {
+        this.isFire = isFire;
     }
 }
