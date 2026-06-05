@@ -5,7 +5,7 @@
 package iessineu.penguinrunner.Entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import iessineu.penguinrunner.Entity.Items.Flamethrower;
@@ -40,7 +40,8 @@ public class Player extends Printable implements Serializable {
     private int iceCream = 0;
 
     private PlayerState state;
-    private List<Item> items = new ArrayList();
+    private List<Item> items = new LinkedList();
+    private int selectedItem = 0;
     private Direction lastDirection = Direction.RIGHT;
 
     public Player(int row, int col) {
@@ -52,6 +53,10 @@ public class Player extends Printable implements Serializable {
 
         this.state = new WalkingState();
         this.setPrintables();
+    }
+
+    public void setItems(List<Item> itemList){
+        this.items = itemList;
     }
 
     public int getRow() {
@@ -101,20 +106,20 @@ public class Player extends Printable implements Serializable {
         }
     }
 
-    public void useItem(String type) {
-        for (int i = 0; i < items.size(); i++) {
-            Item item = items.get(i);
-            if (item.getName().equals(type)) {
-                switch (type) {
-                    case "flamethrower" -> {
-                        Flamethrower f = (Flamethrower) item;
-                        f.use(this.lastDirection);
-                        // items.remove(i);
-                    }
-                    case "teleport" -> {
-
-                    }
+    public void useItem() {
+        Item item = items.get(selectedItem);
+        switch (item.getName()) {
+            case "flamethrower" -> {
+                Flamethrower f = (Flamethrower) item;
+                f.use(this.lastDirection);
+                if (f.expired()) {
+                    items.remove(selectedItem);
+                    selectedItem = 0;
+                    System.out.println("L'objecte ha acabat els usos");
                 }
+            }
+            case "teleport" -> {
+
             }
         }
     }
@@ -137,5 +142,35 @@ public class Player extends Printable implements Serializable {
 
     public void setLastDirection(Direction lastDirection) {
         this.lastDirection = lastDirection;
+    }
+
+    public Item getSelectedItem() {
+        if (hasItems()) {
+            return items.get(selectedItem);
+        } else {
+            return new Item("",0); //retornam un element buit per evitar "item is null", no farà res igualment perque la funcio que el crida empra un switch
+        }
+    }
+
+    public void nextItem() {
+        this.selectedItem++;
+        if (this.selectedItem >= items.size()) {
+            this.selectedItem = 0;
+        }
+    }
+
+    public void previousItem() {
+        this.selectedItem--;
+        if (this.selectedItem < 0) {
+            this.selectedItem = items.size() - 1;
+        }
+    }
+
+    public boolean hasItems() {
+        return !items.isEmpty();
+    }
+
+    public List<Item> getItems() {
+        return items;
     }
 }

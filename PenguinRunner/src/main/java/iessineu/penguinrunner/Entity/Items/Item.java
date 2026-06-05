@@ -11,13 +11,11 @@ import iessineu.penguinrunner.Printable;
 public class Item extends Printable implements Serializable {
 
     String name;
+    int usesLeft;
 
-    public Item(String name) {
+    public Item(String name, int usesLeft) {
         this.name = name;
-    }
-
-    public void use() {
-        System.out.println("Has emprat el " + name);
+        this.usesLeft = usesLeft;
     }
 
     public String getName() {

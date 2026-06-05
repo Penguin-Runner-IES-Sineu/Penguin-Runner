@@ -191,7 +191,13 @@ public class GamePanel extends JPanel implements Serializable {
                 gameState.breakDownRight();
             }
             case KeyEvent.VK_F -> {
-                gameState.useItem("flamethrower");
+                gameState.useItem();
+            }
+            case KeyEvent.VK_X -> {
+                gameState.changeItem(false);
+            }
+            case KeyEvent.VK_Z -> {
+                gameState.changeItem(true);
             }
             case KeyEvent.VK_P ->
                 guardarPartida();
@@ -324,10 +330,19 @@ public class GamePanel extends JPanel implements Serializable {
                         b.setPrintables();
                     }
                 }
+                if (b.isTrapdoor()) {
+                    if (gameState.buttonPressed()) {
+                        b.setType(TileType.TRAPDOOR);
+                    } else {
+                        b.setType(TileType.BLANK);
+                    }
+                    b.setPrintables();
+                }
                 b.draw(row, col);
             }
         }
     }
+
 
     /*
      * Dibuixa el jugador.

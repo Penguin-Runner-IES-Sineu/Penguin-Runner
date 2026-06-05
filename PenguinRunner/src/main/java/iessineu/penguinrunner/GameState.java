@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ import org.json.JSONObject;
 import iessineu.penguinrunner.Blocks.Block;
 import iessineu.penguinrunner.Blocks.TileType;
 import iessineu.penguinrunner.Entity.GameMap;
+import iessineu.penguinrunner.Entity.Items.Item;
 import iessineu.penguinrunner.Entity.Player;
 import iessineu.penguinrunner.Entity.enemies.AI;
 import iessineu.penguinrunner.Entity.enemies.AmbushingEnemy;
@@ -59,6 +61,7 @@ public class GameState implements Serializable {
     private int startPlayerRow;
     private int startPlayerCol;
     private boolean moddedMusic = false;
+    private boolean buttonPressed = false;
 
     private final SoundManager soundManager = new SoundManager();
     private final PlayerState walkingState = new WalkingState();
@@ -81,6 +84,10 @@ public class GameState implements Serializable {
     private Block[][] blocks = loadMap();
 
     public Block[][] loadMap() {
+        List<Item> savedItemList = new LinkedList();
+        if (player != null) {
+            savedItemList = player.getItems();
+        }
         String[] level = mapObject.getMap();
         blocks = new Block[level.length][level[0].length()];
         brokenBlocks = new ArrayList();
@@ -101,10 +108,6 @@ public class GameState implements Serializable {
                     case '.' -> {
                         blocks[row][col] = new Block(TileType.ICE);
                     }
-                    case 'G' -> {
-                        blocks[row][col] = new Block(TileType.ICECREAM);
-                        iceCream++;
-                    }
                     case 'H' -> {
                         blocks[row][col] = new Block(TileType.STAIR);
                     }
@@ -117,6 +120,16 @@ public class GameState implements Serializable {
                     case 'S' -> {
                         blocks[row][col] = new Block(TileType.STONE);
                         stones.add(blocks[row][col]);
+                    }
+                    case 'B' -> {
+                        blocks[row][col] = new Block(TileType.BUTTON);
+                    }
+                    case 'b' -> {
+                        blocks[row][col] = new Block(TileType.TRAPDOOR);
+                    }
+                    case 'G' -> {
+                        blocks[row][col] = new Block(TileType.ICECREAM);
+                        iceCream++;
                     }
                     case 'F' -> {
                         blocks[row][col] = new Block(TileType.FLAMETHROWER);
@@ -146,6 +159,7 @@ public class GameState implements Serializable {
                 }
             }
         }
+        player.setItems(savedItemList);
         updatePlayerState();
 
         return blocks;
@@ -219,7 +233,19 @@ public class GameState implements Serializable {
                 takeTurn();
             }
         }
+    }
 
+    public void changeItem(boolean isLeft) {
+        if (player.hasItems()) {
+            if (isLeft) {
+                player.previousItem();
+            } else {
+                player.nextItem();
+            }
+            System.out.println("Item seleccionat: " + player.getSelectedItem());
+        } else {
+            System.out.println("No tens cap item!");
+        }
     }
 
     public void takeTurn() {
@@ -236,9 +262,14 @@ public class GameState implements Serializable {
         updatePlayerState();
     }
 
-    public void useItem(String type) {
-        player.useItem(type);
-        switch (type) {
+    public void useItem() {
+        if (player.hasItems()) {
+            player.useItem();
+        } else {
+            System.out.println("No tens objectes!");
+        }
+        Item i = player.getSelectedItem();
+        switch (i.getName()) {
             case "flamethrower" -> {
                 Direction lastDirection = player.getLastDirection();
                 int playerRow = player.getRow();
@@ -762,10 +793,17 @@ public class GameState implements Serializable {
             mapObject = mapList.get(nivellActual);
             loadMap();
         }
+        if(bloc.getType() == TileType.BUTTON){
+            buttonPressed = !buttonPressed;
+        }
     }
 
     public boolean checkObjective() {
         return player.geticeCream() >= iceCream;
+    }
+
+    public boolean buttonPressed() {
+        return buttonPressed;
     }
 
     public int getNivell() {

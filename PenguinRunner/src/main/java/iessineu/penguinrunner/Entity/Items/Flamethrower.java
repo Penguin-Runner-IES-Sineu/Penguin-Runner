@@ -11,10 +11,16 @@ import iessineu.penguinrunner.Movement.Direction;
 public class Flamethrower extends Item implements Serializable {
 
     public Flamethrower() {
-        super("flamethrower");
+        super("flamethrower", 3);
     }
 
     public void use(Direction direction) {
         System.out.println("Llamas cap a " + direction);
+        usesLeft--;
+        System.out.println("Te queden " + usesLeft + " usos");
+    }
+
+    public boolean expired(){
+        return usesLeft <= 0;
     }
 }

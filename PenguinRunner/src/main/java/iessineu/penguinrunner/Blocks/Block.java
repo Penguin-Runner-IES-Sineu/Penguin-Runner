@@ -27,6 +27,8 @@ public class Block extends Printable implements Serializable {
     private boolean isDeadlyForEnemy = false;
     private boolean isDoor = false;
     private boolean isBurnable = false;
+    private boolean isTrapdoor = false;
+    private boolean isPressed = false;
 
     protected TileType type;
 
@@ -67,6 +69,10 @@ public class Block extends Printable implements Serializable {
             }
             case DOOR -> {
                 this.isDoor = true;
+                this.type = TileType.BLANK;
+            }
+            case TRAPDOOR -> {
+                this.isTrapdoor = true;
                 this.type = TileType.BLANK;
             }
         }
@@ -128,5 +134,17 @@ public class Block extends Printable implements Serializable {
 
     public void setDoor(boolean isDoor) {
         this.isDoor = isDoor;
+    }
+
+    public boolean isTrapdoor() {
+        return isTrapdoor;
+    }
+
+    public boolean isPressed() {
+        return isPressed;
+    }
+
+    public void setPressed(boolean isPressed) {
+        this.isPressed = isPressed;
     }
 }
