@@ -20,6 +20,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+// **** //
+import java.util.Queue;
+
 import javax.swing.Timer;
 
 import org.json.JSONArray;
@@ -540,13 +543,32 @@ public class GameState implements Serializable {
         }
 
         if (enemy instanceof AmbushingEnemy ambushingEnemy) {
-            PositionHistory target = getAmbushingTarget();
+            int enemyRow = ambushingEnemy.getRow();
+            int enemyCol = ambushingEnemy.getCol();
+
+            // **** //
+            PositionHistory easyTarget = canReachEasy(
+                    enemyRow,
+                    enemyCol,
+                    player.getRow(),
+                    player.getCol()
+            );
+
+            // **** //
+            PositionHistory target;
+
+            // **** //
+            if (easyTarget != null) {
+                target = easyTarget;
+            } else {
+                target = getAmbushingTarget();
+            }
 
             Direction direction = buscador.getShortestDirection(
                     createPathMapForAI(ambushingEnemy),
                     createTileMapForAI(),
-                    ambushingEnemy.getRow(),
-                    ambushingEnemy.getCol(),
+                    enemyRow,
+                    enemyCol,
                     target.getX(),
                     target.getY()
             );
@@ -1099,6 +1121,189 @@ public class GameState implements Serializable {
                 && !isStair(row, col)
                 && !isStair(row + 1, col)
                 && !isEnemy(row + 1, col);
+    }
+
+    // **** //
+    private static class EasyNode implements Serializable {
+
+        int row;
+        int col;
+        int distance;
+
+        EasyNode(int row, int col, int distance) {
+            this.row = row;
+            this.col = col;
+            this.distance = distance;
+        }
+    }
+
+    // **** //
+    private PositionHistory canReachEasy(int enemyRow, int enemyCol, int pRow, int pCol) {
+        final int MAX_EASY_DISTANCE = 2;
+
+        if (isOutOfBounds(enemyRow, enemyCol) || isOutOfBounds(pRow, pCol)) {
+            return null;
+        }
+
+        int manhattanDistance = Math.abs(enemyRow - pRow) + Math.abs(enemyCol - pCol);
+
+        /*
+         * Si el jugador està massa lluny, no volem anar directe.
+         * En aquest cas l'AmbushingEnemy continuarà fent ambush.
+         */
+        if (manhattanDistance > MAX_EASY_DISTANCE) {
+            return null;
+        }
+
+        boolean[][] visited = new boolean[getRows()][getCols()];
+        Queue<EasyNode> queue = new LinkedList<>();
+
+        visited[enemyRow][enemyCol] = true;
+        queue.add(new EasyNode(enemyRow, enemyCol, 0));
+
+        while (!queue.isEmpty()) {
+            EasyNode current = queue.poll();
+
+            if (current.row == pRow && current.col == pCol) {
+                return new PositionHistory(pRow, pCol);
+            }
+
+            if (current.distance >= MAX_EASY_DISTANCE) {
+                continue;
+            }
+
+            tryAddEasyPosition(queue, visited, current, Direction.UP, pRow, pCol);
+            tryAddEasyPosition(queue, visited, current, Direction.DOWN, pRow, pCol);
+            tryAddEasyPosition(queue, visited, current, Direction.LEFT, pRow, pCol);
+            tryAddEasyPosition(queue, visited, current, Direction.RIGHT, pRow, pCol);
+        }
+
+        return null;
+    }
+
+    // **** //
+    private void tryAddEasyPosition(
+            Queue<EasyNode> queue,
+            boolean[][] visited,
+            EasyNode current,
+            Direction direction,
+            int targetRow,
+            int targetCol
+    ) {
+        int nextRow = current.row + direction.getDr();
+        int nextCol = current.col + direction.getDc();
+
+        if (isOutOfBounds(nextRow, nextCol)) {
+            return;
+        }
+
+        if (visited[nextRow][nextCol]) {
+            return;
+        }
+
+        if (!canEnemyMoveEasyFromTo(
+                current.row,
+                current.col,
+                nextRow,
+                nextCol,
+                direction,
+                targetRow,
+                targetCol
+        )) {
+            return;
+        }
+
+        visited[nextRow][nextCol] = true;
+        queue.add(new EasyNode(nextRow, nextCol, current.distance + 1));
+    }
+
+    // **** //
+    private boolean canEnemyMoveEasyFromTo(
+            int row,
+            int col,
+            int nextRow,
+            int nextCol,
+            Direction direction,
+            int targetRow,
+            int targetCol
+    ) {
+        if (isOutOfBounds(nextRow, nextCol)) {
+            return false;
+        }
+
+        if (isSolid(nextRow, nextCol)) {
+            return false;
+        }
+
+        /*
+         * Si hi ha un enemic a la casella següent, bloqueja.
+         * Però si la casella següent és la del jugador, ho permetem.
+         */
+        if (isEnemy(nextRow, nextCol)
+                && !(nextRow == targetRow && nextCol == targetCol)) {
+            return false;
+        }
+
+        /*
+         * Si està caient, només pot baixar.
+         */
+        if (shouldEnemyDrop(row, col)) {
+            return direction == Direction.DOWN;
+        }
+
+        /*
+         * Pujar:
+         * només si està a una escala o si entra dins una escala.
+         */
+        if (direction == Direction.UP) {
+            return isStair(row, col) || isStair(nextRow, nextCol);
+        }
+
+        /*
+         * Baixar:
+         * pot baixar si està a escala, si entra a escala,
+         * o si no té terra davall i per tant cau.
+         */
+        if (direction == Direction.DOWN) {
+            return isStair(row, col)
+                    || isStair(nextRow, nextCol)
+                    || !hasGroundBelowForEnemy(row, col);
+        }
+
+        /*
+         * Esquerra/dreta:
+         * pot moure si té suport, si va cap a una casella amb suport,
+         * o si està en rail/escala.
+         */
+        if (direction == Direction.LEFT || direction == Direction.RIGHT) {
+            return hasGroundBelowForEnemy(row, col)
+                    || hasGroundBelowForEnemy(nextRow, nextCol)
+                    || isRail(row, col)
+                    || isRail(nextRow, nextCol)
+                    || isStair(row, col)
+                    || isStair(nextRow, nextCol);
+        }
+
+        return false;
+    }
+
+    // **** //
+    private boolean hasGroundBelowForEnemy(int row, int col) {
+        int rowBelow = row + 1;
+
+        if (isOutOfBounds(rowBelow, col)) {
+            return true;
+        }
+
+        if (isSolid(rowBelow, col)) {
+            return true;
+        }
+
+        if (isMolten(rowBelow, col)) {
+            return true;
+        }
+
+        return isRail(row, col) || isStair(row, col);
     }
 
 }

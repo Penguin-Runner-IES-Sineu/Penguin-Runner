@@ -58,9 +58,17 @@ public class AI implements Serializable {
             return null;
         }
 
-        if (isBlocked(pathMap[targetRow][targetCol])) {
-            return null;
-        }
+        /*
+         * Abans es feia això:
+         *
+         * if (isBlocked(pathMap[targetRow][targetCol])) {
+         *     return null;
+         * }
+         *
+         * Però si el jugador està darrere d'un enemic o d'un bloqueig temporal,
+         * volem que l'enemic avanci fins a la casella accessible més propera.
+         * Per això no retornam null directament encara que el target estigui bloquejat.
+         */
 
         int rows = pathMap.length;
         int cols = pathMap[0].length;
@@ -84,8 +92,35 @@ public class AI implements Serializable {
 
         boolean foundTarget = false;
 
+        /*
+         * Guardam la millor casella accessible trobada fins ara.
+         *
+         * Si no podem arribar exactament al jugador, ens mourem cap a la
+         * casella accessible que estigui més a prop del jugador.
+         */
+        int bestRow = startRow;
+        int bestCol = startCol;
+        int bestDistanceToTarget = distanceToTarget(startRow, startCol, targetRow, targetCol);
+
         while (!queue.isEmpty()) {
             Node current = queue.poll();
+
+            int distanceToTarget = distanceToTarget(
+                    current.row,
+                    current.col,
+                    targetRow,
+                    targetCol
+            );
+
+            /*
+             * Si aquesta casella està més a prop del jugador que la millor
+             * que havíem trobat, la guardam.
+             */
+            if (distanceToTarget < bestDistanceToTarget) {
+                bestDistanceToTarget = distanceToTarget;
+                bestRow = current.row;
+                bestCol = current.col;
+            }
 
             if (current.row == targetRow && current.col == targetCol) {
                 foundTarget = true;
@@ -141,8 +176,26 @@ public class AI implements Serializable {
             );
         }
 
+        /*
+         * Si no hem arribat exactament al jugador, però hem trobat una casella
+         * accessible més propera que la inicial, anam cap a aquella.
+         *
+         * Això fa que si un enemic bloqueja el camí, l'altre avanci fins quedar
+         * darrere seu en lloc de quedar-se quiet.
+         */
         if (!foundTarget) {
-            return null;
+            if (bestRow == startRow && bestCol == startCol) {
+                return null;
+            }
+
+            return rebuildFirstDirection(
+                    startRow,
+                    startCol,
+                    bestRow,
+                    bestCol,
+                    previousRow,
+                    previousCol
+            );
         }
 
         return rebuildFirstDirection(
@@ -340,6 +393,10 @@ public class AI implements Serializable {
             currentRow = prevRow;
             currentCol = prevCol;
         }
+    }
+
+    private int distanceToTarget(int row, int col, int targetRow, int targetCol) {
+        return Math.abs(row - targetRow) + Math.abs(col - targetCol);
     }
 
     private boolean isInsideBounds(int[][] pathMap, int row, int col) {
