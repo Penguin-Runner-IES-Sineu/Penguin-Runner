@@ -1043,6 +1043,7 @@ public class GameState implements Serializable {
     }
 
     public void playMusic(boolean fromResource) {
+        soundManager.stopMusic();
         soundManager.playMusic(fromResource);
     }
 

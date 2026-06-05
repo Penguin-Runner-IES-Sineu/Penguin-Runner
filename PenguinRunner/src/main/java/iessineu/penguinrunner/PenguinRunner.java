@@ -38,22 +38,25 @@ public class PenguinRunner {
             String seleccio = valors[i];
             switch (clau) {
                 case "-g", "-game" -> {
-                    System.out.println("Carregant joc personalitzat...");
                     GamePanel.setFolderPath("games/" + seleccio + "/");
+                    GamePanel.setGame(true);
+                    System.out.println("Carregant joc personalitzat...");
                     cls();
                     GamePanel.updatePaths();
-                    GamePanel.setGame(true);
                     GamePanel.setSpriteMap(GamePanel.createSpriteMap(false));
-                    frame = new GameFrame();
+                    // frame = new GameFrame();
                 }
                 case "-m", "-mod" -> {
-                    frame = new GameFrame();
+                    if (frame == null) {
+                        frame = new GameFrame();
+                    }
                     System.out.println("Carregant mods...");
                     GamePanel panel = frame.getPanel();
                     panel.loadMods("mods/" + seleccio);
                 }
             }
         }
+
         /*
          * SwingUtilities.invokeLater fa que la finestra es creï
          * correctament dins el fil d'execució de Swing.
