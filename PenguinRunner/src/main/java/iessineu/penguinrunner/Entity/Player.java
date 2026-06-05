@@ -37,7 +37,7 @@ public class Player extends Printable implements Serializable {
     private final int originalRow;
     private final int originalCol;
 
-    private int iceCream = 0;
+    private int iceCream;
 
     private PlayerState state;
     private List<Item> items = new LinkedList();
@@ -91,6 +91,10 @@ public class Player extends Printable implements Serializable {
 
     public int geticeCream() {
         return iceCream;
+    }
+
+    public void setIceCream(int icecream){
+        this.iceCream = icecream;
     }
 
     public void addItem(String type) {

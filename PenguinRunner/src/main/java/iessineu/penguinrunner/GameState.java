@@ -205,11 +205,19 @@ public class GameState implements Serializable {
         }
         List<Enemy> newEnemyList = new ArrayList();
         for (Enemy enemy : getEnemies()) {
+            boolean isDead = enemy.isDead();
+            int ttr = enemy.getTimeToRevive();
             enemy = new Enemy(enemy.getRow(), enemy.getCol(), enemy.getRespawnCol(), enemy.getRespawnRow());
+            if(isDead){
+                enemy.die();
+            }
+            enemy.setTimeToRevive(ttr);
             newEnemyList.add(enemy);
         }
         enemies = newEnemyList;
+        int iceCreams = player.geticeCream();
         player = new Player(player.getRow(), player.getCol());
+        player.setIceCream(iceCreams);
         stones = newStoneList;
         blocks = mapaNou;
         updatePlayerState();
@@ -1009,15 +1017,6 @@ public class GameState implements Serializable {
         soundManager.stopMusic();
         // soundManager.playMusic(false);
         playMusic(false);
-    }
-
-    private void addModdedFont(JSONObject mod) {
-        String fontType = mod.getString("type");
-        if (fontType.equals("emoji")) {
-            GamePanel.setEmojiFontPath(mod.getString("filename"));
-        } else {
-            GamePanel.setTextFontPath(mod.getString("filename"));
-        }
     }
 
     public void playMusic(boolean fromResource) {
