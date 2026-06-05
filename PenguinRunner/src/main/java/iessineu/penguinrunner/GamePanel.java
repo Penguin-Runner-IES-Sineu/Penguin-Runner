@@ -280,6 +280,10 @@ public class GamePanel extends JPanel implements Serializable {
         }
 
         File selectedFile = chooser.getSelectedFile();
+        String path = selectedFile.toString();
+        if (!path.endsWith(".milm")) {
+            selectedFile = new File(path + ".milm");
+        }
 
         try (ObjectInputStream file = new ObjectInputStream(new FileInputStream(selectedFile))) {
             this.gameState = (GameState) file.readObject();

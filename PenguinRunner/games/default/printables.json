@@ -117,6 +117,6 @@
     "type": "teleport",
     "sprite": "TP",
     "color": "#333333",
-    "filename": "teleport.png"
+    "filename": "portal.png"
   }
 ]
