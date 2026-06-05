@@ -6,6 +6,8 @@ package iessineu.penguinrunner.Entity.Items;
 
 import java.io.Serializable;
 
+import iessineu.penguinrunner.Blocks.Block;
+import iessineu.penguinrunner.Blocks.TileType;
 import iessineu.penguinrunner.Entity.Player;
 import iessineu.penguinrunner.GameState;
 import iessineu.penguinrunner.Movement.Direction;
@@ -29,6 +31,14 @@ public class Flamethrower extends Item implements Serializable {
                 gs.breakBlock(playerRow - 1, playerCol + 1);
                 gs.breakBlock(playerRow - 2, playerCol + 1);
                 gs.breakBlock(playerRow - 3, playerCol + 1);
+                Block[][] map = gs.getBlocks();
+                Block b;
+                b = map[playerRow - 1][playerCol + 1];
+                burnBlock(b);
+                b = map[playerRow - 2][playerCol + 1];
+                burnBlock(b);
+                b = map[playerRow - 3][playerCol + 1];
+                burnBlock(b);
             }
             case Direction.DOWN -> {
                 gs.breakBlock(playerRow + 1, playerCol + 1);
@@ -39,6 +49,14 @@ public class Flamethrower extends Item implements Serializable {
                 gs.breakBlock(playerRow + 1, playerCol - 1);
                 gs.breakBlock(playerRow + 1, playerCol - 2);
                 gs.breakBlock(playerRow + 1, playerCol - 3);
+                Block[][] map = gs.getBlocks();
+                Block b;
+                b = map[playerRow + 1][playerCol - 1];
+                burnBlock(b);
+                b = map[playerRow + 1][playerCol - 2];
+                burnBlock(b);
+                b = map[playerRow - +1][playerCol - 3];
+                burnBlock(b);
             }
             case Direction.RIGHT -> {
                 gs.breakBlock(playerRow + 1, playerCol + 1);
@@ -51,5 +69,11 @@ public class Flamethrower extends Item implements Serializable {
 
     public boolean expired() {
         return usesLeft <= 0;
+    }
+
+    public void burnBlock(Block b) {
+        b.setType(TileType.BURNT);
+        b.setPrintables();
+        b.setType(TileType.MOLTEN);
     }
 }

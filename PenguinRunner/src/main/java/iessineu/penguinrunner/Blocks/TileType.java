@@ -21,6 +21,7 @@ public enum TileType implements Serializable {
     RAIL,
     ITEM,
     MOLTEN,
+    BURNT,
     DOOR,
     STONE,
     WOOD,

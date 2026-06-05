@@ -54,6 +54,12 @@
     "filename": "icecream.png"
   },
   {
+    "type": "burnt",
+    "sprite": "7",
+    "color": "#FFFF99",
+    "filename": "burnt.png"
+  },
+  {
     "type": "player",
     "sprite": "🐧",
     "color": "#FFFF00",

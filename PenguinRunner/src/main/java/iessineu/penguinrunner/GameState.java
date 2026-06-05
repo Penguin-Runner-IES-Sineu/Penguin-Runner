@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-// **** //
 import java.util.Queue;
 
 import javax.swing.Timer;
@@ -80,7 +78,7 @@ public class GameState implements Serializable {
     private Timer fallingTimer;
 
     public void resetTimer() {
-        fallingTimer = new Timer(50, e -> {
+        fallingTimer = new Timer(150, e -> {
             if (player.getState() == fallingState) {
                 movePlayerDownOne();
                 updatePlayerState();
@@ -483,32 +481,6 @@ public class GameState implements Serializable {
             }
         }
     }
-//    private void burnBlock(int row, int col) {
-//        if (isOutOfBounds(row, col)) {
-//            return;
-//        }
-//
-//        Block block = blocks[row][col];
-//
-//        if (block != null && block.isBurnable()) {
-//            blocks[row][col] = new Block(TileType.MOLTEN);
-//            brokenBlocks.add(new BrokenBlock(row, col, 5));
-//        }
-//    }
-//
-//    private void updateBurningBlocks() {
-//        for (int i = brokenBlocks.size() - 1; i >= 0; i--) {
-//            BrokenBlock block = brokenBlocks.get(i);
-//
-//            block.turnsLeft--;
-//
-//            if (block.turnsLeft <= 0) {
-//                blocks[block.row][block.col] = new Block(TileType.ICE);
-//                brokenBlocks.remove(i);
-//            }
-//        }
-//    }
-
     /*
      * ENEMICS
      */
