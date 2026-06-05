@@ -106,5 +106,11 @@
     "sprite": "d",
     "color": "#0000FF",
     "filename": "trapdoor.png"
+  },
+  {
+    "type": "teleport",
+    "sprite": "TP",
+    "color": "#333333",
+    "filename": "teleport.png"
   }
 ]

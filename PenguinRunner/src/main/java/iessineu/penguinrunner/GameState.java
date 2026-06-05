@@ -242,7 +242,6 @@ public class GameState implements Serializable {
      * TORNS
      */
     public void takeTurn(Direction direction) {
-        System.out.println(player.getState());
         if (player.getState() == fallingState) {
             if (!fallingTimer.isRunning()) {
                 fallingTimer.start();
@@ -300,7 +299,14 @@ public class GameState implements Serializable {
             }
             case "teleport" -> {
                 Teleport t = (Teleport) i;
-                t.use(player);
+                boolean moved = t.use(player);
+                if (moved) {
+                    blocks[t.getRow()][t.getCol()] = new Block(TileType.BLANK);
+                } else {
+                    blocks[t.getRow()][t.getCol()] = new Block(TileType.TELEPORT);
+                    blocks[t.getRow()][t.getCol()].setCollectable(false);
+                }
+                blocks[t.getRow()][t.getCol()].setPrintables();
             }
         }
     }
@@ -535,7 +541,9 @@ public class GameState implements Serializable {
         }
 
         if (shouldEnemyDrop(row, col)) {
-            enemy.setPosition(row + 1, col);
+            if (!isEnemy(row + 1, col)) {
+                enemy.setPosition(row + 1, col);
+            }
             return;
         }
 
@@ -558,8 +566,12 @@ public class GameState implements Serializable {
             int nextRow = ambushingEnemy.getRow() + direction.getDr();
             int nextCol = ambushingEnemy.getCol() + direction.getDc();
 
-            if ((canMoveTo(nextRow, nextCol) || isMolten(nextRow, nextCol))
-                    && !isEnemy(nextRow, nextCol)) {
+            if (isEnemy(nextRow, nextCol)) {
+                return;
+            }
+
+            if ((canMoveTo(nextRow, nextCol)
+                    || isMolten(nextRow, nextCol))) {
                 ambushingEnemy.setPosition(nextRow, nextCol);
             }
 
@@ -583,7 +595,12 @@ public class GameState implements Serializable {
             int nextRow = seekerEnemy.getRow() + direction.getDr();
             int nextCol = seekerEnemy.getCol() + direction.getDc();
 
-            if ((canMoveTo(nextRow, nextCol) || isMolten(nextRow, nextCol))
+            if (isEnemy(nextRow, nextCol)) {
+                return;
+            }
+
+            if ((canMoveTo(nextRow, nextCol)
+                    || isMolten(nextRow, nextCol))
                     && !isEnemy(nextRow, nextCol)) {
                 seekerEnemy.setPosition(nextRow, nextCol);
             }
@@ -669,6 +686,7 @@ public class GameState implements Serializable {
             }
             if (dead) {
                 loadMap();
+                player.setItems(new ArrayList());
                 return;
             }
         }
