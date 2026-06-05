@@ -45,7 +45,7 @@ import iessineu.penguinrunner.States.WalkingState;
 
 public class GameState implements Serializable {
 
-    private ArrayList<PositionHistory> lastPositions = new ArrayList<>();
+    private ArrayList<PositionHistory> lastPositions = new ArrayList();
     private List<BrokenBlock> brokenBlocks;
     private List<Block> stones;
     // private String rutaMapes = "resources/maps.json";
