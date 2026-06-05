@@ -13,26 +13,23 @@ initSqlJs(config).then(function (SQL) {
         const uInt8Array = new Uint8Array(xhr.response);
         const db = new SQL.Database(uInt8Array);
         contents = db.exec("SELECT * FROM enemies");
-        var taula = document.createElement("taula");
-        document.body.appendChild(taula)
-        var tbody = document.createElement("tbody");
-        taula.appendChild(tbody);
-        var headerRow = document.createElement("tr");
-        for (let i = 0; i < contents[0].columns.length; i++) {
-            var cell = document.createElement("th");
-            cell.innerHTML = contents[0].columns[i];
-            headerRow.appendChild(cell);
-        }
-        tbody.appendChild(headerRow);
         for (let i = 0; i < contents[0].values.length; i++) {
-            var row = document.createElement("tr");
             valors = contents[0].values[i];
-            for (let j = 0; j < valors.length; j++) {
-                var cell = document.createElement("td");
-                cell.innerHTML = valors[j];
-                row.appendChild(cell);
-            }
-            tbody.appendChild(row);
+
+            type = document.createElement("h2")
+            type.innerHTML = valors[1];
+
+            image = document.createElement("img");
+            src = "media/" + valors[2];
+            image.setAttribute("src", src);
+
+            description = document.createElement("p");
+            description.innerHTML = valors[3];
+
+            document.body.append(type);
+            document.body.append(image);
+            document.body.append(description);
+            // tbody.appendChild(row);
         }
 
     };
