@@ -29,7 +29,7 @@
     {
         "modtype": "sfx",
         "modvalue": {
-            "type": "icecream",
+            "type": "collect",
             "filename": "acdc.wav"
         }
     },

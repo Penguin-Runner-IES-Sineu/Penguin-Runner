@@ -47,7 +47,7 @@
     {
         "modtype": "sfx",
         "modvalue": {
-            "type": "icecream",
+            "type": "collect",
             "filename": "ring.wav"
         }
     },

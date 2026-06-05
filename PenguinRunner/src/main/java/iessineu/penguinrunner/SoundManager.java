@@ -26,7 +26,12 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public class SoundManager implements Serializable {
 
     private transient Clip musicClip;
-    private String collectedPath = "nyam.wav";
+    private String collectSFX = "collect.wav";
+    private String doorSFX = "door.wav";
+    private String flameSFX = "flame.wav";
+    private String pickupSFX = "pickup.wav";
+    private String teleportSFX = "teleport.wav";
+    private String breakSFX = "break.wav";
     private String musicPath = "music.wav";
     private Map<String, String> originalMap = generateSoundMap(); //tipo, ruta
     private Map<String, String> soundsMap = generateSoundMap(); //tipo, ruta
@@ -105,13 +110,37 @@ public class SoundManager implements Serializable {
             modded = true;
             fromResource = false;
         }
-        InputStream musicStream = new BufferedInputStream(classLoader.getResourceAsStream("nyam.wav"));
+        InputStream collectStream = new BufferedInputStream(classLoader.getResourceAsStream("collect.wav"));
+        InputStream doorStream = new BufferedInputStream(classLoader.getResourceAsStream("door.wav"));
+        InputStream flameStream = new BufferedInputStream(classLoader.getResourceAsStream("flame.wav"));
+        InputStream pickupStream = new BufferedInputStream(classLoader.getResourceAsStream("pickup.wav"));
+        InputStream teleportStream = new BufferedInputStream(classLoader.getResourceAsStream("teleport.wav"));
+        InputStream breakStream = new BufferedInputStream(classLoader.getResourceAsStream("break.wav"));
         System.out.print("Caregant audio: ");
         try {
-            AudioInputStream audioStream;
+            AudioInputStream audioStream = null;
             if (fromResource) {
                 System.out.println("Carregant Recurs");
-                audioStream = AudioSystem.getAudioInputStream(musicStream);
+                switch (type) {
+                    case "collect" -> {
+                        audioStream = AudioSystem.getAudioInputStream(collectStream);
+                    }
+                    case "door" -> {
+                        audioStream = AudioSystem.getAudioInputStream(doorStream);
+                    }
+                    case "flame" -> {
+                        audioStream = AudioSystem.getAudioInputStream(flameStream);
+                    }
+                    case "pickup" -> {
+                        audioStream = AudioSystem.getAudioInputStream(pickupStream);
+                    }
+                    case "teleport" -> {
+                        audioStream = AudioSystem.getAudioInputStream(teleportStream);
+                    }
+                    case "break" -> {
+                        audioStream = AudioSystem.getAudioInputStream(breakStream);
+                    }
+                }
             } else {
                 System.out.println("Carregant Fitxer");
                 File soundFile = null;
@@ -134,7 +163,12 @@ public class SoundManager implements Serializable {
     public Map<String, String> generateSoundMap() {
         Map<String, String> soundMap = new HashMap();
         soundMap.put("music", musicPath);
-        soundMap.put("icecream", collectedPath);
+        soundMap.put("collect", collectSFX);
+        soundMap.put("door", doorSFX);
+        soundMap.put("flame", flameSFX);
+        soundMap.put("pickup", pickupSFX);
+        soundMap.put("teleport", teleportSFX);
+        soundMap.put("break", breakSFX);
         return soundMap;
     }
 
@@ -146,12 +180,12 @@ public class SoundManager implements Serializable {
         this.musicPath = musicPath;
     }
 
-    public String getCollectedPath() {
-        return collectedPath;
+    public String getCollectSFX() {
+        return collectSFX;
     }
 
-    public void setCollectedPath(String collectedPath) {
-        this.collectedPath = collectedPath;
+    public void setCollectedPath(String collectSFX) {
+        this.collectSFX = collectSFX;
     }
 
     public Map<String, String> getSoundsMap() {

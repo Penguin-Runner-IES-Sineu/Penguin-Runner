@@ -296,12 +296,14 @@ public class GameState implements Serializable {
             case "flamethrower" -> {
                 Flamethrower f = (Flamethrower) i;
                 f.use(player, this);
+                soundManager.playSound("flame", !GamePanel.hasGame());
             }
             case "teleport" -> {
                 Teleport t = (Teleport) i;
                 boolean moved = t.use(player);
                 if (moved) {
                     blocks[t.getRow()][t.getCol()] = new Block(TileType.BLANK);
+                    soundManager.playSound("teleport", !GamePanel.hasGame());
                 } else {
                     blocks[t.getRow()][t.getCol()] = new Block(TileType.TELEPORT);
                     blocks[t.getRow()][t.getCol()].setCollectable(false);
@@ -653,9 +655,12 @@ public class GameState implements Serializable {
 
         if (block != null && block.isCollectable()) {
             blocks[row][col] = new Block(TileType.BLANK);
+            if (block.getType() != TileType.ICECREAM) {
+                soundManager.playSound("pickup", !GamePanel.hasGame());
+            }
             switch (block.getType()) {
                 case TileType.ICECREAM -> {
-                    soundManager.playSound("icecream", !GamePanel.hasGame());
+                    soundManager.playSound("collect", !GamePanel.hasGame());
                     player.addIceCream();
                 }
                 case TileType.FLAMETHROWER -> {
@@ -812,6 +817,7 @@ public class GameState implements Serializable {
     void interact() {
         Block bloc = blocks[player.getRow()][player.getCol()];
         if (bloc.getType() == TileType.DOOR) {
+            soundManager.playSound("door", !GamePanel.hasGame());
             nivellActual++;
             mapObject = mapList.get(nivellActual);
             loadMap();
