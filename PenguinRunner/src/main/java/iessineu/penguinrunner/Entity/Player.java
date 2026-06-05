@@ -126,7 +126,6 @@ public class Player extends Printable implements Serializable {
             }
             case "teleport" -> {
                 Teleport t = (Teleport) item;
-                // t.use(this);
             }
         }
     }

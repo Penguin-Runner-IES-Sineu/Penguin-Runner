@@ -88,5 +88,29 @@
     "sprite": "",
     "color": "#FFFFFF",
     "filename": "ice.png"
+  },
+  {
+    "type": "flamethrower",
+    "sprite": "F",
+    "color": "#FF0000",
+    "filename": "flamethrower.png"
+  },
+  {
+    "type": "button",
+    "sprite": "B",
+    "color": "#00FF00",
+    "filename": "button.png"
+  },
+  {
+    "type": "trapdoor",
+    "sprite": "d",
+    "color": "#0000FF",
+    "filename": "trapdoor.png"
+  },
+  {
+    "type": "teleport",
+    "sprite": "TP",
+    "color": "#333333",
+    "filename": "teleport.png"
   }
 ]

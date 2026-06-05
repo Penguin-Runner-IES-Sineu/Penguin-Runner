@@ -10,9 +10,9 @@ import iessineu.penguinrunner.Entity.Player;
 
 public class Teleport extends Item implements Serializable {
 
-    boolean pointSet;
-    int row;
-    int col;
+    private boolean pointSet;
+    private int row;
+    private int col;
 
     public Teleport() {
         super("teleport");
@@ -32,5 +32,14 @@ public class Teleport extends Item implements Serializable {
         setPoint(p.getRow(), p.getCol());
         return false;
     }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
 
 }

@@ -147,4 +147,8 @@ public class Block extends Printable implements Serializable {
     public void setPressed(boolean isPressed) {
         this.isPressed = isPressed;
     }
+
+    public void setCollectable(boolean isCollectable) {
+        this.isCollectable = isCollectable;
+    }
 }

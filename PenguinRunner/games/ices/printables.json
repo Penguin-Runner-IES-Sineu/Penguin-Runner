@@ -364,15 +364,17 @@
         "sprite": "",
         "color": "#FFFFFF",
         "filename": "ice_wn_in_nw.png"
-    },{
-    "type": "ice_center_in_ne_in_se_in_nw",
-    "sprite": "",
-    "color": "#FFFFFF",
-    "filename": "ice_center_in_nw_in_ne_in_se.png"
-}, {
-    "type": "ice_center_in_ne_in_sw_in_nw",
-    "sprite": "",
-    "color": "#FFFFFF",
-    "filename": "ice_center_in_sw_in_nw_in_ne.png"
-}
+    },
+    {
+        "type": "ice_center_in_ne_in_se_in_nw",
+        "sprite": "",
+        "color": "#FFFFFF",
+        "filename": "ice_center_in_nw_in_ne_in_se.png"
+    },
+    {
+        "type": "ice_center_in_ne_in_sw_in_nw",
+        "sprite": "",
+        "color": "#FFFFFF",
+        "filename": "ice_center_in_sw_in_nw_in_ne.png"
+    }
 ]

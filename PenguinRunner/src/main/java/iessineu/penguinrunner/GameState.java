@@ -245,7 +245,6 @@ public class GameState implements Serializable {
      * TORNS
      */
     public void takeTurn(Direction direction) {
-        System.out.println(player.getState());
         if (player.getState() == fallingState) {
             if (!fallingTimer.isRunning()) {
                 fallingTimer.start();
@@ -300,10 +299,19 @@ public class GameState implements Serializable {
             case "flamethrower" -> {
                 Flamethrower f = (Flamethrower) i;
                 f.use(player, this);
+                soundManager.playSound("flame", !GamePanel.hasGame());
             }
             case "teleport" -> {
                 Teleport t = (Teleport) i;
-                t.use(player);
+                boolean moved = t.use(player);
+                if (moved) {
+                    blocks[t.getRow()][t.getCol()] = new Block(TileType.BLANK);
+                    soundManager.playSound("teleport", !GamePanel.hasGame());
+                } else {
+                    blocks[t.getRow()][t.getCol()] = new Block(TileType.TELEPORT);
+                    blocks[t.getRow()][t.getCol()].setCollectable(false);
+                }
+                blocks[t.getRow()][t.getCol()].setPrintables();
             }
         }
     }
@@ -538,7 +546,9 @@ public class GameState implements Serializable {
         }
 
         if (shouldEnemyDrop(row, col)) {
-            enemy.setPosition(row + 1, col);
+            if (!isEnemy(row + 1, col)) {
+                enemy.setPosition(row + 1, col);
+            }
             return;
         }
 
@@ -580,8 +590,12 @@ public class GameState implements Serializable {
             int nextRow = ambushingEnemy.getRow() + direction.getDr();
             int nextCol = ambushingEnemy.getCol() + direction.getDc();
 
-            if ((canMoveTo(nextRow, nextCol) || isMolten(nextRow, nextCol))
-                    && !isEnemy(nextRow, nextCol)) {
+            if (isEnemy(nextRow, nextCol)) {
+                return;
+            }
+
+            if ((canMoveTo(nextRow, nextCol)
+                    || isMolten(nextRow, nextCol))) {
                 ambushingEnemy.setPosition(nextRow, nextCol);
             }
 
@@ -605,7 +619,12 @@ public class GameState implements Serializable {
             int nextRow = seekerEnemy.getRow() + direction.getDr();
             int nextCol = seekerEnemy.getCol() + direction.getDc();
 
-            if ((canMoveTo(nextRow, nextCol) || isMolten(nextRow, nextCol))
+            if (isEnemy(nextRow, nextCol)) {
+                return;
+            }
+
+            if ((canMoveTo(nextRow, nextCol)
+                    || isMolten(nextRow, nextCol))
                     && !isEnemy(nextRow, nextCol)) {
                 seekerEnemy.setPosition(nextRow, nextCol);
             }
@@ -658,9 +677,12 @@ public class GameState implements Serializable {
 
         if (block != null && block.isCollectable()) {
             blocks[row][col] = new Block(TileType.BLANK);
+            if (block.getType() != TileType.ICECREAM) {
+                soundManager.playSound("pickup", !GamePanel.hasGame());
+            }
             switch (block.getType()) {
                 case TileType.ICECREAM -> {
-                    soundManager.playSound("icecream", !GamePanel.hasGame());
+                    soundManager.playSound("collect", !GamePanel.hasGame());
                     player.addIceCream();
                 }
                 case TileType.FLAMETHROWER -> {
@@ -691,6 +713,7 @@ public class GameState implements Serializable {
             }
             if (dead) {
                 loadMap();
+                player.setItems(new ArrayList());
                 return;
             }
         }
@@ -816,6 +839,7 @@ public class GameState implements Serializable {
     void interact() {
         Block bloc = blocks[player.getRow()][player.getCol()];
         if (bloc.getType() == TileType.DOOR) {
+            soundManager.playSound("door", !GamePanel.hasGame());
             nivellActual++;
             mapObject = mapList.get(nivellActual);
             loadMap();
