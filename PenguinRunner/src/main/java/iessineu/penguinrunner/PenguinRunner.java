@@ -28,7 +28,8 @@ public class PenguinRunner {
             }
         }
 
-        GameFrame frame = new GameFrame();
+        GameFrame frame = null;
+        // GameFrame frame = new GameFrame();
         for (int i = 0; i < claus.length; i++) {
             String clau = claus[i];
             if ("v".equals(clau)) { //parametre -v per carregar vanilla si o si
@@ -46,6 +47,7 @@ public class PenguinRunner {
                     frame = new GameFrame();
                 }
                 case "-m", "-mod" -> {
+                    frame = new GameFrame();
                     System.out.println("Carregant mods...");
                     GamePanel panel = frame.getPanel();
                     panel.loadMods("mods/" + seleccio);
@@ -60,6 +62,9 @@ public class PenguinRunner {
         // GamePanel.setFolderPath("");
         // GamePanel.setFolderPath("resources/");
         // GamePanel.setGame(false);
+        if (frame == null) {
+            frame = new GameFrame();
+        }
         frame.setVisible(true);
         // });
 

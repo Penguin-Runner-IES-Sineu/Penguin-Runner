@@ -4,6 +4,8 @@
  */
 package iessineu.penguinrunner.States;
 
+import java.io.Serializable;
+
 import iessineu.penguinrunner.GameState;
 import iessineu.penguinrunner.Movement.Direction;
 
@@ -12,7 +14,7 @@ import iessineu.penguinrunner.Movement.Direction;
  * @author loren
  */
 
-public class FallingState implements PlayerState {
+public class FallingState implements Serializable, PlayerState {
 
     @Override
     public void handleInput(GameState gameState, Direction direction) {

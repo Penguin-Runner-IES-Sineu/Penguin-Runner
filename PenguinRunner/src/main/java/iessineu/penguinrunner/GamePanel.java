@@ -60,6 +60,7 @@ public class GamePanel extends JPanel implements Serializable {
     private Font emojiFont;
     private final GameFrame gameFrame;
     private GameState gameState;
+    public Timer timer = new Timer(20, e -> repaint());
 
     public GamePanel(GameFrame frame) {
         gameFrame = frame;
@@ -74,7 +75,6 @@ public class GamePanel extends JPanel implements Serializable {
         // Necessari perquè el JPanel pugui rebre tecles.
         setFocusable(true);
 
-        Timer timer = new Timer(20, e -> repaint());
         timer.start();
 
         // Escoltar teclat.

@@ -8,10 +8,12 @@ package iessineu.penguinrunner;
  *
  * @author loren
  */
+import java.io.Serializable;
+
 import iessineu.penguinrunner.Blocks.Block;
 import iessineu.penguinrunner.Blocks.TileType;
 
-public class IceAutoTileConnector {
+public class IceAutoTileConnector implements Serializable{
 
     private static final int N = 1;
     private static final int E = 2;

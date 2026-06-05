@@ -10,6 +10,7 @@ import java.util.List;
 
 import iessineu.penguinrunner.Entity.Items.Flamethrower;
 import iessineu.penguinrunner.Entity.Items.Item;
+import iessineu.penguinrunner.Entity.Items.Teleport;
 import iessineu.penguinrunner.Movement.Direction;
 import iessineu.penguinrunner.Printable;
 import iessineu.penguinrunner.States.PlayerState;
@@ -55,7 +56,7 @@ public class Player extends Printable implements Serializable {
         this.setPrintables();
     }
 
-    public void setItems(List<Item> itemList){
+    public void setItems(List<Item> itemList) {
         this.items = itemList;
     }
 
@@ -93,7 +94,7 @@ public class Player extends Printable implements Serializable {
         return iceCream;
     }
 
-    public void setIceCream(int icecream){
+    public void setIceCream(int icecream) {
         this.iceCream = icecream;
     }
 
@@ -105,7 +106,9 @@ public class Player extends Printable implements Serializable {
                 System.out.println("Has agafat un lanzallamas!");
             }
             case "teleport" -> {
-
+                Teleport t = new Teleport();
+                items.add(t);
+                System.out.println("Has agafat un teleport!");
             }
         }
     }
@@ -115,7 +118,6 @@ public class Player extends Printable implements Serializable {
         switch (item.getName()) {
             case "flamethrower" -> {
                 Flamethrower f = (Flamethrower) item;
-                f.use(this.lastDirection);
                 if (f.expired()) {
                     items.remove(selectedItem);
                     selectedItem = 0;
@@ -123,7 +125,8 @@ public class Player extends Printable implements Serializable {
                 }
             }
             case "teleport" -> {
-
+                Teleport t = (Teleport) item;
+                // t.use(this);
             }
         }
     }
@@ -152,7 +155,7 @@ public class Player extends Printable implements Serializable {
         if (hasItems()) {
             return items.get(selectedItem);
         } else {
-            return new Item("",0); //retornam un element buit per evitar "item is null", no farà res igualment perque la funcio que el crida empra un switch
+            return new Item(""); //retornam un element buit per evitar "item is null", no farà res igualment perque la funcio que el crida empra un switch
         }
     }
 

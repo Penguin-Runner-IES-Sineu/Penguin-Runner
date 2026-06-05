@@ -64,9 +64,6 @@ public class Block extends Printable implements Serializable {
                 this.isPushable = true;
                 this.isBurnable = true;
             }
-            case BLANK -> {
-                this.isSolid = false;
-            }
             case DOOR -> {
                 this.isDoor = true;
                 this.type = TileType.BLANK;
@@ -74,6 +71,9 @@ public class Block extends Printable implements Serializable {
             case TRAPDOOR -> {
                 this.isTrapdoor = true;
                 this.type = TileType.BLANK;
+            }
+            case BLANK -> {
+                this.isSolid = false;
             }
         }
         this.setPrintables();

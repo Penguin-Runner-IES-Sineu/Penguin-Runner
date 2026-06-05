@@ -4,6 +4,8 @@
  */
 package iessineu.penguinrunner;
 
+import java.io.Serializable;
+
 import javax.swing.JFrame;
 
 /**
@@ -15,7 +17,7 @@ import javax.swing.JFrame;
  * Aquesta classe representa la finestra principal del joc.
  * Només crea la finestra i hi posa el GamePanel.
  */
-public class GameFrame extends JFrame {
+public class GameFrame extends JFrame implements Serializable {
 
     private GamePanel attachedPanel = null;
 

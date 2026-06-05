@@ -4,6 +4,8 @@
  */
 package iessineu.penguinrunner.Movement;
 
+import java.io.Serializable;
+
 /**
  *
  * @author loren
@@ -20,7 +22,7 @@ package iessineu.penguinrunner.Movement;
  * UP(-1, 0) vol dir:
  * fila - 1, mateixa columna.
  */
-public enum Direction {
+public enum Direction implements Serializable {
 
     UP(-1, 0),
     DOWN(1, 0),

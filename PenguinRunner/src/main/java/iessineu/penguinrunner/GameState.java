@@ -29,7 +29,9 @@ import org.json.JSONObject;
 import iessineu.penguinrunner.Blocks.Block;
 import iessineu.penguinrunner.Blocks.TileType;
 import iessineu.penguinrunner.Entity.GameMap;
+import iessineu.penguinrunner.Entity.Items.Flamethrower;
 import iessineu.penguinrunner.Entity.Items.Item;
+import iessineu.penguinrunner.Entity.Items.Teleport;
 import iessineu.penguinrunner.Entity.Player;
 import iessineu.penguinrunner.Entity.enemies.AI;
 import iessineu.penguinrunner.Entity.enemies.AmbushingEnemy;
@@ -63,27 +65,32 @@ public class GameState implements Serializable {
     private boolean moddedMusic = false;
     private boolean buttonPressed = false;
 
-    private final SoundManager soundManager = new SoundManager();
-    private final PlayerState walkingState = new WalkingState();
-    private final PlayerState climbingState = new ClimbingState();
-    private final PlayerState railState = new RailState();
-    private final PlayerState fallingState = new FallingState();
+    private SoundManager soundManager = new SoundManager();
+    private PlayerState walkingState = new WalkingState();
+    private PlayerState climbingState = new ClimbingState();
+    private PlayerState railState = new RailState();
+    private PlayerState fallingState = new FallingState();
 
     private static final int NOT_VISITED = -1;
     private static final int BLOCKED = -2;
 
-    private final Timer fallingTimer = new Timer(50, e -> {
-        if (player.getState() == fallingState) {
-            movePlayerDownOne();
-            updatePlayerState();
-            updateLogic();
-            takeTurn();
-        }
-    });
+    private Timer fallingTimer;
+
+    public void resetTimer() {
+        fallingTimer = new Timer(50, e -> {
+            if (player.getState() == fallingState) {
+                movePlayerDownOne();
+                updatePlayerState();
+                updateLogic();
+                takeTurn();
+            }
+        });
+    }
 
     private Block[][] blocks = loadMap();
 
     public Block[][] loadMap() {
+        resetTimer();
         List<Item> savedItemList = new LinkedList();
         if (player != null) {
             savedItemList = player.getItems();
@@ -133,6 +140,9 @@ public class GameState implements Serializable {
                     }
                     case 'F' -> {
                         blocks[row][col] = new Block(TileType.FLAMETHROWER);
+                    }
+                    case 'T' -> {
+                        blocks[row][col] = new Block(TileType.TELEPORT);
                     }
                     case 'P' -> {
                         player = new Player(row, col);
@@ -187,39 +197,44 @@ public class GameState implements Serializable {
     }
 
     public void reloadSprites() {
+        resetTimer();
+        // fallingTimer.start();
         mapObject = mapList.get(nivellActual);
         Block[][] mapa = getBlocks();
-        List<Block> newStoneList = new ArrayList();
-        Block[][] mapaNou = new Block[mapa.length][mapa[0].length];
+        // List<Block> newStoneList = new ArrayList();
+        // Block[][] mapaNou = new Block[mapa.length][mapa[0].length];
         for (int row = 0; row < mapa.length; row++) {
             for (int col = 0; col < mapa[row].length; col++) {
                 Block blocAntic = mapa[row][col];
-                mapaNou[row][col] = new Block(blocAntic.getType());
-                if (blocAntic.isDoor()) {
-                    mapaNou[row][col].setDoor(true);
-                }
-                if (blocAntic.getType() == TileType.STONE) {
-                    newStoneList.add(mapaNou[row][col]);
-                }
+                blocAntic.setPrintables();
+                // mapaNou[row][col] = new Block(blocAntic.getType());
+                // if (blocAntic.isDoor()) {
+                //     mapaNou[row][col].setDoor(true);
+                // }
+                // if (blocAntic.getType() == TileType.STONE) {
+                //     newStoneList.add(mapaNou[row][col]);
+                // }
             }
         }
-        List<Enemy> newEnemyList = new ArrayList();
+        // List<Enemy> newEnemyList = new ArrayList();
         for (Enemy enemy : getEnemies()) {
-            boolean isDead = enemy.isDead();
-            int ttr = enemy.getTimeToRevive();
-            enemy = new Enemy(enemy.getRow(), enemy.getCol(), enemy.getRespawnCol(), enemy.getRespawnRow());
-            if(isDead){
-                enemy.die();
-            }
-            enemy.setTimeToRevive(ttr);
-            newEnemyList.add(enemy);
+            // boolean isDead = enemy.isDead();
+            // int ttr = enemy.getTimeToRevive();
+            // enemy = new Enemy(enemy.getRow(), enemy.getCol(), enemy.getRespawnCol(), enemy.getRespawnRow());
+            // if (isDead) {
+            //     enemy.die();
+            // }
+            // enemy.setTimeToRevive(ttr);
+            // newEnemyList.add(enemy);
+            enemy.setPrintables();
         }
-        enemies = newEnemyList;
-        int iceCreams = player.geticeCream();
-        player = new Player(player.getRow(), player.getCol());
-        player.setIceCream(iceCreams);
-        stones = newStoneList;
-        blocks = mapaNou;
+        // enemies = newEnemyList;
+        // int iceCreams = player.geticeCream();
+        player.setPrintables();
+        // player = new Player(player.getRow(), player.getCol());
+        // player.setIceCream(iceCreams);
+        // stones = newStoneList;
+        // blocks = mapaNou;
         updatePlayerState();
     }
 
@@ -227,6 +242,7 @@ public class GameState implements Serializable {
      * TORNS
      */
     public void takeTurn(Direction direction) {
+        System.out.println(player.getState());
         if (player.getState() == fallingState) {
             if (!fallingTimer.isRunning()) {
                 fallingTimer.start();
@@ -279,34 +295,12 @@ public class GameState implements Serializable {
         Item i = player.getSelectedItem();
         switch (i.getName()) {
             case "flamethrower" -> {
-                Direction lastDirection = player.getLastDirection();
-                int playerRow = player.getRow();
-                int playerCol = player.getCol();
-                switch (lastDirection) {
-                    case Direction.UP -> {
-                        breakBlock(playerRow - 1, playerCol + 1);
-                        breakBlock(playerRow - 2, playerCol + 1);
-                        breakBlock(playerRow - 3, playerCol + 1);
-                    }
-                    case Direction.DOWN -> {
-                        breakBlock(playerRow + 1, playerCol + 1);
-                        breakBlock(playerRow + 2, playerCol + 1);
-                        breakBlock(playerRow + 3, playerCol + 1);
-                    }
-                    case Direction.LEFT -> {
-                        breakBlock(playerRow + 1, playerCol - 1);
-                        breakBlock(playerRow + 1, playerCol - 2);
-                        breakBlock(playerRow + 1, playerCol - 3);
-                    }
-                    case Direction.RIGHT -> {
-                        breakBlock(playerRow + 1, playerCol + 1);
-                        breakBlock(playerRow + 1, playerCol + 2);
-                        breakBlock(playerRow + 1, playerCol + 3);
-                    }
-                }
+                Flamethrower f = (Flamethrower) i;
+                f.use(player, this);
             }
             case "teleport" -> {
-
+                Teleport t = (Teleport) i;
+                t.use(player);
             }
         }
     }
@@ -453,7 +447,7 @@ public class GameState implements Serializable {
         }
     }
 
-    private void breakBlock(int row, int col) {
+    public void breakBlock(int row, int col) {
         if (isOutOfBounds(row, col)) {
             return;
         }
@@ -650,6 +644,9 @@ public class GameState implements Serializable {
                 case TileType.FLAMETHROWER -> {
                     player.addItem("flamethrower");
                 }
+                case TileType.TELEPORT -> {
+                    player.addItem("teleport");
+                }
             }
 
             // System.out.println("Gelat: " + player.geticeCream());
@@ -801,7 +798,7 @@ public class GameState implements Serializable {
             mapObject = mapList.get(nivellActual);
             loadMap();
         }
-        if(bloc.getType() == TileType.BUTTON){
+        if (bloc.getType() == TileType.BUTTON) {
             buttonPressed = !buttonPressed;
         }
     }

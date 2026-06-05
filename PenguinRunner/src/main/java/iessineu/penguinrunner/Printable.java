@@ -23,7 +23,7 @@ import javax.swing.ImageIcon;
  *
  * @author Marc Mas
  */
-public class Printable {
+public class Printable{
 
     String emoji = "X";
     Image sprite;
