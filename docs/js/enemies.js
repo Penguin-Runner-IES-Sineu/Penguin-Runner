@@ -6,7 +6,7 @@ config = {
 initSqlJs(config).then(function (SQL) {
     //Create the database
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', '/docs/bbdd.sqlite', true);
+    xhr.open('GET', 'bbdd.sqlite', true);
     // xhr.open('GET', 'carModels.db', true);
     xhr.responseType = 'arraybuffer';
     xhr.onload = e => {
