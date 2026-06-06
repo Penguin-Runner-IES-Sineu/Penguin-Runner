@@ -397,6 +397,7 @@ public class GamePanel extends JPanel implements Serializable {
 
         player.draw(gameState.getRows(), 1);
         icecream.draw(gameState.getRows(), 5);
+        g2.drawString(player.getLives() + "/ " + gameState.getLives(), 100, textY);
         g2.drawString(player.geticeCream() + "/ " + gameState.getIceCream(), 250, textY);
 
         g2.drawString(

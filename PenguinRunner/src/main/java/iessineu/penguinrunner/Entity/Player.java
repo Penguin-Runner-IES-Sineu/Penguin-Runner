@@ -30,30 +30,53 @@ import iessineu.penguinrunner.States.WalkingState;
  *
  * No guardem x/y en píxels perquè això és només per dibuixar.
  */
-public class Player extends Printable implements Serializable {
+  
 
-    private int row;
-    private int col;
+    public class Player extends Printable implements Serializable {
 
-    private final int originalRow;
-    private final int originalCol;
+        private int row;
+        private int col;
 
-    private int iceCream;
+        private final int originalRow;
+        private final int originalCol;
 
-    private PlayerState state;
-    private List<Item> items = new LinkedList();
-    private int selectedItem = 0;
-    private Direction lastDirection = Direction.RIGHT;
+        private int iceCream;
+        private int lives = 3;
+        private static final int MAX_LIVES = 3;
+        private PlayerState state;
+        private List<Item> items = new LinkedList();
+        private int selectedItem = 0;
+        private Direction lastDirection = Direction.RIGHT;
 
-    public Player(int row, int col) {
-        this.row = row;
-        this.col = col;
+        public Player(int row, int col) {
+            this.row = row;
+            this.col = col;
 
-        this.originalRow = row;
-        this.originalCol = col;
+            this.originalRow = row;
+            this.originalCol = col;
 
-        this.state = new WalkingState();
-        this.setPrintables();
+            this.lives = MAX_LIVES;
+
+            this.state = new WalkingState();
+            this.setPrintables();
+        }
+
+        public int getLives() {
+            return lives;
+        }
+
+        public void setLives(int lives) {
+            this.lives = lives;
+        }
+
+        public boolean isAlive() {
+            return lives > 0;
+        }
+
+        public void loseLife() {
+            if (lives > 0) {
+                lives--;
+            }
     }
 
     public void setItems(List<Item> itemList) {

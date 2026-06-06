@@ -61,6 +61,7 @@ public class GameState implements Serializable {
     private Player player;
     private List<Enemy> enemies;
     private int iceCream = 0;
+    private int lives = 3;
     private int startPlayerRow;
     private int startPlayerCol;
     private boolean moddedMusic = false;
@@ -690,17 +691,42 @@ public class GameState implements Serializable {
             }
             if (dead) {
                 System.out.println("You died");
-                loadMap();
-                player.setItems(new ArrayList());
+                playerDied();
                 return;
             }
         }
 
         if (isIce(playerRow, playerCol) || isFire(playerRow, playerCol)) {
             System.out.println("You died");
-            loadMap();
+            playerDied();
         }
     }
+
+    private void playerDied() {
+    player.loseLife();
+//    soundManager.playSound("die", !GamePanel.hasGame()); si tienes el sonido
+
+    if (player.isAlive()) {
+        // Solo recarga el nivel, conserva las vidas
+        List<Item> items = player.getItems();
+        int lives = player.getLives();
+        loadMap();
+        player.setItems(items);       // conserva ítems si quieres
+        // o player.setItems(new ArrayList()); para perderlos
+        player.setLives(lives);       // restaura las vidas tras loadMap
+    } else {
+        // Game Over: reinicia desde el nivel 0
+        gameOver();
+    }
+}
+
+    private void gameOver() {
+    nivellActual = 0;
+    mapObject = mapList.get(0);
+    loadMap();
+    player.setItems(new ArrayList<>());
+    // Las vidas se resetean solas en loadMap si añades lives=MAX_LIVES allí
+}
 
     /*
      * CONSULTES DE BLOCS
@@ -1061,6 +1087,10 @@ public class GameState implements Serializable {
 
     public int getIceCream() {
         return iceCream;
+    }
+    
+    public int getLives(){
+        return lives;
     }
 
     /*//////////////////////////////////////////////////////////////////////////
