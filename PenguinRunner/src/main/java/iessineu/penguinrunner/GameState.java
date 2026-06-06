@@ -655,10 +655,10 @@ public class GameState implements Serializable {
             // System.out.println("Ja tens un item d'aquest tipus!");
             // } else {
             // }
-            if (block.getType() != TileType.ICECREAM) {
-                soundManager.playSound("pickup", !GamePanel.hasGame());
-            }
             if (!player.hasItem(block.getType().toString().toLowerCase())) {
+                if (block.getType() != TileType.ICECREAM) {
+                    soundManager.playSound("pickup", !GamePanel.hasGame());
+                }
                 blocks[row][col] = new Block(TileType.BLANK);
                 switch (block.getType()) {
                     case TileType.ICECREAM -> {
@@ -912,9 +912,9 @@ public class GameState implements Serializable {
         vol = vol.replace(",", ".");
         float volume = Float.parseFloat(vol);
         changeVolume(volume);
-    
-}
-    
+
+    }
+
     public void changeVolume(float vol) {
         soundManager.setVolume(vol / 100);
     }
