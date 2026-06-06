@@ -169,15 +169,15 @@ public class GamePanel extends JPanel implements Serializable {
                 direction = Direction.UP;
                 playTurn(direction);
             }
-            case KeyEvent.VK_DOWN,KeyEvent.VK_S -> {
+            case KeyEvent.VK_DOWN, KeyEvent.VK_S -> {
                 direction = Direction.DOWN;
                 playTurn(direction);
             }
-            case KeyEvent.VK_LEFT,KeyEvent.VK_A -> {
+            case KeyEvent.VK_LEFT, KeyEvent.VK_A -> {
                 direction = Direction.LEFT;
                 playTurn(direction);
             }
-            case KeyEvent.VK_RIGHT,KeyEvent.VK_D -> {
+            case KeyEvent.VK_RIGHT, KeyEvent.VK_D -> {
                 direction = Direction.RIGHT;
                 playTurn(direction);
             }
@@ -395,9 +395,12 @@ public class GamePanel extends JPanel implements Serializable {
         g2.setFont(textFont.deriveFont(16f));
         g2.setColor(Color.WHITE);
 
-        player.draw(gameState.getRows(), 1);
         icecream.draw(gameState.getRows(), 5);
-        g2.drawString(player.getLives() + "/ " + gameState.getLives(), 100, textY);
+        for (int i = 0; i < player.getLives(); i++) {
+            player.draw(gameState.getRows(), 1+i);
+            // g2.drawString(player.draw, 100, textY+i);
+        }
+        // g2.drawString(player.getLives() + "/ " + gameState.getLives(), 100, textY);
         g2.drawString(player.geticeCream() + "/ " + gameState.getIceCream(), 250, textY);
 
         g2.drawString(
