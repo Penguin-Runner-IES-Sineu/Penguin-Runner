@@ -2,48 +2,54 @@ name: Package Jar with Maven and Release
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    # Permissions are required to create a release and upload assets
+    
     permissions:
       contents: write
 
     steps:
-      - uses: actions/checkout@v3
+    - uses: actions/checkout@v3
 
-      - name: Set up JDK 24
-        uses: actions/setup-java@v3
-        with:
-          java-version: "24"
-          distribution: "temurin"
-          cache: maven
+    - name: Set up JDK 24
+      uses: actions/setup-java@v3
+      with:
+        java-version: '24'
+        distribution: 'temurin'
+        cache: maven
 
-      - name: Build with Maven
-        run: mvn -B package --file PenguinRunner/pom.xml -DskipTests
+    - name: Build with Maven
+      run: mvn -B package --file PenguinRunner/pom.xml -DskipTests
 
-      - name: Prepare Release Assets
-        run: |
-          mkdir staging
-          cp PenguinRunner/target/*.jar staging/
+    - name: Prepare Release Assets
+      run: |
+        # Create staging areas
+        mkdir -p staging/full-game
+        
+        # 1. Place the standalone JAR in the root of staging
+        cp PenguinRunner/target/*.jar staging/
+        
+        # 2. Assemble the components for the ZIP bundle inside 'full-game'
+        cp PenguinRunner/target/*.jar staging/full-game/
+        cp -r PenguinRunner/mods staging/full-game/
+        cp -r PenguinRunner/games staging/full-game/
+        
+        # 3. Create the package.zip inside the root staging folder
+        cd staging/full-game
+        zip -r ../package.zip .
 
-      # Optional: Keeps the zip artifact in your Action runs
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Package
-          path: staging
-
-      # NEW: Create the GitHub Release and upload the jar
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v1.0.${{ github.run_number }}
-          name: Release v1.0.${{ github.run_number }}
-          draft: false
-          prerelease: false
-          files: staging/*.jar
+    # Create the GitHub Release and upload BOTH the standalone jar and the zip
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: v1.0.${{ github.run_number }}
+        name: "Full Game v1.0.${{ github.run_number }}"
+        draft: false
+        prerelease: false
+        files: |
+          staging/*.jar
+          staging/package.zip
