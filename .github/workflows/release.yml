@@ -29,7 +29,7 @@ jobs:
         run: |
           # Create staging areas
           mkdir -p staging/full-game
-          mv PenguinRunner/target/PenguinRunner-1.0.jar PenguinRunner/target/PenguinRunner-${{ github.run_number}}.jar
+          mv PenguinRunner/target/PenguinRunner-1.0.jar PenguinRunner/target/PenguinRunner-V1.${{ github.run_number}}.jar
 
           # 1. Place the standalone JAR in the root of staging
           cp PenguinRunner/target/*.jar staging/
