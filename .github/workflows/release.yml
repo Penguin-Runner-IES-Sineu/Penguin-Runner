@@ -23,7 +23,7 @@ jobs:
 
     # https://medium.com/@alexander.volminger/ci-cd-for-java-maven-using-github-actions-d009a7cb4b8f
     - name: Upload jar
-      run: mkdir staging && cp PenguinRunner/target staging
+      run: mkdir staging && cp -r PenguinRunner/target staging
     - uses: actions/upload-artifact@v4
       with:
         name: Package
