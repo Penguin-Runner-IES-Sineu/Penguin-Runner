@@ -28,7 +28,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 /**
  *
- * @author usuario
+ * @author Maria Esperança
  */
 public class PenguinRunnerMenu {
 
