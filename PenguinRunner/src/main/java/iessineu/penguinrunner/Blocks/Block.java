@@ -160,4 +160,8 @@ public class Block extends Printable implements Serializable {
     public void setFire(boolean isFire) {
         this.isFire = isFire;
     }
+
+    public void setSolid(boolean isSolid) {
+        this.isSolid = isSolid;
+    }
 }

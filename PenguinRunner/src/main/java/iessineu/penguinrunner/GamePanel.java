@@ -337,8 +337,10 @@ public class GamePanel extends JPanel implements Serializable {
                 if (b.isTrapdoor()) {
                     if (gameState.buttonPressed()) {
                         b.setType(TileType.TRAPDOOR);
+                        b.setSolid(true);
                     } else {
                         b.setType(TileType.BLANK);
+                        b.setSolid(false);
                     }
                     b.setPrintables();
                 }
