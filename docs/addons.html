@@ -41,14 +41,17 @@
                         <div class="tree-item folder">📁 sprites</div>
                         <div class="tree-item"><span class="file-ext">font.ttf</span><span class="file-desc">→
                                 Fontprincipal del joc</span></div>
-                        <div class="tree-item"><span class="file-ext">emoji.ttf</span><span class="file-desc">→
-                                Fontd'emojis (recomanat: Segoe UI Emoji)</span></div>
-                        <div class="tree-item"><span class="file-ext">music.wav</span><span class="file-desc">→
-                                Músicadel joc</span></div>
-                        <div class="tree-item"><span class="file-ext">maps.json</span><span class="file-desc">→Definició
-                                dels mapes</span></div>
-                        <div class="tree-item"><span class="file-ext">printables.json</span><span
-                                class="file-desc">→Definició desl sprites</span></div>
+                        <div class="tree-item"><span class="file-ext">emoji.ttf</span><span
+                                class="file-desc">→Fontd'emojis (recomanat: Segoe
+                                UI Emoji)</span></div>
+                        <div class="tree-item"><span class="file-ext">music.wav</span><span class="file-desc">→Músicadel
+                                joc</span></div>
+                        <div class="tree-item"><span class="file-ext">maps.json</span><span
+                                class="file-desc">→Definiciódels mapes</span></div>
+                        <div class="tree-item">
+                            <span class="file-ext">printables.json</span><span class="file-desc">→Definició
+                                delssprites</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -69,12 +72,15 @@
                 <div style="padding-left:16px">
                     <div class="tree-root">📁 el_meu_mod/</div>
                     <div style="padding-left:20px">
-                        <div class="tree-item"><span class="file-ext">mod.json</span><span class="file-desc">→
-                                Definiciódel mod</span></div>
-                        <div class="tree-item"><span class="file-ext">image.png</span><span class="file-desc">→
-                                Spritepersonalitzat</span></div>
+                        <div class="tree-item"><span class="file-ext">mod.json</span><span class="file-desc">→Definició
+                                del mod</span></div>
+                        <div class="tree-item"><span class="file-ext">image.png</span><span class="file-desc">→Sprite
+                                personalitzat</span>
+                        </div>
                         <div class="tree-item"><span class="file-ext">music.wav</span><span class="file-desc">→ Música
-                                oSFX</span></div>
+                                de fons</span></div>
+                        <div class="tree-item"><span class="file-ext">collect.wav</span><span class="file-desc">→ SFX
+                                per recollida d'un objecte</span></div>
                     </div>
                 </div>
             </div>
@@ -84,9 +90,10 @@
                 <div class="mod-fields">
                     <div class="modfield">
                         <span class="field-key">modtype</span>
-                        <span class="field-val"><span class="tag tag-blue">sprite</span><span
-                                class="tag tag-blue">map</span><span class="tag tag-blue">sfx</span><span
-                                class="tag tag-blue">music</span><span class="tag tag-blue">font</span>
+                        <span class="field-val"><span class="tag tag-blue">sprite</span>
+                            <span class="tag tag-blue">map
+                            </span><span class="tag tag-blue">sfx</span>
+                            <span class="tag tag-blue">music</span><span class="tag tag-blue">font</span>
                         </span>
                     </div>
                     <div class="mod-field">
@@ -103,60 +110,80 @@
                     <div class="mod-field">
                         <span class="field-key">map</span>
                         <span class="field-val">Objecte map amb camps: <span class="tag tag-green">type</span>
-                            <spanclass="tag tag-green">level
-                        </span><span class="tag tag-green">view</span></span>
+                            <span class="tag tag-green">level
+                            </span><span class="tag tag-green">view</span></span>
                     </div>
                     <div class="mod-field">
                         <span class="field-key">sprite</span>
                         <span class="field-val">Objecte sprite amb camps: <span class="tag tag-amber">type</span>
-                            <spanclass="tag tag-amber">sprite
-                        </span><span class="tag tag-amber">color</span>
-                        <spanclass="tag tag-amber">filename</span></span>
+                            <span class="tag tag-amber">sprite
+                            </span><span class="tag tag-amber">color</span>
+                            <span class="tag tag-amber">filename</span></span>
                     </div>
                     <div class="mod-field">
-                        <span class="field-key">sfx</span>
-                        <span class="field-val">Només té el camp <span class="tag tag-blue">type</span> - el tipus de
-                            so(e.g. <code style="color:var(--accent2)">icecream</code> per al so en recollir
-                            unobjecte)</span>
-                    </div>
-                    <div class="mod-field">
-                        <span class="field-key">music</span>
-                        <span class="field-val">Només té el camp <span class="tag tag-blue">music</span> - per a la
-                            música de fons del joc</span>
-                    </div>
-                    <div class="mod-field">
-                        <span class="field-key">font</span>
-                        <span class="filed-val">Camp <span class="tag tag-blue">type</span> - especifica si és una
-                            fontd'emoji o de text</span>
+                        <span class="field-key">sfx, music, font</span>
+                        <span class="field-val">Tenen dos camps:
+                            <span class="tag tag-blue">type</span> i <span class="tag tag-blue">filename</span>
+                        </span>
+                        <span class="tag tag-blue"> Filename:</span> ruta a l'objecte que s'està afegint
+                        <span class="tag tag-blue"> Type: </span> <span>el subtipus d'objecte que s'està afegint, té uns
+                            certs tipus:</span>
+                        <span class="tag">music</span> musica de fons (només emprat amb field music)
+                        <span class="tag">text</span> indica que es una font de text (només emprat amb field font)
+                        <span class="tag">emoji</span> indica que es una font de emojis (només emprat amb field font)
+                        <span class="tag">collect</span> agafar un gelat
+                        <span class="tag">flame</span> emprar llançaflames
+                        <span class="tag">pickup</span> agafar un objecte
+                        <span class="tag">teleport</span> emprar el teleport
+                        <span class="tag">door</span> entrar per una porta
                     </div>
                 </div>
             </div>
-
-            <pre style="margin-top:20px"><span class="c">[</span>
-<span class="c">{</span>
-<span class="k">"modtype"</span>: <span class="s">"map"</span>,
-<span class="k">"modvalue"</span>: <span class="c">{</span>
-<span class="k">"type"</span>: <span class="s">"map"</span>,
-<span class="k">"level"</span>: <span class="s">"map"</span>,
-<span class="k">"view"</span>: <span class="n">5</span>,
-<span class="s">"###############################"</span>,
-<span class="s">"#..D..D...D....................#"</span>,
-<span class="s">"#.....P.....L..................#"</span>,
-<span class="s">"###############################"</span>
+            <pre class="json">
+[
+    {
+        "modtype": "map",
+        "modvalue": {
+            "type": "map",
+            "level": 5,
+            "view": [
+                "################################",
+                "#..............................#",
+                "#..D..D...D....................#",
+                "#..DDDD...D....................#",
+                "#..D..D...D............E.......#",
+                "#..............................#",
+                "#.....P.....L..................#",
+                "#..............................#",
+                "################################"
+            ]
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "player",
+            "sprite": "😀",
+            "color": "#FFFF00",
+            "filename": "image.png"
+        }
+    },
+    {
+        "modtype": "sfx",
+        "modvalue": {
+            "type": "collect",
+            "filename": "acdc.wav"
+        }
+    },
+    {
+        "modtype": "font",
+        "modvalue": {
+            "type": "text",
+            "filename": "racesport.ttf"
+        }
+    }
 ]
-<span class="c">}</span>
-<span class="c">},</span>
-<span class="c">{</span>
-<span class="k">"modtype"</span>: <span class="s">"sprite"</span>,
-<span class="k">"modvalue"</span>: <span class="c">{</span>
-  <span class="k">"type"</span>: <span class="s">"player"</span>,
-  <span class="k">"sprite"</span>: <span class="s">"🙂"</span>,
-  <span clasS="k">"color"</span>: <span class="s">"#FFFF00"</span>,
-  <span class="k">"filename"</span>: <span class="s">"image.png</span>
-<span class="c">}</span>
-<span class="c">}</span>
-<span class="c">]</span></pre>
-
+</pre>
             <div class="note">
                 <span class="note-icon">>ℹ️</span>
                 <span>Tots els <code style="color:var(--accent)">filename</code> seran relatius a la carpeta on està
@@ -171,24 +198,29 @@
             <p style="color:var(--muted); margin-bottom:20px; font-size:14px;">Els mapes es defineixen en format JSON
                 amb la següent estructura. Totes les files han de tenir la mateixa longitud.</p>
 
-            <pre><span class="c">[</span>
-<span class="c">{</span>
-<span class="k">"type"</span>: <span class="s">"map"</span>,
-<span class="k">"level"</span>: <span class="n">0</span>,
-<span class="k">"view"</span>: [
-<span class="s">"###############################"</span>,
-<span class="s">"#.....D...G.......P............#</span>,
-<span class="s">"###############################"</span>
-]
-  <span class="c">}</span>
-<span class="c">]</span></pre>
-
+            <pre class="json">
+    {
+        "type": "map",
+        "level": 2,
+        "view": [
+            "###############################",
+            "#                             #",
+            "#     A     H------D A        #",
+            "#     ......H      ...        #",
+            "#   H G     H                 #",
+            "#   H.........                #",
+            "#T  H    P     EEEE           #",
+            "#.............................#",
+            "###############################"
+        ]
+    }
+  </pre>
             <div class="card" style="margin-top:20px">
                 <h3>Camps</h3>
-                <div class="mod-field" style="margin-top:0">
+                <div style="margin-top:0">
                     <div class="mod-field">
-                        <span class="field-key">type</span>
-                        <span class="field-val">Sempre <code style="color:var(--accent2)">"map"</code></span>
+                        <span class="field-key">type </span>
+                        <span class="field-val">(sempre serà map)</span>
                     </div>
                     <div class="mod-field">
                         <span class="field-key">level</span>
@@ -252,9 +284,19 @@
                             <td>Jugador (posició inicial) 🐧</td>
                         </tr>
                         <tr>
-                            <td><span class="symbol" style="background:rgba(252,129,129,0.15);color:var(--accent4)">E,A,
-                                    S</span></td>
-                            <td>Enemics</td>
+                            <td><span class="symbol"
+                                    style="background:rgba(252,129,129,0.15);color:var(--accent4)">E</span></td>
+                            <td>Enemic normal</td>
+                        </tr>
+                        <tr>
+                            <td><span class="symbol"
+                                    style="background:rgba(252,129,129,0.15);color:var(--accent4)">S</span></td>
+                            <td>Enemic Seeker</td>
+                        </tr>
+                        <tr>
+                            <td><span class="symbol"
+                                    style="background:rgba(252,129,129,0.15);color:var(--accent4)">A</span></td>
+                            <td>Enemic Ambushing</td>
                         </tr>
                         <tr>
                             <td><span class="symbol"
@@ -285,15 +327,14 @@
         <section id="sprites">
             <div class="section-label">06 - Sprites</div>
             <h2>Estructura dels sprites (printables.json)</h2>
-
-            <pre><span class="c">[</span>
-<span class="c">{</span>
-<span class="k">"type"</span>: <span class="s">"door"</span>,
-<span class="k">"sprite"</span>: <span class="s">"🚪"</span>,
-<span class="k">"color"</span>: <span class="s">"#FF00BB"</span>,
-<span class="k">"filename"</span>: <span class="s">"door.png</span>
-<span class="c">}</span>
-<span class="c">]</span></pre>
+            <pre class="json">
+{
+    "type": "player",
+    "sprite": "🐧",
+    "color": "#FFFF00",
+    "filename": "player.png"
+ },
+            </pre>
 
             <div class="card" style="margin-top:16px">
                 <h3>Camps</h3>
@@ -309,7 +350,7 @@
                     <div class="mod-field">
                         <span class="field-key">color</span>
                         <span class="field-val">Color en format hexadecimal (e.g.
-                            <codestyle="color:var(--accent2)">#FF00BB</code>)</span>
+                            <codestyle="color:var(--accent)">#FF00BB</code>)</span>
                     </div>
                     <div class="mod-field">
                         <span class="field-key">filename</span>

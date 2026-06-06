@@ -503,3 +503,24 @@ footer {
         gap: 4px;
     }
 }
+
+pre.json .json-key {
+    color: #9cdcfe;
+    font-weight: bold;
+}
+
+pre.json .json-string {
+    color: #ce9178;
+}
+
+pre.json .json-number {
+    color: #b5cea8;
+}
+
+pre.json .json-boolean {
+    color: #569cd6;
+}
+
+pre.json .json-null {
+    color: #569cd6;
+}
