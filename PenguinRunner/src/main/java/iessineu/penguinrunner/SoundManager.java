@@ -37,7 +37,7 @@ public class SoundManager implements Serializable {
     private Map<String, String> soundsMap = generateSoundMap(); //tipo, ruta
 
     public void playMusic(boolean fromResource) {
-        this.setVolume(0.5f);
+        this.setVolume(0.3f);
         boolean modded = false;
         if (!soundsMap.get("music").equals(originalMap.get("music"))) {
             modded = true;
@@ -100,6 +100,16 @@ public class SoundManager implements Serializable {
             float gain = min + (max - min) * volume;
             gainControl.setValue(gain);
         }
+    }
+
+    public float getVolume() {
+        if (musicClip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+            FloatControl gainControl
+                    = (FloatControl) musicClip.getControl(FloatControl.Type.MASTER_GAIN);
+
+            return gainControl.getValue();
+        }
+        return 0f;
     }
 
     public void playSound(String type, boolean fromResource) {

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 import org.json.JSONArray;
@@ -703,30 +704,30 @@ public class GameState implements Serializable {
     }
 
     private void playerDied() {
-    player.loseLife();
+        player.loseLife();
 //    soundManager.playSound("die", !GamePanel.hasGame()); si tienes el sonido
 
-    if (player.isAlive()) {
-        // Solo recarga el nivel, conserva las vidas
-        List<Item> items = player.getItems();
-        int lives = player.getLives();
-        loadMap();
-        player.setItems(items);       // conserva ítems si quieres
-        // o player.setItems(new ArrayList()); para perderlos
-        player.setLives(lives);       // restaura las vidas tras loadMap
-    } else {
-        // Game Over: reinicia desde el nivel 0
-        gameOver();
+        if (player.isAlive()) {
+            // Solo recarga el nivel, conserva las vidas
+            List<Item> items = player.getItems();
+            int lives = player.getLives();
+            loadMap();
+            player.setItems(items);       // conserva ítems si quieres
+            // o player.setItems(new ArrayList()); para perderlos
+            player.setLives(lives);       // restaura las vidas tras loadMap
+        } else {
+            // Game Over: reinicia desde el nivel 0
+            gameOver();
+        }
     }
-}
 
     private void gameOver() {
-    nivellActual = 0;
-    mapObject = mapList.get(0);
-    loadMap();
-    player.setItems(new ArrayList<>());
-    // Las vidas se resetean solas en loadMap si añades lives=MAX_LIVES allí
-}
+        nivellActual = 0;
+        mapObject = mapList.get(0);
+        loadMap();
+        player.setItems(new ArrayList<>());
+        // Las vidas se resetean solas en loadMap si añades lives=MAX_LIVES allí
+    }
 
     /*
      * CONSULTES DE BLOCS
@@ -893,6 +894,29 @@ public class GameState implements Serializable {
 
     public void setModdedMusic(boolean moddedMusic) {
         this.moddedMusic = moddedMusic;
+    }
+
+    public void increaseVolume() {
+        float vol = soundManager.getVolume();
+        soundManager.setVolume(vol + 0.05f);
+    }
+
+    public void decreaseVolume() {
+        float vol = soundManager.getVolume();
+        soundManager.setVolume(vol - 0.05f);
+    }
+
+    public void changeVolume() {
+        String vol = JOptionPane.showInputDialog("Introdueix el volum que vol, com un valor entre 0 i 100"
+        );
+        vol = vol.replace(",", ".");
+        float volume = Float.parseFloat(vol);
+        changeVolume(volume);
+    
+}
+    
+    public void changeVolume(float vol) {
+        soundManager.setVolume(vol / 100);
     }
 
     /*
@@ -1088,8 +1112,8 @@ public class GameState implements Serializable {
     public int getIceCream() {
         return iceCream;
     }
-    
-    public int getLives(){
+
+    public int getLives() {
         return lives;
     }
 
