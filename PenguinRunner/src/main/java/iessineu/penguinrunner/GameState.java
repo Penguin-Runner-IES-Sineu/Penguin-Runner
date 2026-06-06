@@ -649,24 +649,28 @@ public class GameState implements Serializable {
         Block block = blocks[row][col];
 
         if (block != null && block.isCollectable()) {
-            blocks[row][col] = new Block(TileType.BLANK);
+            // if (player.hasItem(block.getType().toString())) {
+            // System.out.println("Ja tens un item d'aquest tipus!");
+            // } else {
+            // }
             if (block.getType() != TileType.ICECREAM) {
                 soundManager.playSound("pickup", !GamePanel.hasGame());
             }
-            switch (block.getType()) {
-                case TileType.ICECREAM -> {
-                    soundManager.playSound("collect", !GamePanel.hasGame());
-                    player.addIceCream();
-                }
-                case TileType.FLAMETHROWER -> {
-                    player.addItem("flamethrower");
-                }
-                case TileType.TELEPORT -> {
-                    player.addItem("teleport");
+            if (!player.hasItem(block.getType().toString().toLowerCase())) {
+                blocks[row][col] = new Block(TileType.BLANK);
+                switch (block.getType()) {
+                    case TileType.ICECREAM -> {
+                        soundManager.playSound("collect", !GamePanel.hasGame());
+                        player.addIceCream();
+                    }
+                    case TileType.FLAMETHROWER -> {
+                        player.addItem("flamethrower");
+                    }
+                    case TileType.TELEPORT -> {
+                        player.addItem("teleport");
+                    }
                 }
             }
-
-            // System.out.println("Gelat: " + player.geticeCream());
         }
     }
 
@@ -743,7 +747,7 @@ public class GameState implements Serializable {
 
         return block != null && block.getType() == TileType.ICE;
     }
-    
+
     private boolean isFire(int row, int col) {
         Block block = getBlock(row, col);
         return block.isFire();

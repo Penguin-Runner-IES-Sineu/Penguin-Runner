@@ -165,19 +165,19 @@ public class GamePanel extends JPanel implements Serializable {
     private void handleInput(KeyEvent e) {
         Direction direction = null;
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP | KeyEvent.VK_W -> {
+            case KeyEvent.VK_UP, KeyEvent.VK_W -> {
                 direction = Direction.UP;
                 playTurn(direction);
             }
-            case KeyEvent.VK_DOWN | KeyEvent.VK_S -> {
+            case KeyEvent.VK_DOWN,KeyEvent.VK_S -> {
                 direction = Direction.DOWN;
                 playTurn(direction);
             }
-            case KeyEvent.VK_LEFT | KeyEvent.VK_A -> {
+            case KeyEvent.VK_LEFT,KeyEvent.VK_A -> {
                 direction = Direction.LEFT;
                 playTurn(direction);
             }
-            case KeyEvent.VK_RIGHT | KeyEvent.VK_D -> {
+            case KeyEvent.VK_RIGHT,KeyEvent.VK_D -> {
                 direction = Direction.RIGHT;
                 playTurn(direction);
             }

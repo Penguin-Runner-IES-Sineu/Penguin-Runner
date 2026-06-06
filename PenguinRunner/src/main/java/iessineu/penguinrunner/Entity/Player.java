@@ -130,6 +130,15 @@ public class Player extends Printable implements Serializable {
         }
     }
 
+    public boolean hasItem(String type) {
+        for (Item item : items) {
+            if (item.getName().equals(type)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public PlayerState getState() {
         return state;
     }
