@@ -40,7 +40,7 @@ jobs:
         
         # 3. Create the package.zip inside the root staging folder
         cd staging/full-game
-        zip -r ../package.zip .
+        zip -r ../full_game.zip .
 
     # Create the GitHub Release and upload BOTH the standalone jar and the zip
     - name: Create GitHub Release
@@ -52,4 +52,4 @@ jobs:
         prerelease: false
         files: |
           staging/*.jar
-          staging/package.zip
+          staging/full_game.zip
