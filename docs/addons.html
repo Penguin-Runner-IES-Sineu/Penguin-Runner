@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PenguinRunner - Documentació</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wgth@300;400;500;600&display=swap"
+        rel="stylesheet">>
+    <link rel="stylesheet" href="css/page.css">
+</head>
+
+<body>
+
+    <header class="hero">
+        <span class="hero-penguin">🐧</span>
+        <h1>Penguin<span>Runner</span></h1>
+        <p>Documentació oficial del joc. Controla un pingüí, recull gelats i supera nivells.</p>
+    </header>
+
+    <nav>
+        <a href="index.html">Descripció General</a>
+        <a href="addons.html">Add-ons (Games i Mods)</a>
+    </nav>
+
+    <div class="container">
+
+        <!-- ESTRUCTURA DEL JOC -->
+        <section id="estructura">
+            <h2>Estructura de càrrega (game)</h2>
+            <p style="color:var(--muted); margin-bottom:20px; font-size:14px;">Per carregar contingut dins el joc, cal
+                crear una carpeta amb la següent estructura dins la carpeta <code
+                    style="color:var(--accent)">games/</code>
+                al costat del <code style="color:var(--accent)">.jar.</code>:</p>
+            <div class="file.tree">
+                <div class="tree-root">📁 games/</div>
+                <div style="padding-left:16px">
+                    <div class="tree-root">📁 game/</div>
+                    <div style="padding-left:20px">
+                        <div class="tree-item folder">📁 sprites</div>
+                        <div class="tree-item"><span class="file-ext">font.ttf</span><span class="file-desc">→
+                                Fontprincipal del joc</span></div>
+                        <div class="tree-item"><span class="file-ext">emoji.ttf</span><span class="file-desc">→
+                                Fontd'emojis (recomanat: Segoe UI Emoji)</span></div>
+                        <div class="tree-item"><span class="file-ext">music.wav</span><span class="file-desc">→
+                                Músicadel joc</span></div>
+                        <div class="tree-item"><span class="file-ext">maps.json</span><span class="file-desc">→Definició
+                                dels mapes</span></div>
+                        <div class="tree-item"><span class="file-ext">printables.json</span><span
+                                class="file-desc">→Definició desl sprites</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="warnign" style="margin-top:16px">
+                <span>⚠️</span>
+                <span>Les carpetes <strong>games</strong> i <strong>mods</strong> són OBLIGATÒRIES!</span>
+            </div>
+        </section>
+
+        <!-- MODS -->
+        <section id="mods">
+            <h2>Estructura dels mods</h2>
+            <p style="color:var(--muted); margin-bottom:20px; font-size:14px;">Un mod s'ubica dins la carpeta <code
+                    style="color:var(--accent)">mods</code>.</p>
+
+            <div class="file-tree" style="margin-bottom:20px">
+                <div class="tree-root">📁 mods/</div>
+                <div style="padding-left:16px">
+                    <div class="tree-root">📁 el_meu_mod/</div>
+                    <div style="padding-left:20px">
+                        <div class="tree-item"><span class="file-ext">mod.json</span><span class="file-desc">→
+                                Definiciódel mod</span></div>
+                        <div class="tree-item"><span class="file-ext">image.png</span><span class="file-desc">→
+                                Spritepersonalitzat</span></div>
+                        <div class="tree-item"><span class="file-ext">music.wav</span><span class="file-desc">→ Música
+                                oSFX</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Camps de mod.json</h3>
+                <div class="mod-fields">
+                    <div class="modfield">
+                        <span class="field-key">modtype</span>
+                        <span class="field-val"><span class="tag tag-blue">sprite</span><span
+                                class="tag tag-blue">map</span><span class="tag tag-blue">sfx</span><span
+                                class="tag tag-blue">music</span><span class="tag tag-blue">font</span>
+                        </span>
+                    </div>
+                    <div class="mod-field">
+                        <span class="field-key">modvalue</span>
+                        <span class="field-val">Objecte JSON amb el format corresponent al tipus (map, sprite,
+                            sfx,music, font)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top:16px">
+                <h3>Tipus de modvalue per cada modtype</h3>
+                <div class="mod-fields">
+                    <div class="mod-field">
+                        <span class="field-key">map</span>
+                        <span class="field-val">Objecte map amb camps: <span class="tag tag-green">type</span>
+                            <spanclass="tag tag-green">level
+                        </span><span class="tag tag-green">view</span></span>
+                    </div>
+                    <div class="mod-field">
+                        <span class="field-key">sprite</span>
+                        <span class="field-val">Objecte sprite amb camps: <span class="tag tag-amber">type</span>
+                            <spanclass="tag tag-amber">sprite
+                        </span><span class="tag tag-amber">color</span>
+                        <spanclass="tag tag-amber">filename</span></span>
+                    </div>
+                    <div class="mod-field">
+                        <span class="field-key">sfx</span>
+                        <span class="field-val">Només té el camp <span class="tag tag-blue">type</span> - el tipus de
+                            so(e.g. <code style="color:var(--accent2)">icecream</code> per al so en recollir
+                            unobjecte)</span>
+                    </div>
+                    <div class="mod-field">
+                        <span class="field-key">music</span>
+                        <span class="field-val">Només té el camp <span class="tag tag-blue">music</span> - per a la
+                            música de fons del joc</span>
+                    </div>
+                    <div class="mod-field">
+                        <span class="field-key">font</span>
+                        <span class="filed-val">Camp <span class="tag tag-blue">type</span> - especifica si és una
+                            fontd'emoji o de text</span>
+                    </div>
+                </div>
+            </div>
+
+            <pre style="margin-top:20px"><span class="c">[</span>
+<span class="c">{</span>
+<span class="k">"modtype"</span>: <span class="s">"map"</span>,
+<span class="k">"modvalue"</span>: <span class="c">{</span>
+<span class="k">"type"</span>: <span class="s">"map"</span>,
+<span class="k">"level"</span>: <span class="s">"map"</span>,
+<span class="k">"view"</span>: <span class="n">5</span>,
+<span class="s">"###############################"</span>,
+<span class="s">"#..D..D...D....................#"</span>,
+<span class="s">"#.....P.....L..................#"</span>,
+<span class="s">"###############################"</span>
+]
+<span class="c">}</span>
+<span class="c">},</span>
+<span class="c">{</span>
+<span class="k">"modtype"</span>: <span class="s">"sprite"</span>,
+<span class="k">"modvalue"</span>: <span class="c">{</span>
+  <span class="k">"type"</span>: <span class="s">"player"</span>,
+  <span class="k">"sprite"</span>: <span class="s">"🙂"</span>,
+  <span clasS="k">"color"</span>: <span class="s">"#FFFF00"</span>,
+  <span class="k">"filename"</span>: <span class="s">"image.png</span>
+<span class="c">}</span>
+<span class="c">}</span>
+<span class="c">]</span></pre>
+
+            <div class="note">
+                <span class="note-icon">>ℹ️</span>
+                <span>Tots els <code style="color:var(--accent)">filename</code> seran relatius a la carpeta on està
+                    ubicat el <code style="color:var(-accent)">mod.json</code>.</span>
+            </div>
+        </section>
+
+        <!-- MAPES -->
+        <section id="mapes">
+            <h2>Estructura dels mapes (maps.json)</h2>
+
+            <p style="color:var(--muted); margin-bottom:20px; font-size:14px;">Els mapes es defineixen en format JSON
+                amb la següent estructura. Totes les files han de tenir la mateixa longitud.</p>
+
+            <pre><span class="c">[</span>
+<span class="c">{</span>
+<span class="k">"type"</span>: <span class="s">"map"</span>,
+<span class="k">"level"</span>: <span class="n">0</span>,
+<span class="k">"view"</span>: [
+<span class="s">"###############################"</span>,
+<span class="s">"#.....D...G.......P............#</span>,
+<span class="s">"###############################"</span>
+]
+  <span class="c">}</span>
+<span class="c">]</span></pre>
+
+            <div class="card" style="margin-top:20px">
+                <h3>Camps</h3>
+                <div class="mod-field" style="margin-top:0">
+                    <div class="mod-field">
+                        <span class="field-key">type</span>
+                        <span class="field-val">Sempre <code style="color:var(--accent2)">"map"</code></span>
+                    </div>
+                    <div class="mod-field">
+                        <span class="field-key">level</span>
+                        <span class="field-val">Número del nivell (defineix l'ordre d'aparició)</span>
+                    </div>
+                    <div class="mod-field">
+                        <span class="field-key">view</span>
+                        <span class="field-val">Array de strings amb la representació visual del mapa</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top:16px">
+                <h3>Llegenda dels mapes</h3>
+                <table class="legend-table">
+                    <thead>
+                        <tr>
+                            <th>Símbol</th>
+                            <th>Significat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="symbol"
+                                    style="background:rgba(99,179,237,0.15);color:var(--accent)">#</span></td>
+                            <td>Paret indestructible</td>
+                        </tr>
+                        <tr>
+                            <td><span class="symbol" style="background:rgba(190,230,255,0.1);color:#bee3f8">.</span>
+                            </td>
+                            <td>Bloc de gel</td>
+                        </tr>
+                        <tr>
+                            <td><span class="symbol"
+                                    style="background:rgba(104,211,145,0.15);color:var(--accent2)">G</span>
+                            <td>Gelat 🍦</td>
+                        </tr>
+                        <tr>
+                            <td><span class="symbol"
+                                    style="background:rgba(251,211,141,0.15);color:var(--accent3)">H</span></td>
+                            <td>Escala</td>
+                        </tr>
+                        <tr>
+                            <td><span class="symbol"
+                                    style="background:rgba(251,211,141,0.15);color:var(--accent3)">-</span></td>
+                            <td>Rail / passarel·la</td>
+                        </tr>
+                        <tr>
+                            <td><span class="symbol"
+                                    style="background:rgba(252,129,129,0.15);color:var(--accent4)">D</span></td>
+                            <td>Porta</td>
+                        </tr>
+                        <tr>
+                            <td><span class="symbol" style="background:rgba(160,160,160,0.15);color:#a0aec0">S</span>
+                            </td>
+                            <td>Pedra movible</td>
+                        </tr>
+                        <tr>
+                            <td><span class="symbol"
+                                    style="background:rgba(99,179,237,0.15);color:var(--accent)">P</span></td>
+                            <td>Jugador (posició inicial) 🐧</td>
+                        </tr>
+                        <tr>
+                            <td><span class="symbol" style="background:rgba(252,129,129,0.15);color:var(--accent4)">E,A,
+                                    S</span></td>
+                            <td>Enemics</td>
+                        </tr>
+                        <tr>
+                            <td><span class="symbol"
+                                    style="background:rgba(252,129,129,0.15);color:var(--accent4)">F</span></td>
+                            <td>Lanzallamas</td>
+                        </tr>
+                        <tr>
+                            <td><span class="symbol"
+                                    style="background:rgba(104,211,145,0.15);color:var(--accent2)">B</span></td>
+                            <td>Botó</td>
+                        </tr>
+                        <tr>
+                            <td><span class="symbol"
+                                    style="background:rgba(104,211,145,0.15);color:var(--accent2)">b</span></td>
+                            <td>Bloc Trampilla: apareix o desapareix quan pitges un botó</td>
+                        </tr>
+                        <tr>
+                            <td><span class="symbol" style="background:rgba(50,50,50,0.3);color:var(--muted)"> </span>
+                            </td>
+                            <td>Espai buit</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SPRITES -->
+        <section id="sprites">
+            <div class="section-label">06 - Sprites</div>
+            <h2>Estructura dels sprites (printables.json)</h2>
+
+            <pre><span class="c">[</span>
+<span class="c">{</span>
+<span class="k">"type"</span>: <span class="s">"door"</span>,
+<span class="k">"sprite"</span>: <span class="s">"🚪"</span>,
+<span class="k">"color"</span>: <span class="s">"#FF00BB"</span>,
+<span class="k">"filename"</span>: <span class="s">"door.png</span>
+<span class="c">}</span>
+<span class="c">]</span></pre>
+
+            <div class="card" style="margin-top:16px">
+                <h3>Camps</h3>
+                <div class="mod-fields" style="margin-top:0">
+                    <div class="mod-field">
+                        <span class="field-key">type</span>
+                        <span class="field-val">Tipus de bloc (veure llista)</span>
+                    </div>
+                    <div class="mod-field">
+                        <span class="field-key">sprite</span>
+                        <span class="field-val">Emoji o caràcter alternatiu (usat si no hi ha imatge)</span>
+                    </div>
+                    <div class="mod-field">
+                        <span class="field-key">color</span>
+                        <span class="field-val">Color en format hexadecimal (e.g.
+                            <codestyle="color:var(--accent2)">#FF00BB</code>)</span>
+                    </div>
+                    <div class="mod-field">
+                        <span class="field-key">filename</span>
+                        <span class="field-val">Nom del fitxer dins la carpeta
+                            <codestyle="color:var(--accent)">/sprites</code></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top:16px">
+                <h3>Tipus de blocs disponibles</h3>
+                <div class="sprites-grid" style="margin-top:12px">
+                    <div class="sprite-chip"><span class="emoji">🚪</span><span class="name">door</span></div>
+                    <div class="sprite-chip"><span class="emoji">🛤️</span><span class="name">rail</span></div>
+                    <div class="sprite-chip"><span class="emoji">🪜</span><span class="name">stair</span></div>
+                    <div class="sprite-chip"><span class="emoji">🧊</span><span class="name">ice</span></div>
+                    <div class="sprite-chip"><span class="emoji">🧱</span><span class="name">wall</span></div>
+                    <div class="sprite-chip"><span class="emoji">⬜</span><span class="name">blank</span></div>
+                    <div class="sprite-chip"><span class="emoji">🕳️</span><span class="name">molten</span></div>
+                    <div class="sprite-chip"><span class="emoji">🔥</span><span class="name">burnt</span></div>
+                    <div class="sprite-chip"><span class="emoji">🪨</span><span class="name">stone</span></div>
+                    <div class="sprite-chip"><span class="emoji">🍦</span><span class="name">icecream</span></div>
+                    <div class="sprite-chip"><span class="emoji">🐧</span><span class="name">player</span></div>
+                    <div class="sprite-chip">
+                        <span class="emoji">🔘</span><span class="name">button</span>
+                    </div>
+                    <div class="sprite-chip">
+                        <span class="emoji">⏹️</span><span class="name">trapdoor</span>
+                    </div>
+                    <div class="sprite-chip">
+                        <span class="emoji">👾</span><span class="name">enemy</span>
+                    </div>
+                    <div class="sprite-chip">
+                        <span class="emoji">👾</span><span class="name">ambushingenemy</span>
+                    </div>
+                    <div class="sprite-chip">
+                        <span class="emoji">👾</span><span class="name">seekerenemy</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NOTES -->
+        <section id="notes">
+            <div class="section-label">08 - Addicional</div>
+            <h2>Notes addicionals</h2>
+            <div style="display:flex; flex-direction:column; gap:12px">
+                <div class="note">
+                    <span class="note-icon">🖼️</span>
+                    <span>Si no es troba una imatge per a un sprite, es pot utilitzar un emoji com a alternativa.</span>
+                </div>
+                <div class="note">
+                    <span class="note-icon">🔤</span>
+                    <span>Es recomana no canviar la font d'emojis si no és necessari.</span>
+                </div>
+                <div class="note">
+                    <span class="note-icon">🗺️</span>
+                    <span>Els mapes es poden crear manualment amb eines com
+                        <strongstyle="color:var(--accent)">asciistudio</strong>.</span>
+                </div>
+                <div class="warning">
+                    <span>⚠️</span>
+                    <span>Les carpetes <strong>games</strong> i <strong>mods</strong> han d'existir obligatòriament al
+                        costat del fitxer .jar.</span>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</body>
+
+</html>
