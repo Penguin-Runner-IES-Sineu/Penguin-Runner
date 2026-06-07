@@ -367,23 +367,25 @@ public class GamePanel extends JPanel implements Serializable {
         for (int row = 0; row < gameState.getRows(); row++) {
             for (int col = 0; col < gameState.getCols(); col++) {
                 Block b = gameState.getBlocks()[row][col];
-                if (b.isDoor()) {
-                    if (gameState.checkObjective()) {
-                        b.setType(TileType.DOOR);
+                if (b != null) {
+                    if (b.isDoor()) {
+                        if (gameState.checkObjective()) {
+                            b.setType(TileType.DOOR);
+                            b.setPrintables();
+                        }
+                    }
+                    if (b.isTrapdoor()) {
+                        if (gameState.buttonPressed()) {
+                            b.setType(TileType.TRAPDOOR);
+                            b.setSolid(true);
+                        } else {
+                            b.setType(TileType.BLANK);
+                            b.setSolid(false);
+                        }
                         b.setPrintables();
                     }
+                    b.draw(row, col);
                 }
-                if (b.isTrapdoor()) {
-                    if (gameState.buttonPressed()) {
-                        b.setType(TileType.TRAPDOOR);
-                        b.setSolid(true);
-                    } else {
-                        b.setType(TileType.BLANK);
-                        b.setSolid(false);
-                    }
-                    b.setPrintables();
-                }
-                b.draw(row, col);
             }
         }
     }

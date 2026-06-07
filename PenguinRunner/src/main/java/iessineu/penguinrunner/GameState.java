@@ -727,7 +727,8 @@ public class GameState implements Serializable {
             List<Item> items = player.getItems();
             int lives = player.getLives();
             loadMap();
-            player.setItems(items);       // conserva ítems si quieres
+            // player.setItems(items);       // conserva ítems si quieres
+            player.setItems(new ArrayList());
             // o player.setItems(new ArrayList()); para perderlos
             player.setLives(lives);       // restaura las vidas tras loadMap
         } else {
