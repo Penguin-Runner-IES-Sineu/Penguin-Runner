@@ -11,6 +11,7 @@ import java.util.List;
 import iessineu.penguinrunner.Entity.Items.Flamethrower;
 import iessineu.penguinrunner.Entity.Items.Item;
 import iessineu.penguinrunner.Entity.Items.Teleport;
+import iessineu.penguinrunner.GameState;
 import iessineu.penguinrunner.Movement.Direction;
 import iessineu.penguinrunner.Printable;
 import iessineu.penguinrunner.States.PlayerState;
@@ -136,11 +137,12 @@ import iessineu.penguinrunner.States.WalkingState;
         }
     }
 
-    public void useItem() {
+    public void useItem(GameState gs) {
         Item item = items.get(selectedItem);
         switch (item.getName()) {
             case "flamethrower" -> {
                 Flamethrower f = (Flamethrower) item;
+                f.use(this, gs);
                 if (f.expired()) {
                     items.remove(selectedItem);
                     selectedItem = 0;
@@ -160,6 +162,10 @@ import iessineu.penguinrunner.States.WalkingState;
             }
         }
         return false;
+    }
+
+    public void removeItem(){
+        items.remove(selectedItem);
     }
 
     public PlayerState getState() {

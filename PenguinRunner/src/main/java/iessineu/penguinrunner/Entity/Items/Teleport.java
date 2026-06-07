@@ -41,5 +41,9 @@ public class Teleport extends Item implements Serializable {
         return col;
     }
 
+    public boolean pointSet() {
+        return pointSet;
+    }
+
 
 }

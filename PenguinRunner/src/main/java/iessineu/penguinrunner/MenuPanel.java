@@ -13,6 +13,8 @@ import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -88,23 +90,23 @@ public class MenuPanel extends JPanel {
         animTimer.start();
     }
 
-    // private void configurarTecles() {
-    //     addKeyListener(new KeyAdapter() {
-    //         @Override
-    //         public void keyPressed(KeyEvent e) {
-    //             int total = 2;
-    //             switch (e.getKeyCode()) {
-    //                 case KeyEvent.VK_UP ->
-    //                     seleccionat = (seleccionat - 1 + total) % total;
-    //                 case KeyEvent.VK_DOWN ->
-    //                     seleccionat = (seleccionat + 1) % total;
-    //                 case KeyEvent.VK_ENTER, KeyEvent.VK_Z ->
-    //                     activar();
-    //             }
-    //             repaint();
-    //         }
-    //     });
-    // }
+    private void configurarTecles() {
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                int total = 2;
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_UP ->
+                        seleccionat = (seleccionat - 1 + total) % total;
+                    case KeyEvent.VK_DOWN ->
+                        seleccionat = (seleccionat + 1) % total;
+                    case KeyEvent.VK_ENTER, KeyEvent.VK_Z ->
+                        activar();
+                }
+                repaint();
+            }
+        });
+    }
 
     private void configurarRatolí() {
         addMouseMotionListener(new MouseMotionAdapter() {

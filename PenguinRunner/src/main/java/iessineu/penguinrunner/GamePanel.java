@@ -205,10 +205,10 @@ public class GamePanel extends JPanel implements Serializable {
             case KeyEvent.VK_B -> {
                 gameState.changeVolume();
             }
-            case KeyEvent.VK_P ->
-                guardarPartida();
-            case KeyEvent.VK_O ->
-                carregarPartida();
+            // case KeyEvent.VK_P ->
+            //     guardarPartida();
+            // case KeyEvent.VK_O ->
+            //     carregarPartida();
             case KeyEvent.VK_ESCAPE ->
                 menuPausa();
             default -> {

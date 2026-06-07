@@ -37,41 +37,7 @@ public class PenguinRunner {
         menu.setVisible(true);
         menuTimer = new Timer(200, e -> arrancar(menu));
         menuTimer.start();
-        // if (arrancar) {
-        //     menuTimer.stop();
-        //     menu.setVisible(false);
-        //     GameFrame frame = null;
-        //     for (int i = 0; i < claus.length; i++) {
-        //         String clau = claus[i];
-        //         if ("v".equals(clau)) { //parametre -v per carregar vanilla si o si
-        //             break;
-        //         }
-        //         String seleccio = valors[i];
-        //         switch (clau) {
-        //             case "-g", "-game" -> {
-        //                 GamePanel.setFolderPath("games/" + seleccio + "/");
-        //                 GamePanel.setGame(true);
-        //                 System.out.println("Carregant joc personalitzat...");
-        //                 cls();
-        //                 GamePanel.updatePaths();
-        //                 GamePanel.setSpriteMap(GamePanel.createSpriteMap(false));
-        //                 // frame = new GameFrame();
-        //             }
-        //             case "-m", "-mod" -> {
-        //                 if (frame == null) {
-        //                     frame = new GameFrame();
-        //                 }
-        //                 System.out.println("Carregant mods...");
-        //                 GamePanel panel = frame.getPanel();
-        //                 panel.loadMods("mods/" + seleccio);
-        //             }
-        //         }
-        //     }
-        //     if (frame == null) {
-        //         frame = new GameFrame();
-        //     }
-        //     frame.setVisible(true);
-        // }
+
     }
 
     public static void cls() {
@@ -87,12 +53,8 @@ public class PenguinRunner {
             menu.setVisible(false);
 
             GameFrame frame = null;
-            // GameFrame frame = new GameFrame();
             for (int i = 0; i < claus.length; i++) {
                 String clau = claus[i];
-                if ("v".equals(clau)) { //parametre -v per carregar vanilla si o si
-                    break;
-                }
                 String seleccio = valors[i];
                 switch (clau) {
                     case "-g", "-game" -> {

@@ -31,7 +31,6 @@ import org.json.JSONObject;
 import iessineu.penguinrunner.Blocks.Block;
 import iessineu.penguinrunner.Blocks.TileType;
 import iessineu.penguinrunner.Entity.GameMap;
-import iessineu.penguinrunner.Entity.Items.Flamethrower;
 import iessineu.penguinrunner.Entity.Items.Item;
 import iessineu.penguinrunner.Entity.Items.Teleport;
 import iessineu.penguinrunner.Entity.Player;
@@ -289,16 +288,14 @@ public class GameState implements Serializable {
     }
 
     public void useItem() {
+        Item i = player.getSelectedItem();
         if (player.hasItems()) {
-            player.useItem();
+            player.useItem(this);
         } else {
             System.out.println("No tens objectes!");
         }
-        Item i = player.getSelectedItem();
         switch (i.getName()) {
             case "flamethrower" -> {
-                Flamethrower f = (Flamethrower) i;
-                f.use(player, this);
                 soundManager.playSound("flame", !GamePanel.hasGame());
             }
             case "teleport" -> {
@@ -307,6 +304,7 @@ public class GameState implements Serializable {
                 if (moved) {
                     blocks[t.getRow()][t.getCol()] = new Block(TileType.BLANK);
                     soundManager.playSound("teleport", !GamePanel.hasGame());
+                    player.removeItem();
                 } else {
                     blocks[t.getRow()][t.getCol()] = new Block(TileType.TELEPORT);
                     blocks[t.getRow()][t.getCol()].setCollectable(false);

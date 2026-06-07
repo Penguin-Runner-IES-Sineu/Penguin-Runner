@@ -39,16 +39,7 @@ public class MenuFrame extends JFrame implements Serializable {
         add(menu);
         pack();
         setLocationRelativeTo(null);
-
-        // Centra la finestra a la pantalla.
-        // GamePanel panel = new GamePanel(this);
-        // add(panel);
-        // // add(new GamePanel(this));
-        // attachedPanel = panel;
-        // // Ajusta la mida de la finestra segons el GamePanel.
-        // pack();
-        // // Centra la finestra a la pantalla.
-        // setLocationRelativeTo(null);
+        
     }
 
     public boolean arrancar() {
