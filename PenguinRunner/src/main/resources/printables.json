@@ -85,7 +85,7 @@
   },
   {
     "type": "flamethrower",
-    "sprite": "F",
+    "sprite": "🔫",
     "color": "#FF0000",
     "filename": "flamethrower.png"
   },

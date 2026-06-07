@@ -86,9 +86,9 @@
                     </div>
                 </div>
             </div>
-            <div class="warnign" style="margin-top:16px">
+            <div class="warning" style="margin-top:16px">
                 <span>⚠️</span>
-                <span>Les carpetes <strong>games</strong> i <strong>mods</strong> són OBLIGATÒRIES!</span>
+                <span>La carpeta games es obligatòria per a la carrega del joc!</span>
             </div>
         </section>
 
@@ -222,6 +222,10 @@
                 <span>Tots els <code style="color:var(--accent)">filename</code> seran relatius a la carpeta on està
                     ubicat el <code style="color:var(-accent)">mod.json</code>.</span>
             </div>
+            <div class="warning" style="margin-top:16px">
+                <span>⚠️</span>
+                <span>La carpeta mods es obligatòria per a la carrega de mods!</span>
+            </div>
         </section>
 
         <!-- MAPES -->
@@ -323,7 +327,7 @@
                         </tr>
                         <tr>
                             <td><span class="symbol"
-                                    style="background:rgba(252,129,129,0.15);color:var(--accent4)">S</span></td>
+                                    style="background:rgba(252,129,129,0.15);color:var(--accent4)">W</span></td>
                             <td>Enemic Seeker</td>
                         </tr>
                         <tr>
@@ -333,8 +337,18 @@
                         </tr>
                         <tr>
                             <td><span class="symbol"
+                                    style="background:rgba(252,129,129,0.15);color:var(--accent4)">C</span></td>
+                            <td>Enemic Lladre</td>
+                        </tr>
+                        <tr>
+                            <td><span class="symbol"
                                     style="background:rgba(252,129,129,0.15);color:var(--accent4)">F</span></td>
                             <td>Lanzallamas</td>
+                        </tr>
+                        <tr>
+                            <td><span class="symbol"
+                                    style="background:rgba(104,211,145,0.15);color:var(--accent2)">T</span></td>
+                            <td>Objecte Teleport</td>
                         </tr>
                         <tr>
                             <td><span class="symbol"
@@ -393,7 +407,7 @@
             </div>
 
             <div class="card" style="margin-top:16px">
-                <h3>Tipus de blocs disponibles</h3>
+                <h3>Tipus de sprites disponibles</h3>
                 <div class="sprites-grid" style="margin-top:12px">
                     <div class="sprite-chip"><span class="emoji">🚪</span><span class="name">door</span></div>
                     <div class="sprite-chip"><span class="emoji">🛤️</span><span class="name">rail</span></div>
@@ -408,6 +422,8 @@
                     <div class="sprite-chip"><span class="emoji">🐧</span><span class="name">player</span></div>
                     <div class="sprite-chip"><span class="emoji">🔘</span><span class="name">button</span></div>
                     <div class="sprite-chip"><span class="emoji">⏹️</span><span class="name">trapdoor</span></div>
+                    <div class="sprite-chip"><span class="emoji">🔫</span><span class="name">flamethrower</span></div>
+                    <div class="sprite-chip"><span class="emoji">🌀</span><span class="name">teleport</span></div>
                     <div class="sprite-chip"><span class="emoji">👾</span><span class="name">enemy</span></div>
                     <div class="sprite-chip"><span class="emoji">👾</span><span class="name">ambushingenemy</span></div>
                     <div class="sprite-chip"><span class="emoji">👾</span><span class="name">seekerenemy</span></div>
@@ -434,11 +450,6 @@
                     <span>Els mapes es poden crear manualment amb eines com
                         <strongstyle="color:var(--accent)"><a
                                 href="https://asciistudio.app/">asciistudio</a></strong>.</span>
-                </div>
-                <div class="warning">
-                    <span>⚠️</span>
-                    <span>Les carpetes <strong>games</strong> i <strong>mods</strong> han d'existir obligatòriament al
-                        costat del fitxer .jar per poder carregar un joc o mod.</span>
                 </div>
             </div>
         </section>
