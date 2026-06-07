@@ -5,16 +5,21 @@ package iessineu.penguinrunner;
 
 import java.util.Arrays;
 
+import javax.swing.Timer;
+
 /**
  *
  * @author loren
  */
 public class PenguinRunner {
 
+    static String[] claus = new String[0];
+    static String[] valors = new String[0];
+    static boolean arrancar = false;
+    static Timer menuTimer;
+
     public static void main(String[] args) {
 
-        String[] claus = new String[0];
-        String[] valors = new String[0];
         for (String arg : args) {
             if (arg.startsWith("-")) {
                 claus = Arrays.copyOf(claus, claus.length + 1);  //si té un guió, feim es
@@ -28,54 +33,92 @@ public class PenguinRunner {
             }
         }
 
-        GameFrame frame = null;
-        // GameFrame frame = new GameFrame();
-        for (int i = 0; i < claus.length; i++) {
-            String clau = claus[i];
-            if ("v".equals(clau)) { //parametre -v per carregar vanilla si o si
-                break;
-            }
-            String seleccio = valors[i];
-            switch (clau) {
-                case "-g", "-game" -> {
-                    GamePanel.setFolderPath("games/" + seleccio + "/");
-                    GamePanel.setGame(true);
-                    System.out.println("Carregant joc personalitzat...");
-                    cls();
-                    GamePanel.updatePaths();
-                    GamePanel.setSpriteMap(GamePanel.createSpriteMap(false));
-                    // frame = new GameFrame();
-                }
-                case "-m", "-mod" -> {
-                    if (frame == null) {
-                        frame = new GameFrame();
-                    }
-                    System.out.println("Carregant mods...");
-                    GamePanel panel = frame.getPanel();
-                    panel.loadMods("mods/" + seleccio);
-                }
-            }
-        }
-
-        /*
-         * SwingUtilities.invokeLater fa que la finestra es creï
-         * correctament dins el fil d'execució de Swing.
-         */
-        // SwingUtilities.invokeLater(() -> {
-        // GamePanel.setFolderPath("");
-        // GamePanel.setFolderPath("resources/");
-        // GamePanel.setGame(false);
-        if (frame == null) {
-            frame = new GameFrame();
-        }
-        frame.setVisible(true);
-        // });
-
+        MenuFrame menu = new MenuFrame();
+        menu.setVisible(true);
+        menuTimer = new Timer(200, e -> arrancar(menu));
+        menuTimer.start();
+        // if (arrancar) {
+        //     menuTimer.stop();
+        //     menu.setVisible(false);
+        //     GameFrame frame = null;
+        //     for (int i = 0; i < claus.length; i++) {
+        //         String clau = claus[i];
+        //         if ("v".equals(clau)) { //parametre -v per carregar vanilla si o si
+        //             break;
+        //         }
+        //         String seleccio = valors[i];
+        //         switch (clau) {
+        //             case "-g", "-game" -> {
+        //                 GamePanel.setFolderPath("games/" + seleccio + "/");
+        //                 GamePanel.setGame(true);
+        //                 System.out.println("Carregant joc personalitzat...");
+        //                 cls();
+        //                 GamePanel.updatePaths();
+        //                 GamePanel.setSpriteMap(GamePanel.createSpriteMap(false));
+        //                 // frame = new GameFrame();
+        //             }
+        //             case "-m", "-mod" -> {
+        //                 if (frame == null) {
+        //                     frame = new GameFrame();
+        //                 }
+        //                 System.out.println("Carregant mods...");
+        //                 GamePanel panel = frame.getPanel();
+        //                 panel.loadMods("mods/" + seleccio);
+        //             }
+        //         }
+        //     }
+        //     if (frame == null) {
+        //         frame = new GameFrame();
+        //     }
+        //     frame.setVisible(true);
+        // }
     }
 
     public static void cls() {
         for (int i = 0; i < 100; i++) {
             System.out.println("");
+        }
+    }
+
+    public static void arrancar(MenuFrame menu) {
+        arrancar = menu.arrancar();
+        if (arrancar) {
+            menuTimer.stop();
+            menu.setVisible(false);
+
+            GameFrame frame = null;
+            // GameFrame frame = new GameFrame();
+            for (int i = 0; i < claus.length; i++) {
+                String clau = claus[i];
+                if ("v".equals(clau)) { //parametre -v per carregar vanilla si o si
+                    break;
+                }
+                String seleccio = valors[i];
+                switch (clau) {
+                    case "-g", "-game" -> {
+                        GamePanel.setFolderPath("games/" + seleccio + "/");
+                        GamePanel.setGame(true);
+                        System.out.println("Carregant joc personalitzat...");
+                        cls();
+                        GamePanel.updatePaths();
+                        GamePanel.setSpriteMap(GamePanel.createSpriteMap(false));
+                    }
+                    case "-m", "-mod" -> {
+                        if (frame == null) {
+                            frame = new GameFrame();
+                        }
+                        System.out.println("Carregant mods...");
+                        GamePanel panel = frame.getPanel();
+                        panel.loadMods("mods/" + seleccio);
+                    }
+                }
+            }
+
+            if (frame == null) {
+                frame = new GameFrame();
+            }
+
+            frame.setVisible(true);
         }
     }
 }

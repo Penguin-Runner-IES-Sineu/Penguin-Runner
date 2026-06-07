@@ -7,6 +7,7 @@ package iessineu.penguinrunner;
 import java.io.Serializable;
 
 import javax.swing.JFrame;
+import javax.swing.Timer;
 
 /**
  *
@@ -21,6 +22,9 @@ public class GameFrame extends JFrame implements Serializable {
 
     private GamePanel attachedPanel = null;
 
+    private boolean arrancar = false;
+    Timer timer;
+
     public GameFrame() {
         setTitle("PenguinRunner");
 
@@ -31,14 +35,19 @@ public class GameFrame extends JFrame implements Serializable {
         setResizable(false);
 
         // Afegim el panell del joc.
+        // MenuPanel menu = new MenuPanel(this);
+        // timer = new Timer(200, e -> arrancar(menu));
+        // timer.start();
+        // add(menu);
+        // pack();
+        // setLocationRelativeTo(null);
+        // Centra la finestra a la pantalla.
         GamePanel panel = new GamePanel(this);
         add(panel);
         // add(new GamePanel(this));
         attachedPanel = panel;
-
         // Ajusta la mida de la finestra segons el GamePanel.
         pack();
-
         // Centra la finestra a la pantalla.
         setLocationRelativeTo(null);
     }

@@ -912,7 +912,6 @@ public class GameState implements Serializable {
         vol = vol.replace(",", ".");
         float volume = Float.parseFloat(vol);
         changeVolume(volume);
-
     }
 
     public void changeVolume(float vol) {

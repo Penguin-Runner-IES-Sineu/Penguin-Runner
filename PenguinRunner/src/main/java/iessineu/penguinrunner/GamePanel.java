@@ -29,6 +29,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -206,11 +209,38 @@ public class GamePanel extends JPanel implements Serializable {
                 guardarPartida();
             case KeyEvent.VK_O ->
                 carregarPartida();
+            case KeyEvent.VK_ESCAPE ->
+                menuPausa();
             default -> {
             }
         }
         gameState.interact();
         resizePanelToGame();
+    }
+
+    public void menuPausa() {
+        ClassLoader classLoader = PenguinRunner.class.getClassLoader();
+        InputStream is = classLoader.getResourceAsStream("sprites/player.png");
+        Icon icon = null;
+        try {
+            icon = new ImageIcon(ImageIO.read(is));
+        } catch (IOException ex) {
+            System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        String[] opcions = {"Resumir", "Canviar volum", "Guardar Partida", "Carregar Partida"};
+        int opcio = JOptionPane.showOptionDialog(null, "Tria una opcio", "Menu de Pausa", 0, 0, icon, opcions, "a");
+        switch (opcio) {
+            case 1 -> {
+                gameState.changeVolume();
+                menuPausa();
+            }
+            case 2 -> {
+                guardarPartida();
+            }
+            case 3 -> {
+                carregarPartida();
+            }
+        }
     }
 
     /*
@@ -248,12 +278,17 @@ public class GamePanel extends JPanel implements Serializable {
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(
                     this,
-                    "No s'ha pogut guardar la partida.",
+                    "No s'ha pogut guardar la partida. Consulta la consola per més informació",
                     "Error",
                     JOptionPane.ERROR_MESSAGE
             );
             ex.printStackTrace();
         }
+        JOptionPane.showMessageDialog(
+                this,
+                "S'ha guardat la partida."
+        );
+        menuPausa();
     }
 
     /*
@@ -400,7 +435,7 @@ public class GamePanel extends JPanel implements Serializable {
 
         icecream.draw(gameState.getRows(), 5);
         for (int i = 0; i < player.getLives(); i++) {
-            player.draw(gameState.getRows(), 1+i);
+            player.draw(gameState.getRows(), 1 + i);
             // g2.drawString(player.draw, 100, textY+i);
         }
         // g2.drawString(player.getLives() + "/ " + gameState.getLives(), 100, textY);
