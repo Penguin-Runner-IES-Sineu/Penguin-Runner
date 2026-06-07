@@ -41,7 +41,7 @@ jobs:
 
           # 3. Create the package.zip inside the root staging folder
           cd staging/full-game
-          zip -r ../full_gameV1.${{ github.run_number}}.zip .
+          zip -r ../Penguin_Runner_full_.${{ github.run_number}}.zip .
 
       # Create the GitHub Release and upload BOTH the standalone jar and the zip
       - name: Create GitHub Release
@@ -53,4 +53,4 @@ jobs:
           prerelease: false
           files: |
             staging/*.jar
-            staging/full_gameV1.${{ github.run_number}}.zip
+            staging/Penguin_Runner_full_V1.${{ github.run_number}}.zip
