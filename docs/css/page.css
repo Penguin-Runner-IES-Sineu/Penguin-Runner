@@ -31,6 +31,10 @@ body {
     min-height: 100vh;
 }
 
+.mechanic-list a{
+    color:#569cd6;
+}
+
 /* Header */
 .hero {
     position: relative;

@@ -33,7 +33,6 @@
 
         <!-- DESCRIPCIÓ -->
         <section id="descripcio">
-            <div class="section-label">01 - Introducció</div>
             <h2>Descripció general</h2>
             <div class="card">
                 <p>PenguinRunner és un joc en el qual controles un pingüí mitjançant el teclat. L'objectiu principal és
@@ -45,7 +44,6 @@
 
         <!-- CONTROLS -->
         <section id="controls">
-            <div class="section-label">02 - Input</div>
             <h2>Controls del jugador</h2>
             <div class="card">
                 <div class="controls-grid">
@@ -80,16 +78,33 @@
 
         <!-- MECÀNIQUES -->
         <section id="mecaniques">
-            <div class="section-label">03 - Gameplay</div>
             <h2>Mecàniques del joc</h2>
             <ul class="mechanic-list">
                 <li><span class="icon">🐧</span> El jugador controla un pingüí.</li>
-                <li><span class="icon">💥</span> El pingüí pot destruir blocs propers amb les tecles Q i E.</li>
-                <li><span class="icon">💥</span> Es poden recollir objectes del mapa, més informació a la <a
+                <li><span class="icon">💥</span> El pingüí pot destruir alguns blocs o moure'n d'altres, més informació
+                    <a href="blocks.html"> aquí </a>
+                </li>
+                <li><span class="icon">📦</span> Es poden recollir objectes del mapa, més informació a la <a
                         href="collectibles.html"> pàgina d'objectes </a></li>
+                <li><span class="icon">👾</span> S'han evitar tots els <a href="enemies.html"> enemics </a> de diferents
+                    tipus del mapa </li>
                 <li><span class="icon">🍦</span> S'han de recollir tots els gelats del mapa.</li>
                 <li><span class="icon">🚪</span> Quan es recullen tots els gelats, s'activa una porta.</li>
                 <li><span class="icon">➡️</span> Les portes permeten accedir a altres nivells.</li>
+            </ul>
+        </section>
+
+        <section id="HUD">
+            <h2>HUD</h2>
+            <img src="media/hud.png" alt="" srcset="">
+            <ul class="mechanic-list">
+                <li>El Display del joc et proporciona amb la següent informació:</li>
+                <li>Vides: Representades com un sprite del jugador, si n'hi ha 3, en tens 3, i en perdràs una cada pic
+                    que un enemic te feri</li>
+                <li>Gelats: La quantitat que tens i la que has d'aconseguir per passar de nivell</li>
+                <li>Nivell: El nivell Actual</li>
+                <li>Objectes: Quan tenguis un objecte, aquest panell sortirà, i actua d'invetari. S'ha de tenir en compte de que sempre hi ha 3 icones, i serveix com una ruleta, si tens un objecte només sempre veuràs el mateix objecte, en canvi, si en tens 2 de diferents aniràn alternant</li>
+                <li>El nombre davall és la quantitat d'usos que tens restants per objectes que en tenen</li>
             </ul>
         </section>
 
