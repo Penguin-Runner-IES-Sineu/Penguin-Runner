@@ -77,7 +77,7 @@
             "color": "#00F000",
             "filename": "ambushingenemy.png"
         },
-         {
+        {
             "type": "icecreamenemy",
             "sprite": "🦭",
             "color": "#0000FF",
