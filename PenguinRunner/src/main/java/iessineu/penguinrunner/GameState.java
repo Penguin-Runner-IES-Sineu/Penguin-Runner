@@ -519,7 +519,7 @@ public class GameState implements Serializable {
         int row = enemy.getRow();
         int col = enemy.getCol();
 
-        // **** //
+// **** //
         if (shouldDie(row, col)) {
             dropIceCreamIfNeeded(enemy);
             enemy.die();
@@ -704,6 +704,7 @@ public class GameState implements Serializable {
             }
             if (dead) {
                 System.out.println("You died");
+                
                 playerDied(false);
                 return;
             }
@@ -1570,16 +1571,17 @@ public class GameState implements Serializable {
         int row = iceCreamEnemy.getRow();
         int col = iceCreamEnemy.getCol();
 
-        /*
-     * Si mor dins una casella on es pot deixar objecte,
-     * deixam un gelat a la posició on ha mort.
-         */
-        if (!isOutOfBounds(row, col)
-                && (isBlank(row, col) || isMolten(row, col))) {
-            blocks[row][col] = new Block(TileType.ICECREAM);
-            blocks[row][col].setPrintables();
-            iceCreamEnemy.dropIceCream();
+        if (isOutOfBounds(row, col)) {
+            return;
         }
+
+
+     // deixa el gelat exactament damunt la casella on ha mort.
+
+        blocks[row-1][col] = new Block(TileType.ICECREAM);
+        blocks[row-1][col].setPrintables();
+
+        iceCreamEnemy.dropIceCream();
     }
 
 }

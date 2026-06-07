@@ -36,14 +36,6 @@ public class IceCreamEnemy extends Enemy {
 
     @Override
     public void setPrintables() {
-        Map<String, List<String>> mapaSprites = GamePanel.getSpriteMap();
-        List<String> atributs = mapaSprites.get("icecreamenemy");
-
-        if (atributs != null) {
-            this.setEmoji(atributs.get(0));
-            this.setColorFromHex(atributs.get(1));
-        } else {
-            this.setEmoji("🍦");
-        }
+        super.setPrintables("icecreamenemy");
     }
 }
