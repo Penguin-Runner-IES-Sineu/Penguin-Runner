@@ -37,6 +37,7 @@ import iessineu.penguinrunner.Entity.Player;
 import iessineu.penguinrunner.Entity.enemies.AI;
 import iessineu.penguinrunner.Entity.enemies.AmbushingEnemy;
 import iessineu.penguinrunner.Entity.enemies.Enemy;
+import iessineu.penguinrunner.Entity.enemies.IceCreamEnemy;
 import iessineu.penguinrunner.Entity.enemies.SeekerEnemy;
 import iessineu.penguinrunner.Movement.Direction;
 import iessineu.penguinrunner.Movement.PositionHistory;
@@ -164,6 +165,10 @@ public class GameState implements Serializable {
                     case 'W' -> {
                         enemies.add(new SeekerEnemy(row, col, 1, 1));
                         blocks[row][col] = new Block(TileType.WOOD);
+                    }
+                    case 'C' -> {
+                        enemies.add(new IceCreamEnemy(row, col, 1, 1));
+                        blocks[row][col] = new Block(TileType.BLANK);
                     }
                     default -> {
                         blocks[row][col] = new Block(TileType.BLANK);
@@ -512,7 +517,9 @@ public class GameState implements Serializable {
         int row = enemy.getRow();
         int col = enemy.getCol();
 
+        // **** //
         if (shouldDie(row, col)) {
+            dropIceCreamIfNeeded(enemy);
             enemy.die();
             enemy.setTimeToRevive(7);
             return;
@@ -522,6 +529,11 @@ public class GameState implements Serializable {
             if (!isEnemy(row + 1, col)) {
                 enemy.setPosition(row + 1, col);
             }
+            return;
+        }
+        // **** //
+        if (enemy instanceof IceCreamEnemy iceCreamEnemy) {
+            moveIceCreamEnemy(iceCreamEnemy);
             return;
         }
 
@@ -1364,6 +1376,203 @@ public class GameState implements Serializable {
         }
 
         return isRail(row, col) || isStair(row, col);
+    }
+    // **** //
+
+    private void moveIceCreamEnemy(IceCreamEnemy enemy) {
+        /*
+     * Si encara no té gelat, primer mira si està damunt un gelat.
+         */
+        if (!enemy.hasIceCream()) {
+            collectIceCreamForEnemy(enemy);
+        }
+
+        /*
+     * Si ja té gelat, fuig del jugador.
+         */
+        if (enemy.hasIceCream()) {
+            moveEnemyAwayFromPlayer(enemy);
+            return;
+        }
+
+        /*
+     * Si encara no té gelat, cerca el gelat més proper.
+         */
+        moveEnemyToNearestIceCream(enemy);
+    }
+
+// **** //
+    private void collectIceCreamForEnemy(IceCreamEnemy enemy) {
+        int row = enemy.getRow();
+        int col = enemy.getCol();
+
+        if (getType(row, col) == TileType.ICECREAM) {
+            blocks[row][col] = new Block(TileType.BLANK);
+            enemy.collectIceCream();
+        }
+    }
+
+// **** //
+    private void moveEnemyToNearestIceCream(IceCreamEnemy enemy) {
+        Direction bestDirection = null;
+        int bestDistance = Integer.MAX_VALUE;
+
+        int enemyRow = enemy.getRow();
+        int enemyCol = enemy.getCol();
+
+        for (int row = 0; row < getRows(); row++) {
+            for (int col = 0; col < getCols(); col++) {
+
+                if (getType(row, col) != TileType.ICECREAM) {
+                    continue;
+                }
+
+                Direction direction = buscador.getShortestDirection(
+                        createPathMapForAI(enemy),
+                        createTileMapForAI(),
+                        enemyRow,
+                        enemyCol,
+                        row,
+                        col
+                );
+
+                if (direction == null) {
+                    continue;
+                }
+
+                int distance = Math.abs(enemyRow - row) + Math.abs(enemyCol - col);
+
+                if (distance < bestDistance) {
+                    bestDistance = distance;
+                    bestDirection = direction;
+                }
+            }
+        }
+
+        if (bestDirection == null) {
+            return;
+        }
+
+        int nextRow = enemy.getRow() + bestDirection.getDr();
+        int nextCol = enemy.getCol() + bestDirection.getDc();
+
+        if (isEnemy(nextRow, nextCol)) {
+            return;
+        }
+
+        if (canMoveTo(nextRow, nextCol) || isMolten(nextRow, nextCol)) {
+            enemy.setPosition(nextRow, nextCol);
+        }
+
+        collectIceCreamForEnemy(enemy);
+    }
+
+// **** //
+    private void moveEnemyAwayFromPlayer(IceCreamEnemy enemy) {
+        Direction bestDirection = null;
+
+        int enemyRow = enemy.getRow();
+        int enemyCol = enemy.getCol();
+
+        int currentDistance = distanceToPlayer(enemyRow, enemyCol);
+        int bestDistance = currentDistance;
+
+        for (Direction direction : Direction.values()) {
+            int nextRow = enemyRow + direction.getDr();
+            int nextCol = enemyCol + direction.getDc();
+
+            if (!canEnemyEscapeTo(enemyRow, enemyCol, nextRow, nextCol, direction)) {
+                continue;
+            }
+
+            int distance = distanceToPlayer(nextRow, nextCol);
+
+            if (distance > bestDistance) {
+                bestDistance = distance;
+                bestDirection = direction;
+            }
+        }
+
+        if (bestDirection == null) {
+            return;
+        }
+
+        int nextRow = enemy.getRow() + bestDirection.getDr();
+        int nextCol = enemy.getCol() + bestDirection.getDc();
+
+        enemy.setPosition(nextRow, nextCol);
+    }
+
+// **** //
+    private int distanceToPlayer(int row, int col) {
+        return Math.abs(row - player.getRow()) + Math.abs(col - player.getCol());
+    }
+
+// **** //
+    private boolean canEnemyEscapeTo(
+            int row,
+            int col,
+            int nextRow,
+            int nextCol,
+            Direction direction
+    ) {
+        if (isOutOfBounds(nextRow, nextCol)) {
+            return false;
+        }
+
+        if (isSolid(nextRow, nextCol)) {
+            return false;
+        }
+
+        if (isEnemy(nextRow, nextCol)) {
+            return false;
+        }
+
+        if (direction == Direction.UP) {
+            return isStair(row, col) || isStair(nextRow, nextCol);
+        }
+
+        if (direction == Direction.DOWN) {
+            return isStair(row, col)
+                    || isStair(nextRow, nextCol)
+                    || !hasGroundBelowForEnemy(row, col);
+        }
+
+        if (direction == Direction.LEFT || direction == Direction.RIGHT) {
+            return hasGroundBelowForEnemy(row, col)
+                    || hasGroundBelowForEnemy(nextRow, nextCol)
+                    || isRail(row, col)
+                    || isRail(nextRow, nextCol)
+                    || isStair(row, col)
+                    || isStair(nextRow, nextCol);
+        }
+
+        return false;
+    }
+
+// **** //
+    private void dropIceCreamIfNeeded(Enemy enemy) {
+        if (!(enemy instanceof IceCreamEnemy iceCreamEnemy)) {
+            return;
+        }
+
+        if (!iceCreamEnemy.hasIceCream()) {
+            return;
+        }
+
+        int row = iceCreamEnemy.getRow();
+        int col = iceCreamEnemy.getCol();
+
+        /*
+     * Si mor dins una casella on es pot deixar objecte,
+     * deixam un gelat a la posició on ha mort.
+         */
+        if (!isOutOfBounds(row, col)
+                && (isBlank(row, col) || isMolten(row, col))) {
+            blocks[row][col] = new Block(TileType.ICECREAM);
+            blocks[row][col].setPrintables();
+            iceCreamEnemy.dropIceCream();
+        }
     }
 
 }
