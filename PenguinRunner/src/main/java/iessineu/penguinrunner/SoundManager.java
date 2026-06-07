@@ -191,7 +191,7 @@ public class SoundManager implements Serializable {
         soundMap.put("break", breakSFX);
         soundMap.put("death", deathSFX);
         soundMap.put("gameover", gameOverSFX);
-        System.out.println(soundMap);
+        // System.out.println(soundMap);
         return soundMap;
     }
 

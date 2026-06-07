@@ -694,11 +694,11 @@ public class GameState implements Serializable {
 
         for (Enemy enemy : enemies) {
             if (!enemy.isDead() && isEnemy(playerRow, playerCol)) {
-                System.out.println("Condicio 1");
+                // System.out.println("Condicio 1");
                 dead = true;
             }
             if (!enemy.isDead() && isEnemy(playerRow, playerCol) && blocks[enemy.getRow()][enemy.getCol()].getType() != TileType.MOLTEN) {
-                System.out.println("Condicio 2");
+                // System.out.println("Condicio 2");
                 dead = true;
             }
             if (dead) {

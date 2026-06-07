@@ -72,7 +72,7 @@
     "filename": "seekerenemy.png"
   },
   {
-    "type": "ambushingEnemy",
+    "type": "ambushingenemy",
     "sprite": "🦭",
     "color": "#00FF00",
     "filename": "ambushingenemy.png"

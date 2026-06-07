@@ -22,7 +22,7 @@ public class Flamethrower extends Item implements Serializable {
     }
 
     public void use(Player p, GameState gs) {
-        System.out.println("Llamas cap a " + p.getLastDirection());
+        // System.out.println("Llamas cap a " + p.getLastDirection());
         usesLeft--;
         int playerRow = p.getRow();
         int playerCol = p.getCol();
