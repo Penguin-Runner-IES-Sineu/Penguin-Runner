@@ -28,6 +28,6 @@ public class AmbushingEnemy extends Enemy {
 
     @Override
     public void setPrintables() {
-        super.setPrintables("ambushingEnemy");
+        super.setPrintables("ambushingenemy");
     }
 }

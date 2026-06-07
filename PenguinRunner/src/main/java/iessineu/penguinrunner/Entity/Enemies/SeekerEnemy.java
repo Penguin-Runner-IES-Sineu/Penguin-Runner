@@ -30,6 +30,6 @@ public final class SeekerEnemy extends Enemy implements Serializable {
 
     @Override
     public void setPrintables() {
-        super.setPrintables("enemy2");
+        super.setPrintables("seekerenemy");
     }
 }

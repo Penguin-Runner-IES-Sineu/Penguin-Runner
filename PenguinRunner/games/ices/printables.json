@@ -66,10 +66,10 @@
         "filename": "enemy.png"
     },
     {
-        "type": "enemy2",
+        "type": "seekerenemy",
         "sprite": "🦭",
         "color": "#00FF00",
-        "filename": "enemy2.png"
+        "filename": "seekerenemy.png"
     },
     {
         "type": "ambushingEnemy",

@@ -8,9 +8,10 @@ package iessineu.penguinrunner.Entity.enemies;
  *
  * @author loren
  */
-import iessineu.penguinrunner.GamePanel;
 import java.util.List;
 import java.util.Map;
+
+import iessineu.penguinrunner.GamePanel;
 
 public class IceCreamEnemy extends Enemy {
 
@@ -36,7 +37,7 @@ public class IceCreamEnemy extends Enemy {
     @Override
     public void setPrintables() {
         Map<String, List<String>> mapaSprites = GamePanel.getSpriteMap();
-        List<String> atributs = mapaSprites.get("enemyIceCream");
+        List<String> atributs = mapaSprites.get("icecreamenemy");
 
         if (atributs != null) {
             this.setEmoji(atributs.get(0));

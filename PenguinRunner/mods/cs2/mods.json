@@ -1,0 +1,70 @@
+[
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "player",
+            "sprite": "😀",
+            "color": "#FFFF00",
+            "filename": "ct.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "enemy",
+            "sprite": "😀",
+            "color": "#FFFF00",
+            "filename": "t.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "flamethrower",
+            "sprite": "😀",
+            "color": "#FFFF00",
+            "filename": "awp.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ambushingenemy",
+            "sprite": "😀",
+            "color": "#FFFF00",
+            "filename": "t.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "seekerenemy",
+            "sprite": "😀",
+            "color": "#FFFF00",
+            "filename": "t.png"
+        }
+    },
+    {
+        "modtype": "sfx",
+        "modvalue": {
+            "type": "death",
+            "filename": "twin.wav"
+        }
+    },
+    {
+        "modtype": "sfx",
+        "modvalue": {
+            "type": "door",
+            "filename": "ctwin.wav"
+        }
+    },
+    {
+        "modtype": "sfx",
+        "modvalue": {
+            "type": "flame",
+            "filename": "awp.wav"
+        }
+    }
+]
+
+
