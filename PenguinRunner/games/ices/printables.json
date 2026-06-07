@@ -37,9 +37,9 @@
         },
         {
             "type": "molten",
-            "sprite": "🕳️",
+            "sprite": " ",
             "color": "#23F0Fa",
-            "filename": "molten.png"
+            "filename": ""
         },
         {
             "type": "stone",
