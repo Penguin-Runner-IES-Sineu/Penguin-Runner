@@ -702,6 +702,7 @@ public class GameState implements Serializable {
             }
             if (dead) {
                 System.out.println("You died");
+                
                 playerDied(false);
                 return;
             }
