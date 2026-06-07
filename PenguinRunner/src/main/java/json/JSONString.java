@@ -1,4 +1,4 @@
-package org.json;
+package json;
 
 /*
 Public Domain.

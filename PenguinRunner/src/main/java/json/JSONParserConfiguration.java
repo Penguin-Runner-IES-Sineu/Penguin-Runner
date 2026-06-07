@@ -1,4 +1,4 @@
-package org.json;
+package json;
 
 /**
  * Configuration object for the JSON parser. The configuration is immutable.

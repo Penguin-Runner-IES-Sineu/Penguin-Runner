@@ -24,10 +24,6 @@ import java.util.Queue;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import iessineu.penguinrunner.Blocks.Block;
 import iessineu.penguinrunner.Blocks.TileType;
 import iessineu.penguinrunner.Entity.GameMap;
@@ -46,6 +42,9 @@ import iessineu.penguinrunner.States.FallingState;
 import iessineu.penguinrunner.States.PlayerState;
 import iessineu.penguinrunner.States.RailState;
 import iessineu.penguinrunner.States.WalkingState;
+import json.JSONArray;
+import json.JSONException;
+import json.JSONObject;
 
 public class GameState implements Serializable {
 

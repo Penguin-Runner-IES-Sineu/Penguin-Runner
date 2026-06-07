@@ -38,10 +38,6 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import iessineu.penguinrunner.Blocks.Block;
 import iessineu.penguinrunner.Blocks.TileType;
 import iessineu.penguinrunner.Entity.Items.Flamethrower;
@@ -49,6 +45,9 @@ import iessineu.penguinrunner.Entity.Items.Item;
 import iessineu.penguinrunner.Entity.Player;
 import iessineu.penguinrunner.Entity.enemies.Enemy;
 import iessineu.penguinrunner.Movement.Direction;
+import json.JSONArray;
+import json.JSONException;
+import json.JSONObject;
 
 public class GamePanel extends JPanel implements Serializable {
 
