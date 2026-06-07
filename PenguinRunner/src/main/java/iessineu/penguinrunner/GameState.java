@@ -164,7 +164,7 @@ public class GameState implements Serializable {
                     }
                     case 'W' -> {
                         enemies.add(new SeekerEnemy(row, col, 1, 1));
-                        blocks[row][col] = new Block(TileType.WOOD);
+                        blocks[row][col] = new Block(TileType.BLANK);
                     }
                     case 'C' -> {
                         enemies.add(new IceCreamEnemy(row, col, 1, 1));
