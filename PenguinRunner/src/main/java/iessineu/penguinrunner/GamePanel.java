@@ -228,7 +228,7 @@ public class GamePanel extends JPanel implements Serializable {
         } catch (IOException ex) {
             System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        String[] opcions = {"Resumir", "Canviar volum", "Guardar Partida", "Carregar Partida"};
+        String[] opcions = {"Resumir", "Canviar volum música", "Guardar Partida", "Carregar Partida"};
         int opcio = JOptionPane.showOptionDialog(null, "Tria una opcio", "Menu de Pausa", 0, 0, icon, opcions, "a");
         switch (opcio) {
             case 1 -> {
