@@ -23,6 +23,7 @@ public class MenuFrame extends JFrame implements Serializable {
     private MenuPanel menu;
 
     public boolean arrancarJoc = false;
+    public boolean forceStart = false;
     Timer timer;
 
     public MenuFrame() {
@@ -43,11 +44,19 @@ public class MenuFrame extends JFrame implements Serializable {
     }
 
     public boolean arrancar() {
+        if(forceStart){
+            remove(menu);
+            return true;
+        }
         arrancarJoc = !menu.isOpen();
         if (arrancarJoc) {
             remove(menu);
         }
         return arrancarJoc;
+    }
+
+    public void forceStart(){
+        forceStart = true;
     }
 
 }

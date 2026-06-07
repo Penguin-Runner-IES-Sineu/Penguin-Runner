@@ -30,6 +30,7 @@ public enum TileType implements Serializable {
     FLAMETHROWER,
     BUTTON,
     TRAPDOOR,
+    EMPTY,
     TELEPORT;
 
     public boolean equals(TileType tyle) {

@@ -44,6 +44,7 @@ import org.json.JSONObject;
 
 import iessineu.penguinrunner.Blocks.Block;
 import iessineu.penguinrunner.Blocks.TileType;
+import iessineu.penguinrunner.Entity.Items.Item;
 import iessineu.penguinrunner.Entity.Player;
 import iessineu.penguinrunner.Entity.enemies.Enemy;
 import iessineu.penguinrunner.Movement.Direction;
@@ -436,9 +437,7 @@ public class GamePanel extends JPanel implements Serializable {
         icecream.draw(gameState.getRows(), 5);
         for (int i = 0; i < player.getLives(); i++) {
             player.draw(gameState.getRows(), 1 + i);
-            // g2.drawString(player.draw, 100, textY+i);
         }
-        // g2.drawString(player.getLives() + "/ " + gameState.getLives(), 100, textY);
         g2.drawString(player.geticeCream() + "/ " + gameState.getIceCream(), 250, textY);
 
         g2.drawString(
@@ -453,6 +452,38 @@ public class GamePanel extends JPanel implements Serializable {
                 padding,
                 textY + 35
         );
+
+        if (player.hasItems()) {
+            List<Item> items = player.getItems();
+            int originalPointer = player.getSelectedItemIndex();
+            for (int i = 0; i < 3; i++) {
+                int pointer = player.getSelectedItemIndex();
+                Block item = null;
+                switch (items.get(pointer).getName().toLowerCase()) {
+                    case "flamethrower" -> {
+                        item = new Block(TileType.FLAMETHROWER);
+                    }
+                    case "teleport" -> {
+                        item = new Block(TileType.TELEPORT);
+                    }
+                }
+                // if (i == selectedItem) {
+                // Block f = new Block(TileType.FLAMETHROWER);
+                if (item != null) {
+                    item.draw(gameState.getRows(), gameState.getCols() - 3 - i);
+                }
+                // f.draw(gameState.getRows(), gameState.getCols() - 3);
+                // }
+                player.nextItem();
+            }
+            player.setSelectedItemIndex(originalPointer);
+            Block arrow = new Block(TileType.EMPTY);
+            arrow.setEmoji("👆");
+            // arrow.setPrintables();
+            arrow.draw(gameState.getRows() + 1, gameState.getCols() - 4);
+        }
+
+        // g2.drawString("objectes", getWidth() - 150, textY + 35);
     }
 
     public static Map<String, List<String>> createSpriteMap(boolean fromResource) {

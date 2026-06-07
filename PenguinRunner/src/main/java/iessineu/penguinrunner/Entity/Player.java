@@ -195,6 +195,14 @@ import iessineu.penguinrunner.States.WalkingState;
             return new Item(""); //retornam un element buit per evitar "item is null", no farà res igualment perque la funcio que el crida empra un switch
         }
     }
+    
+    public int getSelectedItemIndex() {
+        return selectedItem;
+    }
+    
+    public void setSelectedItemIndex(int index) {
+        this.selectedItem = index;
+    }
 
     public void nextItem() {
         this.selectedItem++;

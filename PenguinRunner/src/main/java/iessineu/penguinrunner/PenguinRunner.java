@@ -35,6 +35,11 @@ public class PenguinRunner {
 
         MenuFrame menu = new MenuFrame();
         menu.setVisible(true);
+        for (String clau : claus) {
+            if (clau.equals("-skip")) {
+                menu.forceStart();
+            }
+        }
         menuTimer = new Timer(200, e -> arrancar(menu));
         menuTimer.start();
 
