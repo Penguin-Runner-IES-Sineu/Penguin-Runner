@@ -464,9 +464,11 @@ public class GamePanel extends JPanel implements Serializable {
         nivell.draw(gameState.getRows(), 8);
 
         Block controls = new Block(TileType.BLANK);
+        Printable.setFont(textFont.deriveFont(11f));
         controls.setEmoji("←↑→↓/WASD: moure, Q/E Rompre blocs, Z/X Canviar objecte, F: Interactuar, ESC: Pausa");
         controls.setColorFromHex("#FFFFFF");
         controls.draw(gameState.getRows() + 1, 5);
+        Printable.setFont(textFont.deriveFont(16f));
 
         if (player.hasItems()) {
             List<Item> items = player.getItems();
