@@ -5,6 +5,20 @@
             "type": "music",
             "filename": "sabina.wav"
         }
+    },
+    {
+        "modtype": "sfx",
+        "modvalue": {
+            "type": "death",
+            "filename": "trepa.wav"
+        }
+    },
+    {
+        "modtype": "sfx",
+        "modvalue": {
+            "type": "gameover",
+            "filename": "satan.wav"
+        }
     }
 ]
 

@@ -191,6 +191,7 @@ public class SoundManager implements Serializable {
         soundMap.put("break", breakSFX);
         soundMap.put("death", deathSFX);
         soundMap.put("gameover", gameOverSFX);
+        System.out.println(soundMap);
         return soundMap;
     }
 
@@ -224,5 +225,61 @@ public class SoundManager implements Serializable {
 
     public void setOriginalMap(Map<String, String> originalMap) {
         this.originalMap = originalMap;
+    }
+
+    public String getDoorSFX() {
+        return doorSFX;
+    }
+
+    public void setDoorSFX(String doorSFX) {
+        this.doorSFX = doorSFX;
+    }
+
+    public String getFlameSFX() {
+        return flameSFX;
+    }
+
+    public void setFlameSFX(String flameSFX) {
+        this.flameSFX = flameSFX;
+    }
+
+    public String getPickupSFX() {
+        return pickupSFX;
+    }
+
+    public void setPickupSFX(String pickupSFX) {
+        this.pickupSFX = pickupSFX;
+    }
+
+    public String getTeleportSFX() {
+        return teleportSFX;
+    }
+
+    public void setTeleportSFX(String teleportSFX) {
+        this.teleportSFX = teleportSFX;
+    }
+
+    public String getBreakSFX() {
+        return breakSFX;
+    }
+
+    public void setBreakSFX(String breakSFX) {
+        this.breakSFX = breakSFX;
+    }
+
+    public String getGameOverSFX() {
+        return gameOverSFX;
+    }
+
+    public void setGameOverSFX(String gameOverSFX) {
+        this.gameOverSFX = gameOverSFX;
+    }
+
+    public String getDeathSFX() {
+        return deathSFX;
+    }
+
+    public void setDeathSFX(String deathSFX) {
+        this.deathSFX = deathSFX;
     }
 }
