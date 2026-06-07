@@ -53,4 +53,4 @@ jobs:
           prerelease: false
           files: |
             staging/*.jar
-            staging/full_game.zip
+            staging/full_gameV1.${{ github.run_number}}.zip
