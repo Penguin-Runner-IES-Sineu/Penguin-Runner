@@ -106,6 +106,7 @@ public class GameState implements Serializable {
         startPlayerRow = 0;
         startPlayerCol = 0;
         iceCream = 0;
+        buttonPressed = false;
 
         for (int row = 0; row < level.length; row++) {
             for (int col = 0; col < level[row].length(); col++) {
@@ -578,8 +579,9 @@ public class GameState implements Serializable {
                 return;
             }
 
-            if ((canMoveTo(nextRow, nextCol)
-                    || isMolten(nextRow, nextCol))) {
+            if ((canMoveTo(nextRow, nextCol) && !isEnemy(nextRow, nextCol)
+                    || isMolten(nextRow, nextCol))
+                    ) {
                 ambushingEnemy.setPosition(nextRow, nextCol);
             }
 
@@ -633,7 +635,7 @@ public class GameState implements Serializable {
         int nextRow = enemy.getRow() + dr;
         int nextCol = enemy.getCol() + dc;
 
-        if (canMoveTo(nextRow, nextCol)) {
+        if (canMoveTo(nextRow, nextCol) && !isEnemy(nextRow, nextCol)) {
             enemy.setPosition(nextRow, nextCol);
         }
     }
