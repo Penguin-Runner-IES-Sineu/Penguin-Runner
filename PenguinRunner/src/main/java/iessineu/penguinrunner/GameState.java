@@ -701,23 +701,26 @@ public class GameState implements Serializable {
             }
             if (dead) {
                 System.out.println("You died");
-                playerDied();
+                playerDied(false);
                 return;
             }
         }
 
         if (isIce(playerRow, playerCol) || isFire(playerRow, playerCol)) {
             System.out.println("You died");
-            playerDied();
+            playerDied(false);
         }
     }
 
-    private void playerDied() {
+    public void playerDied(boolean wasForced) {
         player.loseLife();
 //    soundManager.playSound("die", !GamePanel.hasGame()); si tienes el sonido
 
         if (player.isAlive()) {
             // Solo recarga el nivel, conserva las vidas
+            if (!wasForced) {
+                soundManager.playSound("death", !GamePanel.hasGame());
+            }
             List<Item> items = player.getItems();
             int lives = player.getLives();
             loadMap();
@@ -725,6 +728,7 @@ public class GameState implements Serializable {
             // o player.setItems(new ArrayList()); para perderlos
             player.setLives(lives);       // restaura las vidas tras loadMap
         } else {
+            soundManager.playSound("gameover", !GamePanel.hasGame());
             // Game Over: reinicia desde el nivel 0
             gameOver();
         }

@@ -32,6 +32,8 @@ public class SoundManager implements Serializable {
     private String pickupSFX = "pickup.wav";
     private String teleportSFX = "teleport.wav";
     private String breakSFX = "break.wav";
+    private String gameOverSFX = "gameover.wav";
+    private String deathSFX = "death.wav";
     private String musicPath = "music.wav";
     private Map<String, String> originalMap = generateSoundMap(); //tipo, ruta
     private Map<String, String> soundsMap = generateSoundMap(); //tipo, ruta
@@ -126,6 +128,8 @@ public class SoundManager implements Serializable {
         InputStream pickupStream = new BufferedInputStream(classLoader.getResourceAsStream("pickup.wav"));
         InputStream teleportStream = new BufferedInputStream(classLoader.getResourceAsStream("teleport.wav"));
         InputStream breakStream = new BufferedInputStream(classLoader.getResourceAsStream("break.wav"));
+        InputStream deathStream = new BufferedInputStream(classLoader.getResourceAsStream("death.wav"));
+        InputStream gameOverStream = new BufferedInputStream(classLoader.getResourceAsStream("gameover.wav"));
         System.out.print("Caregant audio: ");
         try {
             AudioInputStream audioStream = null;
@@ -149,6 +153,12 @@ public class SoundManager implements Serializable {
                     }
                     case "break" -> {
                         audioStream = AudioSystem.getAudioInputStream(breakStream);
+                    }
+                    case "death" -> {
+                        audioStream = AudioSystem.getAudioInputStream(deathStream);
+                    }
+                    case "gameover" -> {
+                        audioStream = AudioSystem.getAudioInputStream(gameOverStream);
                     }
                 }
             } else {
@@ -179,6 +189,8 @@ public class SoundManager implements Serializable {
         soundMap.put("pickup", pickupSFX);
         soundMap.put("teleport", teleportSFX);
         soundMap.put("break", breakSFX);
+        soundMap.put("death", deathSFX);
+        soundMap.put("gameover", gameOverSFX);
         return soundMap;
     }
 

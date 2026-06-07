@@ -203,8 +203,8 @@ public class GamePanel extends JPanel implements Serializable {
             case KeyEvent.VK_Z -> {
                 gameState.changeItem(true);
             }
-            case KeyEvent.VK_B -> {
-                gameState.changeVolume();
+            case KeyEvent.VK_R -> {
+                gameState.playerDied(true);
             }
             // case KeyEvent.VK_P ->
             //     guardarPartida();
@@ -464,7 +464,7 @@ public class GamePanel extends JPanel implements Serializable {
 
         Block controls = new Block(TileType.BLANK);
         Printable.setFont(textFont.deriveFont(11f));
-        controls.setEmoji("←↑→↓/WASD: moure, Q/E Rompre blocs, Z/X Canviar objecte, F: Interactuar, ESC: Pausa");
+        controls.setEmoji("←↑→↓/WASD: moure, Q/E Rompre blocs, Z/X Canviar objecte, F: Interactuar, R: Reiniciar nivell ESC: Pausa");
         controls.setColorFromHex("#FFFFFF");
         controls.draw(gameState.getRows() + 1, 5);
         Printable.setFont(textFont.deriveFont(16f));

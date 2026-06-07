@@ -54,12 +54,6 @@
     "filename": "icecream.png"
   },
   {
-    "type": "burnt",
-    "sprite": "7",
-    "color": "#FFFF99",
-    "filename": "burnt.png"
-  },
-  {
     "type": "player",
     "sprite": "🐧",
     "color": "#FFFF00",
@@ -72,10 +66,10 @@
     "filename": "enemy.png"
   },
   {
-    "type": "enemy2",
+    "type": "seekerenemy",
     "sprite": "🦭",
-    "color": "#00FF00",
-    "filename": "enemy2.png"
+    "color": "#FFFF00",
+    "filename": "seekerenemy.png"
   },
   {
     "type": "ambushingEnemy",
@@ -84,14 +78,8 @@
     "filename": "ambushingenemy.png"
   },
   {
-    "type": "wood",
-    "sprite": "🪵",
-    "color": "#6E4442",
-    "filename": "wood.png"
-  },
-  {
     "type": "ice",
-    "sprite": "",
+    "sprite": "🧊",
     "color": "#FFFFFF",
     "filename": "ice.png"
   },
@@ -103,20 +91,26 @@
   },
   {
     "type": "button",
-    "sprite": "B",
+    "sprite": "🔘",
     "color": "#00FF00",
     "filename": "button.png"
   },
   {
     "type": "trapdoor",
-    "sprite": "d",
+    "sprite": "⏹️",
     "color": "#0000FF",
     "filename": "trapdoor.png"
   },
   {
     "type": "teleport",
-    "sprite": "TP",
+    "sprite": "🌀",
     "color": "#333333",
     "filename": "portal.png"
+  },
+  {
+    "type": "burnt",
+    "sprite": "🔥",
+    "color": "#BB0000",
+    "filename": "burnt.png"
   }
 ]

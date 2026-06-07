@@ -16,15 +16,26 @@
     <header class="hero">
         <span class="hero-penguin">🐧</span>
         <h1>Penguin<span>Runner</span></h1>
-        <p>Documentació oficial del joc. Controla un pingüí, recull gelats i supera nivells.</p>
+        <p>Com modificar el teu joc</p>
     </header>
 
     <nav>
         <a href="index.html">Descripció General</a>
         <a href="addons.html">Add-ons (Games i Mods)</a>
+        <a href="enemies.html">Tipus d'enemics </a>
+        <a href="blocks.html">Tipus de blocs </a>
+        <a href="items.html">Tipus de objectes </a>
     </nav>
 
     <div class="container">
+
+        <section>
+            <h2>Com carregar mods i games?</h2>
+            <p>Per carregar un mod, s'ha d'executar el .jar amb el parametre -m o -mod seguit del nom de la carpeta que es vol carregar, per exemple "-m yaris"</p>
+            <p>Per carregar un game, segueix la mateixa nomenclatura, però amb -g o -game, i el contingut a la carpeta games</p>
+            <p>L'ordre de carrega recomanat és -game -mod -mod -mod..., ja que un game re-emplaçarà TOT el contingut del joc quan es carregui, per tant si pos -mod -mod -game, el -game ho sobre-escriurà tot</p>
+
+        </section>
 
         <!-- ESTRUCTURA DEL JOC -->
         <section id="estructura">
@@ -40,17 +51,37 @@
                     <div style="padding-left:20px">
                         <div class="tree-item folder">📁 sprites</div>
                         <div class="tree-item"><span class="file-ext">font.ttf</span><span class="file-desc">→
-                                Fontprincipal del joc</span></div>
+                                Font principal del joc</span></div>
                         <div class="tree-item"><span class="file-ext">emoji.ttf</span><span
-                                class="file-desc">→Fontd'emojis (recomanat: Segoe
+                                class="file-desc">→Font d'emojis (recomanat: Segoe
                                 UI Emoji)</span></div>
-                        <div class="tree-item"><span class="file-ext">music.wav</span><span class="file-desc">→Músicadel
+                        <div class="tree-item"><span class="file-ext">music.wav</span><span class="file-desc">→Música del
                                 joc</span></div>
                         <div class="tree-item"><span class="file-ext">maps.json</span><span
-                                class="file-desc">→Definiciódels mapes</span></div>
+                                class="file-desc">→Definició dels mapes</span></div>
                         <div class="tree-item">
-                            <span class="file-ext">printables.json</span><span class="file-desc">→Definició
-                                delssprites</span>
+                            <span class="file-ext">printables.json</span><span class="file-desc">→Definició dels sprites</span>
+                        </div>
+                        <div class="tree-item">
+                            <span class="file-ext">collect.wav</span><span class="file-desc">So al recollir un gelat</span>
+                        </div>
+                        <div class="tree-item">
+                            <span class="file-ext">door.wav</span><span class="file-desc">So al pasar per una porta</span>
+                        </div>
+                        <div class="tree-item">
+                            <span class="file-ext">pickup.wav</span><span class="file-desc">So al agafar un objecte</span>
+                        </div>
+                        <div class="tree-item">
+                            <span class="file-ext">flame.wav</span><span class="file-desc">So al emprar el llançaflames</span>
+                        </div>
+                        <div class="tree-item">
+                            <span class="file-ext">teleport.wav</span><span class="file-desc">So al teletransportar-se</span>
+                        </div>
+                        <div class="tree-item">
+                            <span class="file-ext">death.wav</span><span class="file-desc">So al morir</span>
+                        </div>
+                        <div class="tree-item">
+                            <span class="file-ext">gameover.wav</span><span class="file-desc">So al perdre el joc</span>
                         </div>
                     </div>
                 </div>
@@ -89,7 +120,7 @@
                 <h3>Camps de mod.json</h3>
                 <div class="mod-fields">
                     <div class="modfield">
-                        <span class="field-key">modtype</span>
+                        <span class="field-key">modtype: el tipus d'objecte Pot ser:</span>
                         <span class="field-val"><span class="tag tag-blue">sprite</span>
                             <span class="tag tag-blue">map
                             </span><span class="tag tag-blue">sfx</span>
@@ -136,6 +167,8 @@
                         <span class="tag">pickup</span> agafar un objecte
                         <span class="tag">teleport</span> emprar el teleport
                         <span class="tag">door</span> entrar per una porta
+                        <span class="tag">death</span> un enemic te fer
+                        <span class="tag">gameover</span> mors i perds el joc
                     </div>
                 </div>
             </div>
@@ -185,7 +218,7 @@
 ]
 </pre>
             <div class="note">
-                <span class="note-icon">>ℹ️</span>
+                <span class="note-icon">ℹ️</span>
                 <span>Tots els <code style="color:var(--accent)">filename</code> seran relatius a la carpeta on està
                     ubicat el <code style="color:var(-accent)">mod.json</code>.</span>
             </div>
@@ -325,7 +358,6 @@
 
         <!-- SPRITES -->
         <section id="sprites">
-            <div class="section-label">06 - Sprites</div>
             <h2>Estructura dels sprites (printables.json)</h2>
             <pre class="json">
 {
@@ -374,28 +406,17 @@
                     <div class="sprite-chip"><span class="emoji">🪨</span><span class="name">stone</span></div>
                     <div class="sprite-chip"><span class="emoji">🍦</span><span class="name">icecream</span></div>
                     <div class="sprite-chip"><span class="emoji">🐧</span><span class="name">player</span></div>
-                    <div class="sprite-chip">
-                        <span class="emoji">🔘</span><span class="name">button</span>
-                    </div>
-                    <div class="sprite-chip">
-                        <span class="emoji">⏹️</span><span class="name">trapdoor</span>
-                    </div>
-                    <div class="sprite-chip">
-                        <span class="emoji">👾</span><span class="name">enemy</span>
-                    </div>
-                    <div class="sprite-chip">
-                        <span class="emoji">👾</span><span class="name">ambushingenemy</span>
-                    </div>
-                    <div class="sprite-chip">
-                        <span class="emoji">👾</span><span class="name">seekerenemy</span>
-                    </div>
+                    <div class="sprite-chip"><span class="emoji">🔘</span><span class="name">button</span></div>
+                    <div class="sprite-chip"><span class="emoji">⏹️</span><span class="name">trapdoor</span></div>
+                    <div class="sprite-chip"><span class="emoji">👾</span><span class="name">enemy</span></div>
+                    <div class="sprite-chip"><span class="emoji">👾</span><span class="name">ambushingenemy</span></div>
+                    <div class="sprite-chip"><span class="emoji">👾</span><span class="name">seekerenemy</span></div>
                 </div>
             </div>
         </section>
 
         <!-- NOTES -->
         <section id="notes">
-            <div class="section-label">08 - Addicional</div>
             <h2>Notes addicionals</h2>
             <div style="display:flex; flex-direction:column; gap:12px">
                 <div class="note">
@@ -404,17 +425,19 @@
                 </div>
                 <div class="note">
                     <span class="note-icon">🔤</span>
-                    <span>Es recomana no canviar la font d'emojis si no és necessari.</span>
+                    <span>Es recomana no canviar la font d'emojis si no és necessari.L'única font d'emoji provada
+                        funcional ha estat Segoe UI Emoji</span>
                 </div>
                 <div class="note">
                     <span class="note-icon">🗺️</span>
                     <span>Els mapes es poden crear manualment amb eines com
-                        <strongstyle="color:var(--accent)">asciistudio</strong>.</span>
+                        <strongstyle="color:var(--accent)"><a
+                                href="https://asciistudio.app/">asciistudio</a></strong>.</span>
                 </div>
                 <div class="warning">
                     <span>⚠️</span>
                     <span>Les carpetes <strong>games</strong> i <strong>mods</strong> han d'existir obligatòriament al
-                        costat del fitxer .jar.</span>
+                        costat del fitxer .jar per poder carregar un joc o mod.</span>
                 </div>
             </div>
         </section>

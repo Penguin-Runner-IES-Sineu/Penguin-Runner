@@ -13,6 +13,7 @@ initSqlJs(config).then(function (SQL) {
         const uInt8Array = new Uint8Array(xhr.response);
         const db = new SQL.Database(uInt8Array);
         contents = db.exec("SELECT * FROM enemies");
+        var container = document.querySelector('.container');
         for (let i = 0; i < contents[0].values.length; i++) {
             valors = contents[0].values[i];
 
@@ -20,15 +21,15 @@ initSqlJs(config).then(function (SQL) {
             type.innerHTML = valors[1];
 
             image = document.createElement("img");
-            src = "media/" + valors[2];
+            src = "media/sprites/" + valors[2];
             image.setAttribute("src", src);
 
             description = document.createElement("p");
             description.innerHTML = valors[3];
 
-            document.body.append(type);
-            document.body.append(image);
-            document.body.append(description);
+            container.append(type);
+            container.append(image);
+            container.append(description);
             // tbody.appendChild(row);
         }
 
