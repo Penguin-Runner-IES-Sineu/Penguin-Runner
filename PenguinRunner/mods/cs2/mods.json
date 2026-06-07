@@ -29,6 +29,15 @@
     {
         "modtype": "sprite",
         "modvalue": {
+            "type": "icecream",
+            "sprite": "😀",
+            "color": "#FFFF00",
+            "filename": "bomb.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
             "type": "ambushingenemy",
             "sprite": "😀",
             "color": "#FFFF00",
@@ -48,14 +57,14 @@
         "modtype": "sfx",
         "modvalue": {
             "type": "death",
-            "filename": "twin.wav"
+            "filename": "ctwin.wav"
         }
     },
     {
         "modtype": "sfx",
         "modvalue": {
             "type": "door",
-            "filename": "ctwin.wav"
+            "filename": "twin.wav"
         }
     },
     {
@@ -63,6 +72,20 @@
         "modvalue": {
             "type": "flame",
             "filename": "awp.wav"
+        }
+    },
+    {
+        "modtype": "sfx",
+        "modvalue": {
+            "type": "collect",
+            "filename": "bomb.wav"
+        }
+    },
+    {
+        "modtype": "music",
+        "modvalue": {
+            "type": "music",
+            "filename": "ez4ence.wav"
         }
     }
 ]
