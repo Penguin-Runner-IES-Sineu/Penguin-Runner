@@ -44,6 +44,7 @@ import org.json.JSONObject;
 
 import iessineu.penguinrunner.Blocks.Block;
 import iessineu.penguinrunner.Blocks.TileType;
+import iessineu.penguinrunner.Entity.Items.Flamethrower;
 import iessineu.penguinrunner.Entity.Items.Item;
 import iessineu.penguinrunner.Entity.Player;
 import iessineu.penguinrunner.Entity.enemies.Enemy;
@@ -413,6 +414,8 @@ public class GamePanel extends JPanel implements Serializable {
      */
     private void drawHUD(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
+        Font originalEmojiFont = emojiFont;
+        Printable.setFont(textFont.deriveFont(16f));
 
         int hudY = gameState.getRows() * TILE_SIZE;
         int hudHeight = HUD_HEIGHT;
@@ -425,65 +428,85 @@ public class GamePanel extends JPanel implements Serializable {
         g2.setColor(new Color(90, 130, 160));
         g2.drawLine(0, hudY, getWidth(), hudY);
 
+        // int padding = 20;
+        // int textY = hudY + 35;
+        // g2.setFont(textFont.deriveFont(16f));
+        // g2.setColor(Color.WHITE);
+        // g2.drawString(player.geticeCream() + "/ " + gameState.getIceCream(), 250, textY);
+        // g2.drawString(
+        //         "Nivell: " + (gameState.getNivell() + 1),
+        //         padding + 430,
+        //         textY
+        // );
+        // g2.setColor(new Color(190, 210, 230));
+        // g2.drawString(
+        //         "←↑→↓/WASD: moure   Q/E: trencar   F: interactuar   P: guardar   O: carregar",
+        //         padding,
+        //         textY + 35
+        // );
         Player player = gameState.getPlayer();
         Block icecream = new Block(TileType.ICECREAM);
 
-        int padding = 20;
-        int textY = hudY + 35;
-
-        g2.setFont(textFont.deriveFont(16f));
-        g2.setColor(Color.WHITE);
-
-        icecream.draw(gameState.getRows(), 5);
         for (int i = 0; i < player.getLives(); i++) {
             player.draw(gameState.getRows(), 1 + i);
         }
-        g2.drawString(player.geticeCream() + "/ " + gameState.getIceCream(), 250, textY);
 
-        g2.drawString(
-                "Nivell: " + (gameState.getNivell() + 1),
-                padding + 430,
-                textY
-        );
+        icecream.draw(gameState.getRows(), 5);
 
-        g2.setColor(new Color(190, 210, 230));
-        g2.drawString(
-                "←↑→↓/WASD: moure   Q/E: trencar   F: interactuar   P: guardar   O: carregar",
-                padding,
-                textY + 35
-        );
+        Block vides = new Block(TileType.BLANK);
+        vides.setEmoji(player.geticeCream() + "/ " + gameState.getIceCream());
+        vides.setColorFromHex("#FFFFFF");
+        vides.draw(gameState.getRows(), 6);
+
+        Block nivell = new Block(TileType.BLANK);
+        nivell.setEmoji("Nivell: " + (gameState.getNivell() + 1));
+        nivell.setColorFromHex("#FFFFFF");
+        nivell.draw(gameState.getRows(), 8);
+
+        Block controls = new Block(TileType.BLANK);
+        controls.setEmoji("←↑→↓/WASD: moure, Q/E Rompre blocs, Z/X Canviar objecte, F: Interactuar, ESC: Pausa");
+        controls.setColorFromHex("#FFFFFF");
+        controls.draw(gameState.getRows() + 1, 5);
 
         if (player.hasItems()) {
             List<Item> items = player.getItems();
             int originalPointer = player.getSelectedItemIndex();
             for (int i = 0; i < 3; i++) {
+                player.nextItem();
                 int pointer = player.getSelectedItemIndex();
                 Block item = null;
                 switch (items.get(pointer).getName().toLowerCase()) {
                     case "flamethrower" -> {
                         item = new Block(TileType.FLAMETHROWER);
+                        Block usos = new Block(TileType.BLANK);
+                        Flamethrower f = (Flamethrower) player.getSelectedItem();
+                        usos.setEmoji("(" + f.getUsesLeft() + ")");
+                        usos.setColorFromHex("#FFFFFF");
+                        usos.draw(gameState.getRows() + 1, gameState.getCols() - 3 - i);
                     }
                     case "teleport" -> {
                         item = new Block(TileType.TELEPORT);
                     }
                 }
-                // if (i == selectedItem) {
-                // Block f = new Block(TileType.FLAMETHROWER);
                 if (item != null) {
                     item.draw(gameState.getRows(), gameState.getCols() - 3 - i);
                 }
-                // f.draw(gameState.getRows(), gameState.getCols() - 3);
-                // }
-                player.nextItem();
             }
             player.setSelectedItemIndex(originalPointer);
             Block arrow = new Block(TileType.EMPTY);
-            arrow.setEmoji("👆");
-            // arrow.setPrintables();
-            arrow.draw(gameState.getRows() + 1, gameState.getCols() - 4);
+            ClassLoader classLoader = PenguinRunner.class.getClassLoader();
+            InputStream is = classLoader.getResourceAsStream("sprites/selected.png");
+            ImageIcon icon = null;
+            try {
+                icon = new ImageIcon(ImageIO.read(is));
+            } catch (IOException ex) {
+                System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+            arrow.hardCodeSprite(icon);
+            arrow.draw(gameState.getRows(), gameState.getCols() - 4);
         }
 
-        // g2.drawString("objectes", getWidth() - 150, textY + 35);
+        Printable.setFont(originalEmojiFont);
     }
 
     public static Map<String, List<String>> createSpriteMap(boolean fromResource) {

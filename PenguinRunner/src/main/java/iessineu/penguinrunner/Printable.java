@@ -67,6 +67,10 @@ public class Printable{
         }
     }
 
+    public void hardCodeSprite(ImageIcon icon){
+        sprite = icon.getImage();
+    }
+
     public void setPrintables(String type) {
         Map<String, List<String>> mapaSprites = GamePanel.getSpriteMap();
         List<String> atributs = mapaSprites.get(type);

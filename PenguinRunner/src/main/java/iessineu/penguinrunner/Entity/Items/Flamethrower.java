@@ -43,6 +43,10 @@ public class Flamethrower extends Item implements Serializable {
         System.out.println("Te queden " + usesLeft + " usos");
     }
 
+    public int getUsesLeft(){
+        return usesLeft;
+    }
+
     public boolean expired() {
         return usesLeft <= 0;
     }
