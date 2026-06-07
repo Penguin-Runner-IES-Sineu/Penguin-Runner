@@ -449,6 +449,7 @@ public class GameState implements Serializable {
      */
     public void breakDownLeft() {
         if (canMoveTo(player.getRow(), player.getCol() - 1)) {
+            soundManager.playSound("popice", !GamePanel.hasGame());
             breakBlock(player.getRow() + 1, player.getCol() - 1);
             updateLogic();
         }
@@ -456,6 +457,7 @@ public class GameState implements Serializable {
 
     public void breakDownRight() {
         if (canMoveTo(player.getRow(), player.getCol() + 1)) {
+            soundManager.playSound("popice", !GamePanel.hasGame());
             breakBlock(player.getRow() + 1, player.getCol() + 1);
             updateLogic();
         }
@@ -580,8 +582,7 @@ public class GameState implements Serializable {
             }
 
             if ((canMoveTo(nextRow, nextCol) && !isEnemy(nextRow, nextCol)
-                    || isMolten(nextRow, nextCol))
-                    ) {
+                    || isMolten(nextRow, nextCol))) {
                 ambushingEnemy.setPosition(nextRow, nextCol);
             }
 
