@@ -882,6 +882,7 @@ public class GameState implements Serializable {
         }
         if (bloc.getType() == TileType.BUTTON) {
             buttonPressed = !buttonPressed;
+            soundFXManager.playSound("button", !GamePanel.hasGame());
         }
     }
 

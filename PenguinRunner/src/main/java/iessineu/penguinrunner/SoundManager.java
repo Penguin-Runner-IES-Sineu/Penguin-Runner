@@ -26,6 +26,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public class SoundManager implements Serializable {
 
     private transient Clip musicClip;
+    private String buttonSFX = "button.wav";
     private String popIceSFX = "popice.wav";
     private String collectSFX = "collect.wav";
     private String doorSFX = "door.wav";
@@ -132,6 +133,7 @@ public class SoundManager implements Serializable {
         InputStream deathStream = new BufferedInputStream(classLoader.getResourceAsStream("death.wav"));
         InputStream gameOverStream = new BufferedInputStream(classLoader.getResourceAsStream("gameover.wav"));
         InputStream popIceStream = new BufferedInputStream(classLoader.getResourceAsStream("popice.wav"));
+        InputStream buttonStream = new BufferedInputStream(classLoader.getResourceAsStream("button.wav"));
         System.out.print("Caregant audio: ");
         try {
             AudioInputStream audioStream = null;
@@ -165,6 +167,9 @@ public class SoundManager implements Serializable {
                     case "popice" -> {
                         audioStream = AudioSystem.getAudioInputStream(popIceStream);
                     }
+                    case "button" -> {
+                        audioStream = AudioSystem.getAudioInputStream(buttonStream);
+                    }
                 }
             } else {
                 System.out.println("Carregant Fitxer");
@@ -197,6 +202,7 @@ public class SoundManager implements Serializable {
         soundMap.put("death", deathSFX);
         soundMap.put("gameover", gameOverSFX);
         soundMap.put("popice", popIceSFX);
+        soundMap.put("button", buttonSFX);
         // System.out.println(soundMap);
         return soundMap;
     }
@@ -295,5 +301,13 @@ public class SoundManager implements Serializable {
 
     public void setPopIceSFX(String popIceSFX) {
         this.popIceSFX = popIceSFX;
+    }
+
+    public String getButtonSFX() {
+        return buttonSFX;
+    }
+
+    public void setButtonSFX(String buttonSFX) {
+        this.buttonSFX = buttonSFX;
     }
 }
