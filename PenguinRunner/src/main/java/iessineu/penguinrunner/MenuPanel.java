@@ -171,7 +171,6 @@ public class MenuPanel extends JPanel {
         dibuixarTitol(g2, titol, sub);
         dibuixarPlaca(g2);
         dibuixarItemsMenu(g2);
-        dibuixarAjuda(g2);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
     }
 
@@ -277,14 +276,6 @@ public class MenuPanel extends JPanel {
         }
         g2.setColor(sel ? color.brighter() : new Color(color.getRed(), color.getGreen(), color.getBlue(), 190));
         g2.drawString(label, tx, y + 7);
-    }
-
-    private void dibuixarAjuda(Graphics2D g2) {
-        g2.setFont(new Font("Courier New", Font.PLAIN, 11));
-        g2.setColor(new Color(110, 170, 210, 140));
-        String txt = "↑↓ Moure   Z / ENTER Confirmar   C / ESC Enrere";
-        FontMetrics fm = g2.getFontMetrics();
-        g2.drawString(txt, (W - fm.stringWidth(txt)) / 2, H - 18);
     }
 
     private BufferedImage dibuixarPingui() {
