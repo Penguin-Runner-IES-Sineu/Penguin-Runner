@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -247,11 +246,14 @@ public class GamePanel extends JPanel implements Serializable {
 
     public void menuPausa() {
         PauseMenuDialog pauseMenu = new PauseMenuDialog(gameFrame, gameState.getGameVolume());
+        Timer soundTimer = new Timer(150, e -> gameState.changeVolume(pauseMenu.getVolume()));
+        soundTimer.start();
         pauseMenu.setVisible(true);
 
         /*
      * Quan es tanca el menú, aplicam el volum seleccionat.
          */
+        soundTimer.stop();
         gameState.changeVolume(pauseMenu.getVolume());
 
         switch (pauseMenu.getSelectedOption()) {
