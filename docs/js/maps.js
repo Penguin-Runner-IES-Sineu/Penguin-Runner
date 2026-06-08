@@ -19,8 +19,6 @@ initSqlJs(config).then(function (SQL) {
         var container = document.querySelector('.container');
         for (let i = 0; i < contents[0].values.length; i++) {
             valors = contents[0].values[i];
-            // arBlocs = blocs[0].values[i];
-            // arEnemics = enemies[0].values[i];
 
             nivell = document.createElement("h2")
             nivell.innerHTML = "nivell" + valors[1];
