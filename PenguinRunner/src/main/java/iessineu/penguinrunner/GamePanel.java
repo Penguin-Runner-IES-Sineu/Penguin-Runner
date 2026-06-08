@@ -65,6 +65,7 @@ public class GamePanel extends JPanel implements Serializable {
     private final GameFrame gameFrame;
     private GameState gameState;
     public Timer timer = new Timer(20, e -> repaint());
+    public Timer deathTimer;
 
     public GamePanel(GameFrame frame) {
         gameFrame = frame;
@@ -206,17 +207,39 @@ public class GamePanel extends JPanel implements Serializable {
             case KeyEvent.VK_R -> {
                 gameState.playerDied(true);
             }
-            // case KeyEvent.VK_P ->
-            //     guardarPartida();
-            // case KeyEvent.VK_O ->
-            //     carregarPartida();
             case KeyEvent.VK_ESCAPE ->
                 menuPausa();
             default -> {
             }
         }
-        gameState.interact();
-        resizePanelToGame();
+        if (!gameState.isGameOver()) {
+            gameFrame.setVisible(true);
+            gameState.unmuteMusic();
+            gameState.interact();
+            resizePanelToGame();
+        } else {
+            gameFrame.setVisible(false);
+            gameState.muteMusic();
+            loadDeathMenu();
+        }
+    }
+
+    public void loadDeathMenu() {
+        MenuFrame deathMenu = new MenuFrame(true);
+        deathMenu.setVisible(true);
+        deathTimer = new Timer(200, e -> reloadGame(deathMenu));
+        deathTimer.start();
+    }
+
+    public void reloadGame(MenuFrame menu) {
+        boolean arrancar = menu.arrancar();
+        if (arrancar) {
+            deathTimer.stop();
+            menu.setVisible(false);
+            gameFrame.setVisible(true);
+            gameState.setGameOver(false);
+            gameState.unmuteMusic();
+        }
     }
 
     public void menuPausa() {
@@ -468,7 +491,7 @@ public class GamePanel extends JPanel implements Serializable {
         Printable.setFont(textFont.deriveFont(11f));
         controls.setEmoji("←↑→↓/WASD: moure, Q/E Rompre blocs, Z/X Canviar objecte, F: Interactuar, R: Reiniciar nivell ESC: Pausa");
         controls.setColorFromHex("#FFFFFF");
-        controls.draw(gameState.getRows() + 1, 5);
+        controls.draw(gameState.getRows() + 1, gameState.getCols() / 2);
         Printable.setFont(textFont.deriveFont(16f));
 
         if (player.hasItems()) {

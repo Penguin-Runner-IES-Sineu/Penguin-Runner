@@ -21,12 +21,13 @@ import javax.swing.Timer;
 public class MenuFrame extends JFrame implements Serializable {
 
     private MenuPanel menu;
+    private MenuPanel deathMenu;
 
     public boolean arrancarJoc = false;
     public boolean forceStart = false;
     Timer timer;
 
-    public MenuFrame() {
+    public MenuFrame(boolean deathMenu) {
         setTitle("PenguinRunner");
 
         // Quan tanquem la finestra, el programa acaba.
@@ -34,17 +35,17 @@ public class MenuFrame extends JFrame implements Serializable {
 
         setResizable(false);
 
-        menu = new MenuPanel(this);
+        menu = new MenuPanel(this, deathMenu);
         timer = new Timer(200, e -> arrancar());
         timer.start();
         add(menu);
         pack();
         setLocationRelativeTo(null);
-        
+
     }
 
     public boolean arrancar() {
-        if(forceStart){
+        if (forceStart) {
             remove(menu);
             return true;
         }
@@ -55,7 +56,7 @@ public class MenuFrame extends JFrame implements Serializable {
         return arrancarJoc;
     }
 
-    public void forceStart(){
+    public void forceStart() {
         forceStart = true;
     }
 

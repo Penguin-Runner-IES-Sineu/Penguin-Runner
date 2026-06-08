@@ -49,6 +49,7 @@ import json.JSONObject;
 public class GameState implements Serializable {
 
     private ArrayList<PositionHistory> lastPositions = new ArrayList();
+    private boolean gameOver = false;
     private List<BrokenBlock> brokenBlocks;
     private List<Block> stones;
     // private String rutaMapes = "resources/maps.json";
@@ -66,6 +67,7 @@ public class GameState implements Serializable {
     private int startPlayerCol;
     private boolean moddedMusic = false;
     private boolean buttonPressed = false;
+    private float gameVolume = 0.95f;
 
     private SoundManager soundManager = new SoundManager();
     private PlayerState walkingState = new WalkingState();
@@ -704,7 +706,7 @@ public class GameState implements Serializable {
             }
             if (dead) {
                 System.out.println("You died");
-                
+
                 playerDied(false);
                 return;
             }
@@ -743,6 +745,7 @@ public class GameState implements Serializable {
         nivellActual = 0;
         mapObject = mapList.get(0);
         loadMap();
+        this.setGameOver(true);
         player.setItems(new ArrayList<>());
         // Las vidas se resetean solas en loadMap si añades lives=MAX_LIVES allí
     }
@@ -928,12 +931,32 @@ public class GameState implements Serializable {
         String vol = JOptionPane.showInputDialog("Introdueix el volum que vol, com un valor entre 0 i 100"
         );
         vol = vol.replace(",", ".");
-        float volume = Float.parseFloat(vol);
-        changeVolume(volume);
+        gameVolume = Float.parseFloat(vol);
+        changeVolume(gameVolume);
     }
+
+    public float getVolume() {
+        return soundManager.getVolume();
+    }
+
+    public void muteMusic() {
+        soundManager.setVolume(0f);
+    }    
+    
+    public void unmuteMusic() {
+        soundManager.setVolume(gameVolume);
+    }    
 
     public void changeVolume(float vol) {
         soundManager.setVolume(vol / 100);
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
     }
 
     /*
@@ -1574,10 +1597,7 @@ public class GameState implements Serializable {
         if (isOutOfBounds(row, col)) {
             return;
         }
-
-
-     // deixa el gelat exactament damunt la casella on ha mort.
-
+  
         blocks[row-1][col] = new Block(TileType.ICECREAM);
         blocks[row-1][col].setPrintables();
 

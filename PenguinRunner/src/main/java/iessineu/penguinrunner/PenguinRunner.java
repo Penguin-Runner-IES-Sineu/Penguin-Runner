@@ -33,7 +33,7 @@ public class PenguinRunner {
             }
         }
 
-        MenuFrame menu = new MenuFrame();
+        MenuFrame menu = new MenuFrame(false);
         menu.setVisible(true);
         for (String clau : claus) {
             if (clau.equals("-skip")) {

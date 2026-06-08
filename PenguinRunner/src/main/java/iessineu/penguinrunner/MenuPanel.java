@@ -18,7 +18,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -39,14 +42,6 @@ public class MenuPanel extends JPanel {
     private final JFrame frame;
 
     private int seleccionat = 0;
-    // private boolean opcionsDesplegades = false;
-
-    // private final String[][] opcionsValors = {
-    //     {"So: ON", "So: OFF"},
-    //     {"Dificultat: Normal", "Dificultat: Fàcil", "Dificultat: Difícil"},
-    //     {"Idioma: CAT", "Idioma: ESP", "Idioma: ENG"}
-    // };
-    // private final int[] opcioIdx = {0, 0, 0};
     private Timer animTimer;
     private float cicle = 0f;
     private float alphaMenu = 0f;
@@ -61,21 +56,36 @@ public class MenuPanel extends JPanel {
     private static final Color C_JUGAR = new Color(80, 220, 255);
     private static final Color C_SORTIR = new Color(255, 110, 110);
     private static final Color[] COLORS = {C_JUGAR, C_SORTIR};
-    private static final String[] LABELS = {"👤  JUGAR", "🏠  SORTIR"};
+    private static final String[] LABELS = {"JUGAR", "SORTIR"};
+    private boolean deathMenu = false;
 
     private static final int[][] ESTRELLES = {
         {60, 30}, {140, 55}, {220, 22}, {310, 48}, {400, 18}, {500, 52}, {590, 28}, {650, 70},
         {100, 95}, {280, 82}, {460, 92}, {640, 105}, {30, 115}, {180, 130}, {360, 118}, {520, 135}
     };
 
-    public MenuPanel(JFrame frame) {
+    public MenuPanel(JFrame frame, boolean deathMenu) {
         this.frame = frame;
+        this.deathMenu = deathMenu;
         setPreferredSize(new Dimension(W, H));
         setFocusable(true);
-        setBackground(new Color(5, 20, 60));
-        imgPingui = dibuixarPingui();
+        ClassLoader classLoader = PenguinRunner.class.getClassLoader();
+        // InputStream deathScreen = classLoader.getResourceAsStream("sprites/dead.png");
+        InputStream deathScreen = classLoader.getResourceAsStream("sprites/enemy.png");
+        if (deathMenu) {
+            COLORS[0] = new Color(200, 100, 25);
+            LABELS[0] = "TORNAR A JUGAR";
+            setBackground(new Color(25, 25, 25));
+            try {
+                imgPingui = ImageIO.read(deathScreen);
+            } catch (IOException ex) {
+                System.getLogger(MenuPanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+        } else {
+            setBackground(new Color(5, 20, 60));
+            imgPingui = dibuixarPingui();
+        }
         iniciarAnimacio();
-        // configurarTecles();
         configurarRatolí();
     }
 
@@ -123,7 +133,7 @@ public class MenuPanel extends JPanel {
         if (seleccionat == 0) {
             arrancar = true;
         }
-        if(seleccionat == 1){
+        if (seleccionat == 1) {
             System.exit(0);
         }
     }
@@ -149,7 +159,16 @@ public class MenuPanel extends JPanel {
 
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alphaMenu));
         dibuixarPinguiAnimat(g2);
-        dibuixarTitol(g2);
+        String titol;
+        String sub;
+        if (deathMenu) {
+            titol = "HAS MORT";
+            sub = "Pitja a tornar a jugar per tornar a jugar";
+        } else {
+            titol = "PENGUIN RUNNER";
+            sub = "Un projecte fet per Alumnes de l'IES Sineu";
+        }
+        dibuixarTitol(g2, titol, sub);
         dibuixarPlaca(g2);
         dibuixarItemsMenu(g2);
         dibuixarAjuda(g2);
@@ -157,10 +176,18 @@ public class MenuPanel extends JPanel {
     }
 
     private void dibuixarFons(Graphics2D g2) {
-        g2.setPaint(new GradientPaint(0, 0, new Color(4, 12, 45), 0, H * 0.65f, new Color(8, 35, 80)));
-        g2.fillRect(0, 0, W, H);
-        g2.setPaint(new GradientPaint(0, (int) (H * 0.65f), new Color(130, 190, 230), 0, H, new Color(195, 228, 255)));
-        g2.fillRoundRect(-10, (int) (H * 0.65f), W + 20, (int) (H * 0.4f), 50, 50);
+        if (deathMenu) {
+            g2.setPaint(new GradientPaint(0, 0, new Color(40, 4, 4), 0, H * 0.65f, new Color(75, 8, 8)));
+            g2.fillRect(0, 0, W, H);
+
+            g2.setPaint(new GradientPaint(0, (int) (H * 0.65f), new Color(15, 15, 15), 0, H, new Color(35, 35, 35)));
+            g2.fillRoundRect(-10, (int) (H * 0.65f), W + 20, (int) (H * 0.4f), 50, 50);
+        } else {
+            g2.setPaint(new GradientPaint(0, 0, new Color(4, 12, 45), 0, H * 0.65f, new Color(8, 35, 80)));
+            g2.fillRect(0, 0, W, H);
+            g2.setPaint(new GradientPaint(0, (int) (H * 0.65f), new Color(130, 190, 230), 0, H, new Color(195, 228, 255)));
+            g2.fillRoundRect(-10, (int) (H * 0.65f), W + 20, (int) (H * 0.4f), 50, 50);
+        }
     }
 
     private void dibuixarEstrelles(Graphics2D g2) {
@@ -185,7 +212,11 @@ public class MenuPanel extends JPanel {
             ona.lineTo(W, H);
             ona.lineTo(0, H);
             ona.closePath();
-            g2.setColor(new Color(15, 65, 145, 70 + i * 20));
+            if (deathMenu) {
+                g2.setColor(new Color(15, 15, 15, 70 + i * 20));
+            } else {
+                g2.setColor(new Color(15, 65, 145, 70 + i * 20));
+            }
             g2.fill(ona);
         }
     }
@@ -195,10 +226,9 @@ public class MenuPanel extends JPanel {
         g2.drawImage(imgPingui, (int) (W * 0.68f) - 40, (int) py, 80, 110, null);
     }
 
-    private void dibuixarTitol(Graphics2D g2) {
+    private void dibuixarTitol(Graphics2D g2, String titol, String sub) {
         Font fTitol = new Font("Courier New", Font.BOLD, 46);
         g2.setFont(fTitol);
-        String titol = "PENGUIN RUNNER";
         FontMetrics fm = g2.getFontMetrics();
         int tx = (W - fm.stringWidth(titol)) / 2;
         g2.setColor(new Color(0, 130, 210, 70));
@@ -207,7 +237,6 @@ public class MenuPanel extends JPanel {
         g2.drawString(titol, tx, 115);
         g2.setFont(new Font("Courier New", Font.PLAIN, 14));
         g2.setColor(new Color(150, 215, 255, 170));
-        String sub = "❄  Aventura amb el nostre PenguinRunner  ❄";
         g2.drawString(sub, (W - g2.getFontMetrics().stringWidth(sub)) / 2, 140);
     }
 
@@ -294,7 +323,7 @@ public class MenuPanel extends JPanel {
         return img;
     }
 
-    public boolean isOpen(){
+    public boolean isOpen() {
         return !arrancar;
     }
 }
