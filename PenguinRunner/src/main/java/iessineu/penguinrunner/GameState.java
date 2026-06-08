@@ -69,7 +69,8 @@ public class GameState implements Serializable {
     private boolean buttonPressed = false;
     private float gameVolume = 0.95f;
 
-    private SoundManager soundManager = new SoundManager();
+    private SoundManager musicManager = new SoundManager();
+    private SoundManager soundFXManager = new SoundManager();
     private PlayerState walkingState = new WalkingState();
     private PlayerState climbingState = new ClimbingState();
     private PlayerState railState = new RailState();
@@ -303,14 +304,14 @@ public class GameState implements Serializable {
         }
         switch (i.getName()) {
             case "flamethrower" -> {
-                soundManager.playSound("flame", !GamePanel.hasGame());
+                soundFXManager.playSound("flame", !GamePanel.hasGame());
             }
             case "teleport" -> {
                 Teleport t = (Teleport) i;
                 boolean moved = t.use(player);
                 if (moved) {
                     blocks[t.getRow()][t.getCol()] = new Block(TileType.BLANK);
-                    soundManager.playSound("teleport", !GamePanel.hasGame());
+                    soundFXManager.playSound("teleport", !GamePanel.hasGame());
                     player.removeItem();
                 } else {
                     blocks[t.getRow()][t.getCol()] = new Block(TileType.TELEPORT);
@@ -318,6 +319,7 @@ public class GameState implements Serializable {
                 }
                 blocks[t.getRow()][t.getCol()].setPrintables();
             }
+
         }
     }
 
@@ -451,7 +453,7 @@ public class GameState implements Serializable {
      */
     public void breakDownLeft() {
         if (canMoveTo(player.getRow(), player.getCol() - 1)) {
-            soundManager.playSound("popice", !GamePanel.hasGame());
+            soundFXManager.playSound("popice", !GamePanel.hasGame());
             breakBlock(player.getRow() + 1, player.getCol() - 1);
             updateLogic();
         }
@@ -459,7 +461,7 @@ public class GameState implements Serializable {
 
     public void breakDownRight() {
         if (canMoveTo(player.getRow(), player.getCol() + 1)) {
-            soundManager.playSound("popice", !GamePanel.hasGame());
+            soundFXManager.playSound("popice", !GamePanel.hasGame());
             breakBlock(player.getRow() + 1, player.getCol() + 1);
             updateLogic();
         }
@@ -671,12 +673,12 @@ public class GameState implements Serializable {
             // }
             if (!player.hasItem(block.getType().toString().toLowerCase())) {
                 if (block.getType() != TileType.ICECREAM) {
-                    soundManager.playSound("pickup", !GamePanel.hasGame());
+                    soundFXManager.playSound("pickup", !GamePanel.hasGame());
                 }
                 blocks[row][col] = new Block(TileType.BLANK);
                 switch (block.getType()) {
                     case TileType.ICECREAM -> {
-                        soundManager.playSound("collect", !GamePanel.hasGame());
+                        soundFXManager.playSound("collect", !GamePanel.hasGame());
                         player.addIceCream();
                     }
                     case TileType.FLAMETHROWER -> {
@@ -725,7 +727,7 @@ public class GameState implements Serializable {
         if (player.isAlive()) {
             // Solo recarga el nivel, conserva las vidas
             if (!wasForced) {
-                soundManager.playSound("death", !GamePanel.hasGame());
+                soundFXManager.playSound("death", !GamePanel.hasGame());
             }
             List<Item> items = player.getItems();
             int lives = player.getLives();
@@ -735,7 +737,7 @@ public class GameState implements Serializable {
             // o player.setItems(new ArrayList()); para perderlos
             player.setLives(lives);       // restaura las vidas tras loadMap
         } else {
-            soundManager.playSound("gameover", !GamePanel.hasGame());
+            soundFXManager.playSound("gameover", !GamePanel.hasGame());
             // Game Over: reinicia desde el nivel 0
             gameOver();
         }
@@ -871,7 +873,7 @@ public class GameState implements Serializable {
     void interact() {
         Block bloc = blocks[player.getRow()][player.getCol()];
         if (bloc.getType() == TileType.DOOR) {
-            soundManager.playSound("door", !GamePanel.hasGame());
+            soundFXManager.playSound("door", !GamePanel.hasGame());
             nivellActual++;
             mapObject = mapList.get(nivellActual);
             loadMap();
@@ -917,38 +919,28 @@ public class GameState implements Serializable {
         this.moddedMusic = moddedMusic;
     }
 
-    public void increaseVolume() {
-        float vol = soundManager.getVolume();
-        soundManager.setVolume(vol + 0.05f);
-    }
-
-    public void decreaseVolume() {
-        float vol = soundManager.getVolume();
-        soundManager.setVolume(vol - 0.05f);
-    }
-
-    public void changeVolume() {
+    public void changeVolume(boolean isMusic) {
         String vol = JOptionPane.showInputDialog("Introdueix el volum que vol, com un valor entre 0 i 100"
         );
         vol = vol.replace(",", ".");
         gameVolume = Float.parseFloat(vol);
-        changeVolume(gameVolume);
-    }
-
-    public float getVolume() {
-        return soundManager.getVolume();
+        changeVolume(gameVolume, isMusic);
     }
 
     public void muteMusic() {
-        soundManager.setVolume(0f);
-    }    
-    
-    public void unmuteMusic() {
-        soundManager.setVolume(gameVolume);
-    }    
+        musicManager.setVolume(0f);
+    }
 
-    public void changeVolume(float vol) {
-        soundManager.setVolume(vol / 100);
+    public void unmuteMusic() {
+        musicManager.setVolume(gameVolume);
+    }
+
+    public void changeVolume(float vol, boolean isMusic) {
+        if (isMusic) {
+            musicManager.setVolume(vol / 100);
+        } else {
+            soundFXManager.setVolume(vol / 100);
+        }
     }
 
     public boolean isGameOver() {
@@ -1128,25 +1120,25 @@ public class GameState implements Serializable {
     private void addModMusic(JSONObject mod) {
         String soundType = mod.getString("type");
         String soundPath = mod.getString("filename");
-        Map<String, String> newMap = soundManager.getSoundsMap();
+        Map<String, String> newMap = musicManager.getSoundsMap();
         newMap.put(soundType, soundPath);
-        soundManager.setSoundsMap(newMap);
-        soundManager.stopMusic();
+        musicManager.setSoundsMap(newMap);
+        musicManager.stopMusic();
         // soundManager.playMusic(false);
         playMusic(false);
     }
 
     public void playMusic(boolean fromResource) {
-        soundManager.stopMusic();
-        soundManager.playMusic(fromResource);
+        musicManager.stopMusic();
+        musicManager.playMusic(fromResource);
     }
 
     private void addModSound(JSONObject mod) {
         String soundType = mod.getString("type");
         String soundPath = mod.getString("filename");
-        Map<String, String> newMap = soundManager.getSoundsMap();
+        Map<String, String> newMap = soundFXManager.getSoundsMap();
         newMap.put(soundType, soundPath);
-        soundManager.setSoundsMap(newMap);
+        soundFXManager.setSoundsMap(newMap);
     }
 
     public int getIceCream() {
@@ -1597,9 +1589,9 @@ public class GameState implements Serializable {
         if (isOutOfBounds(row, col)) {
             return;
         }
-  
-        blocks[row-1][col] = new Block(TileType.ICECREAM);
-        blocks[row-1][col].setPrintables();
+
+        blocks[row - 1][col] = new Block(TileType.ICECREAM);
+        blocks[row - 1][col].setPrintables();
 
         iceCreamEnemy.dropIceCream();
     }

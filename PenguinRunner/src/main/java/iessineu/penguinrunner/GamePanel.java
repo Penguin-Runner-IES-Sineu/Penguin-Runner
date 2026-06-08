@@ -255,9 +255,13 @@ public class GamePanel extends JPanel implements Serializable {
         int opcio = JOptionPane.showOptionDialog(null, "Tria una opcio", "Menu de Pausa", 0, 0, icon, opcions, "a");
         switch (opcio) {
             case 1 -> {
-                gameState.changeVolume();
+                gameState.changeVolume(true);
                 menuPausa();
             }
+            // case 2 -> {
+            //     gameState.changeVolume(false);
+            //     menuPausa();
+            // }
             case 2 -> {
                 guardarPartida();
             }
