@@ -240,7 +240,7 @@ public class GameState implements Serializable {
             enemy.setPrintables();
         }
         // enemies = newEnemyList;
-        // int iceCreams = player.geticeCream();
+        // int iceCreams = player.geticeCream();GGGDWWWW
         player.setPrintables();
         // player = new Player(player.getRow(), player.getCol());
         // player.setIceCream(iceCreams);
@@ -404,7 +404,8 @@ public class GameState implements Serializable {
             checkCol += dc;
         }
 
-        if (isOutOfBounds(row, checkCol) || !isBlank(row, checkCol)) {
+        // **** //
+        if (!canStoneMoveTo(row, checkCol)) {
             return false;
         }
 
@@ -412,8 +413,10 @@ public class GameState implements Serializable {
 
         while (col != playerCol) {
             Block blockToMove = blocks[row][col];
-            blocks[row][col] = new Block(TileType.BLANK);
             blocks[row][col + dc] = blockToMove;
+
+            // **** //
+            blocks[row][col] = getBlockAfterStoneLeaves(row, col);
 
             col -= dc;
         }
@@ -431,7 +434,8 @@ public class GameState implements Serializable {
                         continue;
                     }
 
-                    if (!isBlank(nextRow, col)) {
+                    // **** //
+                    if (!canStoneMoveTo(nextRow, col)) {
                         continue;
                     }
 
@@ -444,7 +448,9 @@ public class GameState implements Serializable {
                     }
 
                     blocks[nextRow][col] = blocks[row][col];
-                    blocks[row][col] = new Block(TileType.BLANK);
+
+                    // **** //
+                    blocks[row][col] = getBlockAfterStoneLeaves(row, col);
                 }
             }
         }
@@ -454,19 +460,19 @@ public class GameState implements Serializable {
      * ACCIONS
      */
     public void breakDownLeft() {
-        if (canMoveTo(player.getRow(), player.getCol() - 1)) {
-            soundFXManager.playSound("popice", !GamePanel.hasGame());
-            breakBlock(player.getRow() + 1, player.getCol() - 1);
-            updateLogic();
-        }
+//        if (canMoveTo(player.getRow(), player.getCol() - 1)) {
+        soundFXManager.playSound("popice", !GamePanel.hasGame());
+        breakBlock(player.getRow() + 1, player.getCol() - 1);
+        updateLogic();
+//        }
     }
 
     public void breakDownRight() {
-        if (canMoveTo(player.getRow(), player.getCol() + 1)) {
-            soundFXManager.playSound("popice", !GamePanel.hasGame());
-            breakBlock(player.getRow() + 1, player.getCol() + 1);
-            updateLogic();
-        }
+//        if (canMoveTo(player.getRow(), player.getCol() + 1)) {
+        soundFXManager.playSound("popice", !GamePanel.hasGame());
+        breakBlock(player.getRow() + 1, player.getCol() + 1);
+        updateLogic();
+//        }
     }
 
     public void breakBlock(int row, int col) {
@@ -486,7 +492,27 @@ public class GameState implements Serializable {
         for (int i = brokenBlocks.size() - 1; i >= 0; i--) {
             BrokenBlock block = brokenBlocks.get(i);
 
+            /*
+             * Si hi ha una pedra dins el bloc romput i el comptador ja és 1,
+             * no deixam que baixi més.
+             */
+            // **** //
+            if (block.turnsLeft <= 1 && isStone(block.row, block.col)) {
+                block.turnsLeft = 1;
+                continue;
+            }
+
             block.turnsLeft--;
+
+            /*
+             * Si després de restar arriba a 0 però encara hi ha una pedra,
+             * el deixam congelat a 1.
+             */
+            // **** //
+            if (block.turnsLeft <= 0 && isStone(block.row, block.col)) {
+                block.turnsLeft = 1;
+                continue;
+            }
 
             if (block.turnsLeft <= 0) {
                 blocks[block.row][block.col] = new Block(TileType.ICE);
@@ -503,14 +529,19 @@ public class GameState implements Serializable {
             if (enemy.isDead()) {
                 enemy.subtractTimeToRevive(1);
 
+                // **** //
                 if (enemy.getTimeToRevive() <= 0) {
-                    if (!isEnemy(enemy.getRespawnRow(), enemy.getRespawnRow())) {
+                    PositionHistory respawnPosition = findEnemyRespawnPosition(enemy);
+
+                    if (respawnPosition != null) {
+                        enemy.setPosition(respawnPosition.getX(), respawnPosition.getY());
                         enemy.revive();
                     }
                 }
 
                 continue;
             }
+
             if (isEnemy(enemy.getRow(), enemy.getCol() + 1)) {
 
             }
@@ -624,27 +655,8 @@ public class GameState implements Serializable {
 
             return;
         }
-        int dr = 0;
-        int dc = 0;
-
-        if (enemy.getRow() < player.getRow()) {
-            dr = 1;
-        } else if (enemy.getRow() > player.getRow()) {
-            if (isStair(enemy.getRow(), enemy.getCol())) {
-                dr = -1;
-            }
-        } else if (enemy.getCol() < player.getCol()) {
-            dc = 1;
-        } else if (enemy.getCol() > player.getCol()) {
-            dc = -1;
-        }
-
-        int nextRow = enemy.getRow() + dr;
-        int nextCol = enemy.getCol() + dc;
-
-        if (canMoveTo(nextRow, nextCol) && !isEnemy(nextRow, nextCol)) {
-            enemy.setPosition(nextRow, nextCol);
-        }
+        // **** //
+        moveBasicEnemy(enemy);
     }
 
     private boolean shouldEnemyDrop(int row, int col) {
@@ -757,12 +769,45 @@ public class GameState implements Serializable {
     /*
      * CONSULTES DE BLOCS
      */
+    // **** //
+    private boolean canStoneMoveTo(int row, int col) {
+        if (isOutOfBounds(row, col)) {
+            return false;
+        }
+
+        return isBlank(row, col) || isMolten(row, col);
+    }
+
+    // **** //
+    private boolean isBrokenBlockAt(int row, int col) {
+        for (BrokenBlock block : brokenBlocks) {
+            if (block.row == row && block.col == col) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // **** //
+    private Block getBlockAfterStoneLeaves(int row, int col) {
+        if (isBrokenBlockAt(row, col)) {
+            return new Block(TileType.MOLTEN);
+        }
+
+        return new Block(TileType.BLANK);
+    }
+
     private boolean canMoveTo(int row, int col) {
+        if (isOutOfBounds(row, col)) {
+            return false;
+        }
+
         if (blocks[row][col].getType() == TileType.MOLTEN && isEnemy(row, col)) {
             return false;
         }
-        return !isOutOfBounds(row, col)
-                && !isSolid(row, col);
+
+        return !isSolid(row, col);
     }
 
     private boolean isOutOfBounds(int row, int col) {
@@ -938,7 +983,7 @@ public class GameState implements Serializable {
     }
 
     public void unmuteMusic() {
-        isMuted= false;
+        isMuted = false;
         musicManager.setVolume(gameVolume);
     }
 
@@ -1597,10 +1642,316 @@ public class GameState implements Serializable {
             return;
         }
 
-        blocks[row - 1][col] = new Block(TileType.ICECREAM);
-        blocks[row - 1][col].setPrintables();
+        blocks[row][col] = new Block(TileType.ICECREAM);
+        blocks[row][col].setPrintables();
 
         iceCreamEnemy.dropIceCream();
     }
+    // **** //
 
+    private PositionHistory findEnemyRespawnPosition(Enemy enemy) {
+        int respawnRow = enemy.getRespawnRow();
+        int respawnCol = enemy.getRespawnCol();
+
+        /*
+     * Primer intenta reviure a la posició original.
+         */
+        if (canEnemyRespawnAt(respawnRow, respawnCol)) {
+            return new PositionHistory(respawnRow, respawnCol);
+        }
+
+        /*
+     * Si està ocupada, cerca dins la mateixa fila.
+     * Primer mira 1 casella a l'esquerra i dreta,
+     * després 2, després 3...
+         */
+        for (int offset = 1; offset < getCols(); offset++) {
+            int leftCol = respawnCol - offset;
+            int rightCol = respawnCol + offset;
+
+            if (canEnemyRespawnAt(respawnRow, leftCol)) {
+                return new PositionHistory(respawnRow, leftCol);
+            }
+
+            if (canEnemyRespawnAt(respawnRow, rightCol)) {
+                return new PositionHistory(respawnRow, rightCol);
+            }
+        }
+
+        /*
+     * Si tota la fila està ocupada, no reviu encara.
+     * Ho tornarà a provar el pròxim torn.
+         */
+        return null;
+    }
+
+// **** //
+    private boolean canEnemyRespawnAt(int row, int col) {
+        if (isOutOfBounds(row, col)) {
+            return false;
+        }
+
+        /*
+     * No pot aparèixer damunt el jugador.
+         */
+        if (player.getRow() == row && player.getCol() == col) {
+            return false;
+        }
+
+        /*
+     * No pot aparèixer damunt un altre enemic viu.
+         */
+        if (isEnemy(row, col)) {
+            return false;
+        }
+
+        /*
+     * No pot aparèixer dins un bloc sòlid:
+     * gel, paret, pedra, etc.
+         */
+        if (isSolid(row, col)) {
+            return false;
+        }
+
+        /*
+     * Evitam que reaparegui damunt foc.
+         */
+        if (isFire(row, col)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    // **** //
+    // **** //
+    private void moveBasicEnemy(Enemy enemy) {
+        Direction direction;
+
+        /*
+     * Si veu el jugador, el persegueix directament.
+     * Només el pot veure si està a la mateixa fila/columna
+     * i a menys de 6 blocs.
+         */
+        if (canBasicEnemySeePlayer(enemy)) {
+            direction = getDirectionTowards(
+                    enemy.getRow(),
+                    enemy.getCol(),
+                    player.getRow(),
+                    player.getCol()
+            );
+        } else {
+            /*
+         * Si no veu el jugador, usa pathfinding per tornar
+         * a la seva casella original.
+             */
+            direction = getDirectionToEnemyHome(enemy);
+        }
+
+        if (direction == null) {
+            return;
+        }
+
+        int nextRow = enemy.getRow() + direction.getDr();
+        int nextCol = enemy.getCol() + direction.getDc();
+
+        if (canBasicEnemyMoveTo(enemy.getRow(), enemy.getCol(), nextRow, nextCol, direction)) {
+            enemy.setPosition(nextRow, nextCol);
+        }
+    }
+
+// **** //
+    private boolean canBasicEnemySeePlayer(Enemy enemy) {
+        int enemyRow = enemy.getRow();
+        int enemyCol = enemy.getCol();
+
+        int playerRow = player.getRow();
+        int playerCol = player.getCol();
+
+        /*
+     * Només veu el jugador si està a la mateixa fila o columna.
+         */
+        boolean sameRow = enemyRow == playerRow;
+        boolean sameCol = enemyCol == playerCol;
+
+        if (!sameRow && !sameCol) {
+            return false;
+        }
+
+        /*
+     * Menys de 6 blocs: distància 1, 2, 3, 4 o 5.
+         */
+        int distance = Math.abs(enemyRow - playerRow) + Math.abs(enemyCol - playerCol);
+
+        if (distance >= 6) {
+            return false;
+        }
+
+        /*
+     * Si hi ha un bloc sòlid entre l'enemic i el jugador,
+     * no el veu.
+         */
+        return hasLineOfSight(enemyRow, enemyCol, playerRow, playerCol);
+    }
+
+// **** //
+    private boolean hasLineOfSight(int startRow, int startCol, int targetRow, int targetCol) {
+        if (startRow == targetRow) {
+            int minCol = Math.min(startCol, targetCol) + 1;
+            int maxCol = Math.max(startCol, targetCol);
+
+            for (int col = minCol; col < maxCol; col++) {
+                if (isSolid(startRow, col)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        if (startCol == targetCol) {
+            int minRow = Math.min(startRow, targetRow) + 1;
+            int maxRow = Math.max(startRow, targetRow);
+
+            for (int row = minRow; row < maxRow; row++) {
+                if (isSolid(row, startCol)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+// **** //
+    private Direction getDirectionTowards(int fromRow, int fromCol, int targetRow, int targetCol) {
+        /*
+     * Primer intenta corregir fila.
+         */
+        if (fromRow < targetRow) {
+            return Direction.DOWN;
+        }
+
+        if (fromRow > targetRow) {
+            return Direction.UP;
+        }
+
+        /*
+     * Després intenta corregir columna.
+         */
+        if (fromCol < targetCol) {
+            return Direction.RIGHT;
+        }
+
+        if (fromCol > targetCol) {
+            return Direction.LEFT;
+        }
+
+        return null;
+    }
+
+// **** //
+    private boolean canBasicEnemyMoveTo(
+            int row,
+            int col,
+            int nextRow,
+            int nextCol,
+            Direction direction
+    ) {
+        if (isOutOfBounds(nextRow, nextCol)) {
+            return false;
+        }
+
+        if (isSolid(nextRow, nextCol)) {
+            return false;
+        }
+
+        if (isEnemy(nextRow, nextCol)) {
+            return false;
+        }
+
+        /*
+     * Pujar només si està a una escala o entra dins una escala.
+         */
+        if (direction == Direction.UP) {
+            return isStair(row, col) || isStair(nextRow, nextCol);
+        }
+
+        /*
+     * Baixar:
+     * - si està a escala
+     * - si entra dins una escala
+     * - o si la casella és lliure.
+     *
+     * Això permet que l'enemic es tiri per un forat.
+         */
+        if (direction == Direction.DOWN) {
+            return isStair(row, col)
+                    || isStair(nextRow, nextCol)
+                    || canMoveTo(nextRow, nextCol)
+                    || isMolten(nextRow, nextCol);
+        }
+
+        /*
+     * Esquerra/dreta:
+     * Ara sí que pot entrar en una casella que té BLANK davall.
+     * Si després queda sense terra, la gravetat el farà caure en el següent torn.
+         */
+        if (direction == Direction.LEFT || direction == Direction.RIGHT) {
+            return canMoveTo(nextRow, nextCol)
+                    || isMolten(nextRow, nextCol)
+                    || isRail(row, col)
+                    || isRail(nextRow, nextCol)
+                    || isStair(row, col)
+                    || isStair(nextRow, nextCol);
+        }
+
+        return false;
+    }
+
+// **** //
+    private boolean hasBasicGroundAt(int row, int col) {
+        int rowBelow = row + 1;
+
+        if (isOutOfBounds(rowBelow, col)) {
+            return true;
+        }
+
+        /*
+     * Si davall hi ha BLANK, no hi ha terra.
+         */
+        if (isBlank(rowBelow, col)) {
+            return false;
+        }
+
+        /*
+     * Si davall hi ha molten, ho tractam com a terra.
+         */
+        if (isMolten(rowBelow, col)) {
+            return true;
+        }
+
+        return isSolid(rowBelow, col)
+                || isRail(row, col)
+                || isStair(row, col)
+                || isStair(rowBelow, col);
+    }
+
+    private Direction getDirectionToEnemyHome(Enemy enemy) {
+        if (enemy.getRow() == enemy.getHomeRow()
+                && enemy.getCol() == enemy.getHomeCol()) {
+            return null;
+        }
+
+        return buscador.getShortestDirection(
+                createPathMapForAI(enemy),
+                createTileMapForAI(),
+                enemy.getRow(),
+                enemy.getCol(),
+                enemy.getHomeRow(),
+                enemy.getHomeCol()
+        );
+    }
 }

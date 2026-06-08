@@ -27,6 +27,9 @@ public class Enemy extends Printable implements Serializable {
     private final int originalRow;
     private final int originalCol;
 
+    private final int homeRow;
+    private final int homeCol;
+
     private boolean isDead = false;
     private int timeToRevive = 0;
 
@@ -35,6 +38,9 @@ public class Enemy extends Printable implements Serializable {
         originalCol = this.col = col;
         this.respawnRow = respawnRow;
         this.respawnCol = respawnCol;
+        this.homeRow = row;
+        this.homeCol = col;
+
         this.setPrintables();
     }
 
@@ -91,6 +97,14 @@ public class Enemy extends Printable implements Serializable {
     public void setPosition(int row, int col) {
         this.row = row;
         this.col = col;
+    }
+
+    public int getHomeRow() {
+        return homeRow;
+    }
+
+    public int getHomeCol() {
+        return homeCol;
     }
 
     public void setPrintables() {
