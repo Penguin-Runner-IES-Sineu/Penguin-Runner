@@ -495,17 +495,17 @@ public class GamePanel extends JPanel implements Serializable {
 
         icecream.draw(gameState.getRows(), 5);
 
-        Block vides = new Block(TileType.BLANK);
+        Block vides = new Block(TileType.EMPTY);
         vides.setEmoji(player.geticeCream() + "/ " + gameState.getIceCream());
         vides.setColorFromHex("#FFFFFF");
         vides.draw(gameState.getRows(), 6);
 
-        Block nivell = new Block(TileType.BLANK);
+        Block nivell = new Block(TileType.EMPTY);
         nivell.setEmoji("Nivell: " + (gameState.getNivell() + 1));
         nivell.setColorFromHex("#FFFFFF");
         nivell.draw(gameState.getRows(), 8);
 
-        Block controls = new Block(TileType.BLANK);
+        Block controls = new Block(TileType.EMPTY);
         Printable.setFont(textFont.deriveFont(11f));
         controls.setEmoji("←↑→↓/WASD: moure, Q/E Rompre blocs, Z/X Canviar objecte, F: Interactuar, R: Reiniciar nivell ESC: Pausa");
         controls.setColorFromHex("#FFFFFF");
@@ -522,7 +522,7 @@ public class GamePanel extends JPanel implements Serializable {
                 switch (items.get(pointer).getName().toLowerCase()) {
                     case "flamethrower" -> {
                         item = new Block(TileType.FLAMETHROWER);
-                        Block usos = new Block(TileType.BLANK);
+                        Block usos = new Block(TileType.EMPTY);
                         Flamethrower f = (Flamethrower) player.getSelectedItem();
                         usos.setEmoji("(" + f.getUsesLeft() + ")");
                         usos.setColorFromHex("#FFFFFF");

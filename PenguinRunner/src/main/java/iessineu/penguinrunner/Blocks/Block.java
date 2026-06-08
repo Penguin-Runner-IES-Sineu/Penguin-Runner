@@ -73,7 +73,7 @@ public class Block extends Printable implements Serializable {
                 this.isTrapdoor = true;
                 this.type = TileType.BLANK;
             }
-            case BLANK -> {
+            case BLANK, EMPTY -> {
                 this.isSolid = false;
             }
         }
