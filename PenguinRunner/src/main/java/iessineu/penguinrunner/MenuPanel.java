@@ -163,7 +163,7 @@ public class MenuPanel extends JPanel {
         String sub;
         if (deathMenu) {
             titol = "HAS MORT";
-            sub = "Pitja a tornar a jugar per tornar a jugar";
+            sub = "Millor sort la proxima vegada...";
         } else {
             titol = "PENGUIN RUNNER";
             sub = "Un projecte fet per Alumnes de l'IES Sineu";
