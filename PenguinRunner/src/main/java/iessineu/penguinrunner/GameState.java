@@ -1201,13 +1201,13 @@ public class GameState implements Serializable {
         Map<String, String> newMap = musicManager.getSoundsMap();
         newMap.put(soundType, soundPath);
         musicManager.setSoundsMap(newMap);
-        musicManager.stopMusic();
+        stopMusic();
         // soundManager.playMusic(false);
         playMusic(false);
     }
 
     public void playMusic(boolean fromResource) {
-        musicManager.stopMusic();
+        stopMusic();
         musicManager.playMusic(fromResource);
     }
 
@@ -1937,34 +1937,6 @@ public class GameState implements Serializable {
         return false;
     }
 
-// **** //
-    private boolean hasBasicGroundAt(int row, int col) {
-        int rowBelow = row + 1;
-
-        if (isOutOfBounds(rowBelow, col)) {
-            return true;
-        }
-
-        /*
-     * Si davall hi ha BLANK, no hi ha terra.
-         */
-        if (isBlank(rowBelow, col)) {
-            return false;
-        }
-
-        /*
-     * Si davall hi ha molten, ho tractam com a terra.
-         */
-        if (isMolten(rowBelow, col)) {
-            return true;
-        }
-
-        return isSolid(rowBelow, col)
-                || isRail(row, col)
-                || isStair(row, col)
-                || isStair(rowBelow, col);
-    }
-
     private Direction getDirectionToEnemyHome(Enemy enemy) {
         if (enemy.getRow() == enemy.getHomeRow()
                 && enemy.getCol() == enemy.getHomeCol()) {
@@ -1980,12 +1952,11 @@ public class GameState implements Serializable {
                 enemy.getHomeCol()
         );
     }
-    // **** //
 
     public void reloadAudioAfterLoad() {
         /*
-     * Quan carregam una partida des d'un fitxer, els SoundManager poden
-     * quedar bug, per aixo els reinici
+     * Després de carregar una partida, tornam a crear els SoundManager
+     * i iniciam només una música.
          */
         musicManager = new SoundManager();
         soundFXManager = new SoundManager();
@@ -1994,5 +1965,12 @@ public class GameState implements Serializable {
 
         playMusic(!GamePanel.hasGame());
         changeVolume(gameVolume);
+    }
+    // **** //
+
+    public void stopMusic() {
+        if (musicManager != null) {
+            musicManager.stopMusic();
+        }
     }
 }

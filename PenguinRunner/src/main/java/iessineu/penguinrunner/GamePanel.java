@@ -364,6 +364,8 @@ public class GamePanel extends JPanel implements Serializable {
         }
 
         try (ObjectInputStream file = new ObjectInputStream(new FileInputStream(selectedFile))) {
+            // **** //
+            gameState.stopMusic();
             this.gameState = (GameState) file.readObject();
 
             // repaint();
