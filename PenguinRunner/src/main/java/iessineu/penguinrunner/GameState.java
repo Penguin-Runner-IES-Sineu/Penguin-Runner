@@ -68,6 +68,7 @@ public class GameState implements Serializable {
     private boolean moddedMusic = false;
     private boolean buttonPressed = false;
     private float gameVolume = 0.95f;
+    private boolean isMuted;
 
     private SoundManager musicManager = new SoundManager();
     private SoundManager soundFXManager = new SoundManager();
@@ -313,6 +314,7 @@ public class GameState implements Serializable {
                     blocks[t.getRow()][t.getCol()] = new Block(TileType.BLANK);
                     soundFXManager.playSound("teleport", !GamePanel.hasGame());
                     player.removeItem();
+                    player.setSelectedItemIndex(0);
                 } else {
                     blocks[t.getRow()][t.getCol()] = new Block(TileType.TELEPORT);
                     blocks[t.getRow()][t.getCol()].setCollectable(false);
@@ -919,28 +921,28 @@ public class GameState implements Serializable {
         this.moddedMusic = moddedMusic;
     }
 
-    public void changeVolume(boolean isMusic) {
+    public void changeVolume() {
         String vol = JOptionPane.showInputDialog("Introdueix el volum que vol, com un valor entre 0 i 100"
         );
-        vol = vol.replace(",", ".");
-        gameVolume = Float.parseFloat(vol);
-        changeVolume(gameVolume, isMusic);
+        if (vol != null) {
+            vol = vol.replace(",", ".");
+            gameVolume = Float.parseFloat(vol);
+            changeVolume(gameVolume);
+        }
     }
 
     public void muteMusic() {
         musicManager.setVolume(0f);
+        isMuted = true;
     }
 
     public void unmuteMusic() {
+        isMuted= false;
         musicManager.setVolume(gameVolume);
     }
 
-    public void changeVolume(float vol, boolean isMusic) {
-        if (isMusic) {
-            musicManager.setVolume(vol / 100);
-        } else {
-            soundFXManager.setVolume(vol / 100);
-        }
+    public void changeVolume(float vol) {
+        musicManager.setVolume(vol / 100);
     }
 
     public boolean isGameOver() {
@@ -949,6 +951,10 @@ public class GameState implements Serializable {
 
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
+    }
+
+    public boolean isMuted() {
+        return isMuted;
     }
 
     /*

@@ -214,7 +214,9 @@ public class GamePanel extends JPanel implements Serializable {
         }
         if (!gameState.isGameOver()) {
             gameFrame.setVisible(true);
-            gameState.unmuteMusic();
+            if (gameState.isMuted()) {
+                gameState.unmuteMusic();
+            }
             gameState.interact();
             resizePanelToGame();
         } else {
@@ -255,13 +257,9 @@ public class GamePanel extends JPanel implements Serializable {
         int opcio = JOptionPane.showOptionDialog(null, "Tria una opcio", "Menu de Pausa", 0, 0, icon, opcions, "a");
         switch (opcio) {
             case 1 -> {
-                gameState.changeVolume(true);
+                gameState.changeVolume();
                 menuPausa();
             }
-            // case 2 -> {
-            //     gameState.changeVolume(false);
-            //     menuPausa();
-            // }
             case 2 -> {
                 guardarPartida();
             }
@@ -495,7 +493,7 @@ public class GamePanel extends JPanel implements Serializable {
         Printable.setFont(textFont.deriveFont(11f));
         controls.setEmoji("←↑→↓/WASD: moure, Q/E Rompre blocs, Z/X Canviar objecte, F: Interactuar, R: Reiniciar nivell ESC: Pausa");
         controls.setColorFromHex("#FFFFFF");
-        controls.draw(gameState.getRows() + 1, gameState.getCols() / 2);
+        controls.draw(gameState.getRows() + 1, (gameState.getCols() / 2) - 2);
         Printable.setFont(textFont.deriveFont(16f));
 
         if (player.hasItems()) {

@@ -149,9 +149,6 @@ import iessineu.penguinrunner.States.WalkingState;
                     System.out.println("L'objecte ha acabat els usos");
                 }
             }
-            case "teleport" -> {
-                Teleport t = (Teleport) item;
-            }
         }
     }
 
