@@ -102,16 +102,17 @@
             "filename": "button.png"
         },
         {
-            "type": "trapdoor",
-            "sprite": "⏹️",
-            "color": "#0000FF",
-            "filename": "trapdoor.png"
-        },
-        {
             "type": "teleport",
             "sprite": "🌀",
             "color": "#333333",
             "filename": "portal.png"
+        },
+        
+        {
+            "type": "trapdoor",
+            "sprite": "⏹️",
+            "color": "#0000FF",
+            "filename": "trapdoor.png"
         },
         {
             "type": "burnt",
