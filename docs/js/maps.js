@@ -21,7 +21,7 @@ initSqlJs(config).then(function (SQL) {
             valors = contents[0].values[i];
 
             nivell = document.createElement("h2")
-            nivell.innerHTML = "nivell" + valors[1];
+            nivell.innerHTML = "Nivell " + valors[1];
 
             view = document.createElement("pre")
             view.innerHTML = valors[2];
