@@ -43,7 +43,7 @@ public class Flamethrower extends Item implements Serializable {
         System.out.println("Te queden " + usesLeft + " usos");
     }
 
-    public int getUsesLeft(){
+    public int getUsesLeft() {
         return usesLeft;
     }
 
@@ -62,29 +62,29 @@ public class Flamethrower extends Item implements Serializable {
 
     public void burnUp(int playerRow, int playerCol, GameState gs) {
         gs.breakBlock(playerRow - 1, playerCol + 1);
-        gs.breakBlock(playerRow - 2, playerCol + 1);
-        gs.breakBlock(playerRow - 3, playerCol + 1);
+        gs.breakBlock(playerRow - 1, playerCol);
+        gs.breakBlock(playerRow - 1, playerCol - 1);
         Block[][] map = gs.getBlocks();
         Block b;
         b = map[playerRow - 1][playerCol + 1];
         burnBlock(b);
-        b = map[playerRow - 2][playerCol + 1];
+        b = map[playerRow - 1][playerCol];
         burnBlock(b);
-        b = map[playerRow - 3][playerCol + 1];
+        b = map[playerRow - 1][playerCol - 1];
         burnBlock(b);
     }
 
     public void burnDown(int playerRow, int playerCol, GameState gs) {
         gs.breakBlock(playerRow + 1, playerCol + 1);
-        gs.breakBlock(playerRow + 2, playerCol + 1);
-        gs.breakBlock(playerRow + 3, playerCol + 1);
+        gs.breakBlock(playerRow + 1, playerCol);
+        gs.breakBlock(playerRow + 1, playerCol - 1);
         Block[][] map = gs.getBlocks();
         Block b;
         b = map[playerRow + 1][playerCol + 1];
         burnBlock(b);
-        b = map[playerRow + 2][playerCol + 1];
+        b = map[playerRow + 1][playerCol];
         burnBlock(b);
-        b = map[playerRow + 3][playerCol + 1];
+        b = map[playerRow + 1][playerCol - 1];
         burnBlock(b);
     }
 
