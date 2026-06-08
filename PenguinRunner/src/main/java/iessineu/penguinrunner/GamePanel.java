@@ -246,26 +246,39 @@ public class GamePanel extends JPanel implements Serializable {
     }
 
     public void menuPausa() {
-        ClassLoader classLoader = PenguinRunner.class.getClassLoader();
-        InputStream is = classLoader.getResourceAsStream("sprites/icon.png");
-        Icon icon = null;
-        try {
-            icon = new ImageIcon(ImageIO.read(is));
-        } catch (IOException ex) {
-            System.getLogger(GamePanel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
-        String[] opcions = {"Resumir", "Canviar volum música", "Guardar Partida", "Carregar Partida"};
-        int opcio = JOptionPane.showOptionDialog(null, "Tria una opcio", "Menu de Pausa", 0, 0, icon, opcions, "a");
-        switch (opcio) {
-            case 1 -> {
-                gameState.changeVolume();
-                menuPausa();
+        PauseMenuDialog pauseMenu = new PauseMenuDialog(gameFrame, gameState.getGameVolume());
+        pauseMenu.setVisible(true);
+
+        /*
+     * Quan es tanca el menú, aplicam el volum seleccionat.
+         */
+        gameState.changeVolume(pauseMenu.getVolume());
+
+        switch (pauseMenu.getSelectedOption()) {
+            case PauseMenuDialog.RESUME -> {
+                gameState.unmuteMusic();
+                requestFocusInWindow();
             }
-            case 2 -> {
+
+            case PauseMenuDialog.SAVE -> {
+                gameState.unmuteMusic();
                 guardarPartida();
+                requestFocusInWindow();
             }
-            case 3 -> {
+
+            case PauseMenuDialog.LOAD -> {
+                gameState.unmuteMusic();
                 carregarPartida();
+                requestFocusInWindow();
+            }
+
+            case PauseMenuDialog.EXIT -> {
+                System.exit(0);
+            }
+
+            default -> {
+                gameState.unmuteMusic();
+                requestFocusInWindow();
             }
         }
     }
@@ -315,7 +328,7 @@ public class GamePanel extends JPanel implements Serializable {
                 this,
                 "S'ha guardat la partida."
         );
-        menuPausa();
+//        menuPausa();
     }
 
     /*
@@ -366,8 +379,10 @@ public class GamePanel extends JPanel implements Serializable {
             ex.printStackTrace();
         }
         gameState.reloadSprites();
+        gameState.reloadAudioAfterLoad();
         resizePanelToGame();
-        // repaint();
+        requestFocusInWindow();
+        repaint();
     }
 
     /*

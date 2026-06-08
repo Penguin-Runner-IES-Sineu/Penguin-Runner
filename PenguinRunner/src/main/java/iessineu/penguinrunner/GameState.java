@@ -988,7 +988,32 @@ public class GameState implements Serializable {
     }
 
     public void changeVolume(float vol) {
-        musicManager.setVolume(vol / 100);
+        /*
+     * Accepta:
+     * 75   -> 75%
+     * 0.75 -> 75%
+         */
+        if (vol > 1f) {
+            vol = vol / 100f;
+        }
+
+        if (vol < 0f) {
+            vol = 0f;
+        }
+
+        if (vol > 1f) {
+            vol = 1f;
+        }
+
+        gameVolume = vol;
+
+        if (!isMuted) {
+            musicManager.setVolume(gameVolume);
+        }
+    }
+
+    public float getGameVolume() {
+        return gameVolume;
     }
 
     public boolean isGameOver() {
@@ -1779,11 +1804,11 @@ public class GameState implements Serializable {
         }
 
         /*
-     * Menys de 6 blocs: distància 1, 2, 3, 4 o 5.
+     * Menys de X blocs: distància 1, 2, 3, 4 o 5.
          */
         int distance = Math.abs(enemyRow - playerRow) + Math.abs(enemyCol - playerCol);
 
-        if (distance >= 6) {
+        if (distance >= 15) {
             return false;
         }
 
@@ -1953,5 +1978,20 @@ public class GameState implements Serializable {
                 enemy.getHomeRow(),
                 enemy.getHomeCol()
         );
+    }
+    // **** //
+
+    public void reloadAudioAfterLoad() {
+        /*
+     * Quan carregam una partida des d'un fitxer, els SoundManager poden
+     * quedar bug, per aixo els reinici
+         */
+        musicManager = new SoundManager();
+        soundFXManager = new SoundManager();
+
+        isMuted = false;
+
+        playMusic(!GamePanel.hasGame());
+        changeVolume(gameVolume);
     }
 }
