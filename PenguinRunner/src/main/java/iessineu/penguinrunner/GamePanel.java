@@ -241,6 +241,7 @@ public class GamePanel extends JPanel implements Serializable {
             gameFrame.setVisible(true);
             gameState.setGameOver(false);
             gameState.unmuteMusic();
+            resizePanelToGame();
         }
     }
 
