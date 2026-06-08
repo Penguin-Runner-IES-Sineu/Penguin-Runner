@@ -17,6 +17,7 @@ public class PenguinRunner {
     static String[] valors = new String[0];
     static boolean arrancar = false;
     static Timer menuTimer;
+    static boolean editorMapes = false;
 
     public static void main(String[] args) {
 
@@ -32,17 +33,28 @@ public class PenguinRunner {
                 }
             }
         }
-
-        MenuFrame menu = new MenuFrame(false);
-        menu.setVisible(true);
+        boolean forceStart = false;
         for (String clau : claus) {
+            if (clau.equals("-editor")) {
+                editorMapes = true;
+            }
             if (clau.equals("-skip")) {
-                menu.forceStart();
+                forceStart = true;
             }
         }
-        menuTimer = new Timer(200, e -> arrancar(menu));
-        menuTimer.start();
 
+        if (editorMapes) {
+            AsciiMapStudio editor = new AsciiMapStudio();
+            editor.setVisible(true);
+        } else {
+            MenuFrame menu = new MenuFrame(false);
+            menu.setVisible(true);
+            if (forceStart) {
+                menu.forceStart();
+            }
+            menuTimer = new Timer(200, e -> arrancar(menu));
+            menuTimer.start();
+        }
     }
 
     public static void cls() {

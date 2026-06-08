@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de mapes</title>
+    <link rel="stylesheet" href="css/page.css">
+    <link rel="icon" href="favicon.ico">
+</head>
+
+<body>
+
+    <header class="hero">
+        <span class="hero-penguin">🐧</span>
+        <h1>Penguin<span>Runner</span></h1>
+        <p>Editor de mapes</p>
+    </header>
+
+    <nav>
+        <a href="index.html">Descripció General</a>
+        <a href="addons.html">Add-ons (Games i Mods)</a>
+        <a href="mapeditor.html">Editor de mapes</a>
+        <a href="enemies.html">Tipus d'enemics </a>
+        <a href="blocks.html">Tipus de blocs </a>
+        <a href="items.html">Tipus de objectes </a>
+        <a href="maps.html">Mapes per defecte</a>
+    </nav>
+    <div class="container">
+
+        <section>
+            <h2>Editor de mapes</h2>
+            <p>Amb PenguinRunner, hem inclós un editor de mapes que pots emprar per crear o editar-los, per obrir-lo cal
+                executar el joc amb el parametre -editor (java -jar ./PenguinRunner.jar -editor)
+            <p>
+                <img src="media/mapeditor.png" alt="">
+            <p>
+                Amb aquesta eina, podràs crear els teus mapes personalitzats com vulguis.
+            </p>
+            <p>
+                Llegenda de blocs:
+            </p>
+            <table class="legend-table">
+                <thead>
+                    <tr>
+                        <th>Símbol</th>
+                        <th>Significat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="symbol" style="background:rgba(99,179,237,0.15);color:var(--accent)">#</span>
+                        </td>
+                        <td>Paret indestructible</td>
+                    </tr>
+                    <tr>
+                        <td><span class="symbol" style="background:rgba(190,230,255,0.1);color:#bee3f8">.</span>
+                        </td>
+                        <td>Bloc de gel</td>
+                    </tr>
+                    <tr>
+                        <td><span class="symbol" style="background:rgba(104,211,145,0.15);color:var(--accent2)">G</span>
+                        <td>Gelat 🍦</td>
+                    </tr>
+                    <tr>
+                        <td><span class="symbol" style="background:rgba(251,211,141,0.15);color:var(--accent3)">H</span>
+                        </td>
+                        <td>Escala</td>
+                    </tr>
+                    <tr>
+                        <td><span class="symbol" style="background:rgba(251,211,141,0.15);color:var(--accent3)">-</span>
+                        </td>
+                        <td>Rail / passarel·la</td>
+                    </tr>
+                    <tr>
+                        <td><span class="symbol" style="background:rgba(252,129,129,0.15);color:var(--accent4)">D</span>
+                        </td>
+                        <td>Porta</td>
+                    </tr>
+                    <tr>
+                        <td><span class="symbol" style="background:rgba(160,160,160,0.15);color:#a0aec0">S</span>
+                        </td>
+                        <td>Pedra movible</td>
+                    </tr>
+                    <tr>
+                        <td><span class="symbol" style="background:rgba(99,179,237,0.15);color:var(--accent)">P</span>
+                        </td>
+                        <td>Jugador (posició inicial) 🐧</td>
+                    </tr>
+                    <tr>
+                        <td><span class="symbol" style="background:rgba(252,129,129,0.15);color:var(--accent4)">E</span>
+                        </td>
+                        <td>Enemic Normal</td>
+                    </tr>
+                    <tr>
+                        <td><span class="symbol" style="background:rgba(252,129,129,0.15);color:var(--accent4)">W</span>
+                        </td>
+                        <td>Enemic Seeker</td>
+                    </tr>
+                    <tr>
+                        <td><span class="symbol" style="background:rgba(252,129,129,0.15);color:var(--accent4)">A</span>
+                        </td>
+                        <td>Enemic Ambushing</td>
+                    </tr>
+                    <tr>
+                        <td><span class="symbol" style="background:rgba(252,129,129,0.15);color:var(--accent4)">C</span>
+                        </td>
+                        <td>Enemic Lladre</td>
+                    </tr>
+                    <tr>
+                        <td><span class="symbol" style="background:rgba(252,129,129,0.15);color:var(--accent4)">F</span>
+                        </td>
+                        <td>Lanzallamas</td>
+                    </tr>
+                    <tr>
+                        <td><span class="symbol" style="background:rgba(104,211,145,0.15);color:var(--accent2)">T</span>
+                        </td>
+                        <td>Objecte Teleport</td>
+                    </tr>
+                    <tr>
+                        <td><span class="symbol" style="background:rgba(104,211,145,0.15);color:var(--accent2)">B</span>
+                        </td>
+                        <td>Botó</td>
+                    </tr>
+                    <tr>
+                        <td><span class="symbol" style="background:rgba(104,211,145,0.15);color:var(--accent2)">b</span>
+                        </td>
+                        <td>Bloc Trampilla: apareix o desapareix quan pitges un botó</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+    </div>
+</body>
+
+</html>
