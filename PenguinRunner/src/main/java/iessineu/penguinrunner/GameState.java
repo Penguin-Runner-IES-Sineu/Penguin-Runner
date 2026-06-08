@@ -461,7 +461,6 @@ public class GameState implements Serializable {
      */
     public void breakDownLeft() {
 //        if (canMoveTo(player.getRow(), player.getCol() - 1)) {
-        soundFXManager.playSound("popice", !GamePanel.hasGame());
         breakBlock(player.getRow() + 1, player.getCol() - 1);
         updateLogic();
 //        }
@@ -469,7 +468,6 @@ public class GameState implements Serializable {
 
     public void breakDownRight() {
 //        if (canMoveTo(player.getRow(), player.getCol() + 1)) {
-        soundFXManager.playSound("popice", !GamePanel.hasGame());
         breakBlock(player.getRow() + 1, player.getCol() + 1);
         updateLogic();
 //        }
@@ -483,9 +481,12 @@ public class GameState implements Serializable {
         Block block = blocks[row][col];
 
         if (block != null && block.isBreakable()) {
+            soundFXManager.playSound("popice", !GamePanel.hasGame());
             blocks[row][col] = new Block(TileType.MOLTEN);
             brokenBlocks.add(new BrokenBlock(row, col, 5));
+            // updateLogic();
         }
+
     }
 
     private void updateBrokenBlocks() {
