@@ -42,7 +42,7 @@ import iessineu.penguinrunner.Blocks.TileType;
 import iessineu.penguinrunner.Entity.Items.Flamethrower;
 import iessineu.penguinrunner.Entity.Items.Item;
 import iessineu.penguinrunner.Entity.Player;
-import iessineu.penguinrunner.Entity.enemies.Enemy;
+import iessineu.penguinrunner.Entity.Enemies.Enemy;
 import iessineu.penguinrunner.Movement.Direction;
 import json.JSONArray;
 import json.JSONException;

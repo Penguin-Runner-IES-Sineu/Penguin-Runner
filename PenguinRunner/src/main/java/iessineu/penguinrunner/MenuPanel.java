@@ -25,6 +25,7 @@ import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -35,7 +36,7 @@ import javax.swing.Timer;
  *
  * @author Maria Esperança
  */
-public class MenuPanel extends JPanel {
+public class MenuPanel extends JPanel implements Serializable{
 
     // ======
     //  MENÚ PRINCIPAL

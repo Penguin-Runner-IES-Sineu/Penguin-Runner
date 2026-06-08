@@ -24,6 +24,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.Path2D;
 import java.awt.geom.RoundRectangle2D;
+import java.io.Serializable;
 
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -33,7 +34,7 @@ import javax.swing.Timer;
  *
  * @author loren
  */
-public class PauseMenuDialog extends JDialog {
+public class PauseMenuDialog extends JDialog implements Serializable {
 
     public static final int RESUME = 0;
     public static final int SAVE = 1;
