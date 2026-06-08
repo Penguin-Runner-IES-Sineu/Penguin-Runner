@@ -9,7 +9,7 @@ import javax.swing.Timer;
 
 /**
  *
- * @author loren
+ * @author Marc Mas, Llorenç Gayà, Maria Esperança, Iñaqui Insurralde
  */
 public class PenguinRunner {
 
