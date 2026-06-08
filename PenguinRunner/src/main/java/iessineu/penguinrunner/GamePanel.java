@@ -244,7 +244,7 @@ public class GamePanel extends JPanel implements Serializable {
 
     public void menuPausa() {
         ClassLoader classLoader = PenguinRunner.class.getClassLoader();
-        InputStream is = classLoader.getResourceAsStream("sprites/player.png");
+        InputStream is = classLoader.getResourceAsStream("sprites/icon.png");
         Icon icon = null;
         try {
             icon = new ImageIcon(ImageIO.read(is));
