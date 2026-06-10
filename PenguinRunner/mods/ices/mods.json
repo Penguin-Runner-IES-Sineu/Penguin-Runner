@@ -1,0 +1,452 @@
+[
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice",
+            "sprite": "🧊",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_center",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_center.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_center_in_ne",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_center_in_ne.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_center_in_ne_in_se",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_center_in_ne_in_se.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_center_in_ne_in_se_in_sw",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_center_in_ne_in_se_in_sw.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_center_in_ne_in_se_in_sw_in_nw",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_center_in_ne_in_se_in_sw_in_nw.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_center_in_ne_in_sw",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_center_in_ne_in_sw.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_center_in_nw",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_center_in_nw.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_center_in_nw_in_ne",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_center_in_nw_in_ne.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_center_in_nw_in_ne_in_se",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_center_in_nw_in_ne_in_se.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_center_in_se",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_center_in_se.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_center_in_se_in_nw",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_center_in_se_in_nw.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_center_in_se_in_sw",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_center_in_se_in_sw.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_center_in_se_in_sw_in_nw",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_center_in_se_in_sw_in_nw.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_center_in_sw",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_center_in_sw.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_center_in_sw_in_nw",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_center_in_sw_in_nw.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_center_in_sw_in_nw_in_ne",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_center_in_sw_in_nw_in_ne.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_e",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_e.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_es",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_es.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_esw",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_esw.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_esw_in_se",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_esw_in_se.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_esw_in_se_in_sw",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_esw_in_se_in_sw.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_esw_in_sw",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_esw_in_sw.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_es_in_se",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_es_in_se.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_ew",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_ew.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_isolated",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_isolated.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_n",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_n.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_ne",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_ne.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_nes",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_nes.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_nes_in_ne",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_nes_in_ne.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_nes_in_ne_in_se",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_nes_in_ne_in_se.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_nes_in_se",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_nes_in_se.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_ne_in_ne",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_ne_in_ne.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_ns",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_ns.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_s",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_s.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_sw",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_sw.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_swn",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_swn.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_swn_in_nw",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_swn_in_nw.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_swn_in_sw",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_swn_in_sw.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_swn_in_sw_in_nw",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_swn_in_sw_in_nw.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_sw_in_sw",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_sw_in_sw.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_w",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_w.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_wn",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_wn.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_wne",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_wne.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_wne_in_ne",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_wne_in_ne.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_wne_in_nw",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_wne_in_nw.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_wne_in_nw_in_ne",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_wne_in_nw_in_ne.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_wn_in_nw",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_wn_in_nw.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_center_in_ne_in_se_in_nw",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_center_in_nw_in_ne_in_se.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ice_center_in_ne_in_sw_in_nw",
+            "sprite": "",
+            "color": "#FFFFFF",
+            "filename": "sprites/ice_center_in_sw_in_nw_in_ne.png"
+        }
+    }
+]
