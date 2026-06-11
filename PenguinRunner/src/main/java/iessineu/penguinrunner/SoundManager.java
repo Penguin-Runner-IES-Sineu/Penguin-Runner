@@ -41,7 +41,6 @@ public class SoundManager implements Serializable {
     private Map<String, String> soundsMap = generateSoundMap(); //tipo, ruta
 
     public void playMusic(boolean fromResource) {
-        this.setVolume(0.3f);
         boolean modded = false;
         if (!soundsMap.get("music").equals(originalMap.get("music"))) {
             modded = true;

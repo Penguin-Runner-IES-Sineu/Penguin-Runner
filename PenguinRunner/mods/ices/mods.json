@@ -1,5 +1,78 @@
 [
     {
+        "modtype": "font",
+        "modvalue": {
+            "type": "text",
+            "filename": "racesport.ttf"
+        }
+    },
+    {
+        "modtype": "sfx",
+        "modvalue": {
+            "type": "door",
+            "filename": "clear.wav"
+        }
+    },
+    {
+        "modtype": "sfx",
+        "modvalue": {
+            "type": "gameover",
+            "filename": "over.wav"
+        }
+    },
+    {
+        "modtype": "music",
+        "modvalue": {
+            "type": "music",
+            "filename": "background.wav"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "player",
+            "sprite": "🧊",
+            "color": "#FFFFFF",
+            "filename": "sprites/pingu.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "enemy",
+            "sprite": "🧊",
+            "color": "#FFFFFF",
+            "filename": "sprites/morsa_1.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "ambushingenemy",
+            "sprite": "🧊",
+            "color": "#FFFFFF",
+            "filename": "sprites/morsa_2.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "seekerenemy",
+            "sprite": "🧊",
+            "color": "#FFFFFF",
+            "filename": "sprites/morsa_3.png"
+        }
+    },
+    {
+        "modtype": "sprite",
+        "modvalue": {
+            "type": "icecreamenemy",
+            "sprite": "🧊",
+            "color": "#FFFFFF",
+            "filename": "sprites/morsa_4.png"
+        }
+    },
+    {
         "modtype": "sprite",
         "modvalue": {
             "type": "ice",
