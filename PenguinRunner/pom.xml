@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>iessineu.penguinrunner</groupId>
     <artifactId>PenguinRunner</artifactId>
@@ -9,30 +11,31 @@
         <maven.compiler.release>24</maven.compiler.release>
         <exec.mainClass>iessineu.penguinrunner.PenguinRunner</exec.mainClass>
     </properties>
-    <dependencies>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.14.0</version>
-            <type>jar</type>
-        </dependency>
-    </dependencies>
-    <build> 
-        <plugins> 
-            <plugin> 
-                <groupId>org.apache.maven.plugins</groupId> 
-                <artifactId>maven-jar-plugin</artifactId> 
-                <version>3.5.0</version> 
-                <configuration> 
-                    <archive> 
-                        <manifest> 
-                            <addClasspath>true</addClasspath> 
-                            <mainClass>iessineu.penguinrunner.PenguinRunner</mainClass>
-                        </manifest> 
-                    </archive> 
-                </configuration> 
-            </plugin> 
-        </plugins> 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>iessineu.penguinrunner.PenguinRunner</mainClass>
+                                </transformer>
+                            </transformers>
+                            <shadedArtifactAttached>false</shadedArtifactAttached>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
     <name>PenguinRunner</name>
 </project>
