@@ -39,10 +39,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import iessineu.penguinrunner.Blocks.Block;
 import iessineu.penguinrunner.Blocks.TileType;
+import iessineu.penguinrunner.Entity.Enemies.Enemy;
 import iessineu.penguinrunner.Entity.Items.Flamethrower;
 import iessineu.penguinrunner.Entity.Items.Item;
 import iessineu.penguinrunner.Entity.Player;
-import iessineu.penguinrunner.Entity.Enemies.Enemy;
 import iessineu.penguinrunner.Movement.Direction;
 import json.JSONArray;
 import json.JSONException;
@@ -150,7 +150,7 @@ public class GamePanel extends JPanel implements Serializable {
         int height = gameState.getRows() * TILE_SIZE + HUD_HEIGHT;
         setPreferredSize(new Dimension(width, height));
         gameFrame.pack();
-        gameFrame.setLocationRelativeTo(null);
+        // gameFrame.setLocationRelativeTo(null);
 
         revalidate();
     }
