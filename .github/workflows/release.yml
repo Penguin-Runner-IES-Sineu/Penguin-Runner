@@ -32,10 +32,10 @@ jobs:
           mv PenguinRunner/target/PenguinRunner-1.0.jar PenguinRunner/target/PenguinRunner-V1.${{ github.run_number}}.jar
 
           # 1. Place the standalone JAR in the root of staging
-          cp PenguinRunner/target/*.jar staging/
+          cp PenguinRunner/target/P*.jar staging/
 
           # 2. Assemble the components for the ZIP bundle inside 'full-game'
-          cp PenguinRunner/target/*.jar staging/full-game/
+          cp PenguinRunner/target/P*.jar staging/full-game/
           cp -r PenguinRunner/mods staging/full-game/
           cp -r PenguinRunner/games staging/full-game/
 
