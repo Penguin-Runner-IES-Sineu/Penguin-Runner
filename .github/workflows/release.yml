@@ -52,5 +52,5 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            staging/*.jar
+            staging/P*.jar
             staging/Penguin_Runner_full_V1.${{ github.run_number}}.zip
