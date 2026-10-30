@@ -1,16 +1,17 @@
 package gemini.penguinrunner;
 
+import java.io.File;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
 import gemini.penguinrunner.assets.AssetManager;
 import gemini.penguinrunner.entities.Player;
 import gemini.penguinrunner.items.Flamethrower;
 import gemini.penguinrunner.items.Teleport;
 import gemini.penguinrunner.ui.GamePanel;
 import gemini.penguinrunner.world.Direction;
-import gemini.penguinrunner.world.TileType;
 import gemini.penguinrunner.world.World;
-
-import javax.swing.*;
-import java.io.File;
 
 /**
  * Main application launcher for Gemini_Java_PenguinRunner.

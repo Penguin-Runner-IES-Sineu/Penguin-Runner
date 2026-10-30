@@ -1,12 +1,11 @@
 package gemini.penguinrunner.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import gemini.penguinrunner.items.Item;
 import gemini.penguinrunner.states.PlayerState;
 import gemini.penguinrunner.states.WalkingState;
-import gemini.penguinrunner.world.Direction;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Player extends Entity {
     public static final int MAX_LIVES = 3;

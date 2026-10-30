@@ -1,10 +1,24 @@
 package gemini.penguinrunner.ui;
 
-import gemini.penguinrunner.assets.AudioPlayer;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Window;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+
+import gemini.penguinrunner.assets.AudioPlayer;
 
 /**
  * Centered, dynamically scaling pause menu modal dialog.

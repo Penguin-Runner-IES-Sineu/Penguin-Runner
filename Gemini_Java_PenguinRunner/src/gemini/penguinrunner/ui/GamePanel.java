@@ -1,5 +1,20 @@
 package gemini.penguinrunner.ui;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.io.File;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.Timer;
+
 import gemini.penguinrunner.assets.AssetManager;
 import gemini.penguinrunner.assets.SpriteConfig;
 import gemini.penguinrunner.entities.Enemy;
@@ -9,12 +24,6 @@ import gemini.penguinrunner.world.Block;
 import gemini.penguinrunner.world.Direction;
 import gemini.penguinrunner.world.TileType;
 import gemini.penguinrunner.world.World;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.io.File;
 
 /**
  * Main game canvas handling double-buffered rendering, tick timers, and user input.

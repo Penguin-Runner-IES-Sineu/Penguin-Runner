@@ -1,6 +1,10 @@
 package gemini.penguinrunner.io;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Lightweight, zero-dependency, high-performance JSON parser and serializer.

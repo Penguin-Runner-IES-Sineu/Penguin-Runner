@@ -1,7 +1,7 @@
 package gemini.penguinrunner.ai;
 
-import gemini.penguinrunner.world.Direction;
 import gemini.penguinrunner.world.Block;
+import gemini.penguinrunner.world.Direction;
 import gemini.penguinrunner.world.TileType;
 
 /**
