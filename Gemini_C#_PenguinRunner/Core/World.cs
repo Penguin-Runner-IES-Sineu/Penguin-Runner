@@ -109,13 +109,14 @@ public class World
                     case 'S': block = new Block(TileType.Stone, r, c); break;
                     case 'W': block = new Block(TileType.Wood, r, c); break;
                     case 'D': block = new Block(TileType.Door, r, c); break;
-                    case 'T' or 'b': block = new Block(TileType.Trapdoor, r, c); break;
+                    case 'b': block = new Block(TileType.Trapdoor, r, c); break;
                     case 'B': block = new Block(TileType.Button, r, c); break;
                     case 'G':
                         block = new Block(TileType.IceCream, r, c);
                         TotalIceCream++;
                         break;
                     case 'F': block = new Block(TileType.Flamethrower, r, c); break;
+                    case 'T' or 't': block = new Block(TileType.Teleport, r, c); break;
                     case 'P':
                         Player = new Player(r, c) { Lives = preservedLives };
                         foreach (var item in preservedItems) Player.AddItem(item);

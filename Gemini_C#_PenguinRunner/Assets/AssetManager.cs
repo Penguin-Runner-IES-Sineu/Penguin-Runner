@@ -85,28 +85,37 @@ public class AssetManager : IDisposable
         {
             string jsonText = File.ReadAllText(jsonPath);
             using var doc = JsonDocument.Parse(jsonText);
-            foreach (var prop in doc.RootElement.EnumerateObject())
+
+            if (doc.RootElement.ValueKind == JsonValueKind.Array)
             {
-                string key = prop.Name;
-                if (prop.Value.ValueKind != JsonValueKind.Array) continue;
-                var arr = prop.Value;
-                if (arr.GetArrayLength() < 3) continue;
-
-                string emoji = arr[0].GetString() ?? "";
-                string hex = arr[1].GetString() ?? "#FFFFFF";
-                string spriteRelPath = arr[2].GetString() ?? "";
-
-                Color color = ParseHexColor(hex);
-
-                Texture2D? tex = null;
-                string spriteFile = Path.Combine(_resourceDir, "sprites", spriteRelPath);
-                if (File.Exists(spriteFile))
+                foreach (var elem in doc.RootElement.EnumerateArray())
                 {
-                    tex = Raylib.LoadTexture(spriteFile);
-                    _rawTextures[key] = tex.Value;
-                }
+                    if (elem.ValueKind != JsonValueKind.Object) continue;
+                    string key = elem.TryGetProperty("type", out var t) ? t.GetString() ?? "" : "";
+                    if (string.IsNullOrEmpty(key)) continue;
 
-                _spriteConfigs[key] = new SpriteConfig(emoji, color, tex);
+                    string emoji = elem.TryGetProperty("sprite", out var s) ? s.GetString() ?? "" : "";
+                    string hex = elem.TryGetProperty("color", out var c) ? c.GetString() ?? "#FFFFFF" : "#FFFFFF";
+                    string filename = elem.TryGetProperty("filename", out var f) ? f.GetString() ?? "" : "";
+
+                    RegisterSprite(key, emoji, hex, filename);
+                }
+            }
+            else if (doc.RootElement.ValueKind == JsonValueKind.Object)
+            {
+                foreach (var prop in doc.RootElement.EnumerateObject())
+                {
+                    string key = prop.Name;
+                    if (prop.Value.ValueKind != JsonValueKind.Array) continue;
+                    var arr = prop.Value;
+                    if (arr.GetArrayLength() < 3) continue;
+
+                    string emoji = arr[0].GetString() ?? "";
+                    string hex = arr[1].GetString() ?? "#FFFFFF";
+                    string spriteRelPath = arr[2].GetString() ?? "";
+
+                    RegisterSprite(key, emoji, hex, spriteRelPath);
+                }
             }
 
             string selPath = Path.Combine(_resourceDir, "sprites", "selected.png");
@@ -119,6 +128,25 @@ public class AssetManager : IDisposable
         {
             Console.Error.WriteLine($"Error loading printables.json: {ex.Message}");
         }
+    }
+
+    private void RegisterSprite(string key, string emoji, string hex, string filename)
+    {
+        Color color = ParseHexColor(hex);
+        Texture2D? tex = null;
+
+        if (!string.IsNullOrEmpty(filename))
+        {
+            string spriteFile = Path.Combine(_resourceDir, "sprites", filename);
+            if (File.Exists(spriteFile))
+            {
+                var loaded = Raylib.LoadTexture(spriteFile);
+                _rawTextures[key] = loaded;
+                tex = loaded;
+            }
+        }
+
+        _spriteConfigs[key] = new SpriteConfig(emoji, color, tex);
     }
 
     public void PlaySound(string name)
