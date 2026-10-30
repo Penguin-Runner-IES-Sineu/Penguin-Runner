@@ -140,13 +140,14 @@ public class World {
                     case 'S' -> block = new Block(TileType.STONE, r, c);
                     case 'W' -> block = new Block(TileType.WOOD, r, c);
                     case 'D' -> block = new Block(TileType.DOOR, r, c);
-                    case 'T', 'b' -> block = new Block(TileType.TRAPDOOR, r, c);
+                    case 'b' -> block = new Block(TileType.TRAPDOOR, r, c);
                     case 'B' -> block = new Block(TileType.BUTTON, r, c);
                     case 'G' -> {
                         block = new Block(TileType.ICECREAM, r, c);
                         totalIceCream++;
                     }
                     case 'F' -> block = new Block(TileType.FLAMETHROWER, r, c);
+                    case 'T', 't' -> block = new Block(TileType.TELEPORT, r, c);
                     case 'P' -> {
                         player = new Player(r, c);
                         player.setLives(preservedLives);
